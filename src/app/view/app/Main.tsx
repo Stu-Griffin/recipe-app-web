@@ -1,5 +1,4 @@
 //Components
-import Navigation from "./app/view/Navigation";
 
 //Icons
 
@@ -12,9 +11,10 @@ import React from "react";
 
 //Models
 
-
-export default function SignIn() {
+function Main() {
 	return (
-		<Navigation/>
+		<h1>Main</h1>
 	);
 }
+
+export default Main;

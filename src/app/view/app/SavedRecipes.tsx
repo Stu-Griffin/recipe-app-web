@@ -1,5 +1,4 @@
 //Components
-import Navigation from "./app/view/Navigation";
 
 //Icons
 
@@ -12,9 +11,10 @@ import React from "react";
 
 //Models
 
-
-export default function SignIn() {
+function SavedRecipes() {
 	return (
-		<Navigation/>
+		<h1>SavedRecipes</h1>
 	);
 }
+
+export default SavedRecipes;
