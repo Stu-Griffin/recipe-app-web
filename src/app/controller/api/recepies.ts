@@ -46,7 +46,6 @@ class RecipeAPI {
 	}
 
 	async getRecipes(type: string, page: number) {
-		console.log(`${this.url}?type=${type}&page=${page}`);
 		try {
 			const { data } = await axios.get(`${this.url}?type=${type}&page=${page}`);
 			return data;

@@ -36,6 +36,20 @@ function Main() {
 		}
 	};
 
+	const recipeTypeButtonStyle = (value: string) => {
+		if(recipeType === value.toLowerCase()) {
+			return {
+				color: "white",
+				backgroundColor: "#129575",
+			};
+		} else {
+			return {
+				color: "#129575",
+				backgroundColor: "white",
+			};
+		}
+	};
+
 	return (
 		<main>
 			<nav className="recipes-types">
@@ -45,6 +59,7 @@ function Main() {
 							<button 
 								key={index}
 								className="recipe-type" 
+								style={recipeTypeButtonStyle(el)}
 								onClick={() => dispatch(changeAdditionalValue({key: "recipeType", value: el.toLowerCase()}))}
 							>{el}</button>
 						);

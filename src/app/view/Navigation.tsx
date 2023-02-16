@@ -9,21 +9,51 @@ import SavedRecipes from "./app/SavedRecipes";
 import logo from "../../assets/icons/logo.svg";
 
 //Types
-import { ReactElement } from "react";
+import { ReactElement, useEffect } from "react";
+import { AppDispatch, RootState } from "../types/store";
+import { ProfileStateI } from "../types/profile";
 
 //Libraries
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
 //Functions
+import userApi from "../controller/api/user";
+import { changeProfileValue } from "../controller/redux/profile";
 
 //Models
 
 function Navigation(): ReactElement {
+	const dispatch: AppDispatch = useDispatch();
+	const { userId, user }: ProfileStateI = useSelector((state: RootState) => state.profile);
+
+	useEffect(() => {
+		(userId !== "") && getUserInfo();
+	}, [userId]);
+
+	const getUserInfo = async (): Promise<void> => {
+		const response = await userApi.getUser(userId);
+		if(response.status === 200) {
+			dispatch(changeProfileValue({key: "user", value: {login: response.data.login, avatar: response.data.avatar}}));
+		}
+	};
+
 	return (
 		<Router>
 			<header>
-				<img src={logo} className="logo" alt="App logo"/>
+				<div className="info-part">
+					<Link to="/">
+						<img src={logo} className="logo" alt="App logo"/>
+					</Link>
+					{
+						(Object.values(user).every((el: string) => el.length !== 0)) &&
+						<div className="welcome-text">
+							<h2>Hello {user.login}</h2>
+							<h3>What are you cooking today?</h3>
+						</div>
+					}
+				</div>
 				<nav>
 					<Link to="/" className="navigation-button">Home</Link>
 					<Link to="/profile/" className="navigation-button">Profile</Link>

@@ -1,0 +1,16 @@
+.input-area {
+	margin-top: 15px;
+}
+
+.input-area h3 {
+
+}
+
+.input-area input {
+	width: 15rem;
+	padding: 10px;
+	margin-top: 5px;
+	font-size: 18px;
+	border-radius: 10px;
+	border: 2px solid #969696;
+}

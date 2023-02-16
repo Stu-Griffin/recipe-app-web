@@ -11,13 +11,11 @@ main {
 .recipe-type {
 	margin: 20px;
 	border: none;
-	color: white;
 	cursor: pointer;
 	font-size: 15px;
 	font-weight: bold;
 	padding: 10px 15px;
 	border-radius: 10px;
-	background-color: #129575;
 }
 
 .recipe-type:hover {

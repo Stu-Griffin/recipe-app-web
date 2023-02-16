@@ -6,6 +6,7 @@ const profileState: ProfileStateI = {
 		login: "",
 		avatar: "",
 	},
+	// userId: "",
 	userId: "63ed09c8ca0722a694d6127e",
 };
 
