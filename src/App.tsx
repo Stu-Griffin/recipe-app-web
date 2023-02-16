@@ -7,14 +7,18 @@ import Navigation from "./app/view/Navigation";
 
 //Libraries
 import React from "react";
+import { Provider } from "react-redux";
 
 //Functions
+import { store } from "./app/controller/redux/store";
 
 //Models
 
 
 export default function SignIn() {
 	return (
-		<Navigation/>
+		<Provider store={store}>
+			<Navigation/>
+		</Provider>
 	);
 }
