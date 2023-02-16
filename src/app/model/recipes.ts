@@ -1,0 +1,1 @@
+export const recipeTypes: Array<string> = ["Appetizers", "Salads", "Soups", "Main", "Deserts"];
