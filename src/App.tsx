@@ -15,12 +15,8 @@ import { store } from "./app/controller/redux/store";
 //Models
 
 //Styles
-import "./app/style/main.css";
-import "./app/style/input.css";
+import "./app/style/style.css";
 import "./app/style/reusable.css";
-import "./app/style/navigation.css";
-import "./app/style/recipe-card.css";
-import "./app/style/authorization.css";
 
 export default function SignIn() {
 	return (

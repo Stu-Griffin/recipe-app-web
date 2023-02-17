@@ -1,10 +1,3 @@
-export interface AvatarI {
-	uri: string;
-	name: string;
-	type: string;
-	fileName: string;
-}
-
 export interface ProfileUserI {
 	login: string;
 	avatar: string;
@@ -21,13 +14,13 @@ export interface ProfileFormStateI {
 	login: string;
 	email: string;
 	password: string;
-	avatar: AvatarI|null;
+	avatar: any;
 }
 
 export interface ProfileFormActionI {
 	payload: {
 		key: string;
-		value: AvatarI|string|null;
+		value: any|string|null;
 	};
 	type: string;
 }

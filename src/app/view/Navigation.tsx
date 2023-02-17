@@ -6,15 +6,14 @@ import SignUp from "./authorization/SignUp";
 import SavedRecipes from "./app/SavedRecipes";
 
 //Icons
-import logo from "../../assets/icons/logo.svg";
 
 //Types
-import { ReactElement, useEffect } from "react";
-import { AppDispatch, RootState } from "../types/store";
+import { ReactElement } from "react";
 import { ProfileStateI } from "../types/profile";
+import { AppDispatch, RootState } from "../types/store";
 
 //Libraries
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
@@ -44,7 +43,7 @@ function Navigation(): ReactElement {
 			<header>
 				<div className="info-part">
 					<Link to="/">
-						<img src={logo} className="logo" alt="App logo"/>
+						<img src={user.avatar} className="avatar" alt="User avatar"/>
 					</Link>
 					{
 						(Object.values(user).every((el: string) => el.length !== 0)) &&
