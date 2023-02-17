@@ -1,12 +1,12 @@
 //Components
-import RecipeCard from "../reusable/RecipeCard";
+import RecipesList from "../reusable/RecipeList";
 
 //Icons
 
 //Types
+import { RecipesStateI } from "../../types/recipes";
 import { AdittionalStateI } from "../../types/additional";
 import { AppDispatch, RootState } from "../../types/store";
-import { RecipeI, RecipesStateI } from "../../types/recipes";
 
 //Libraries
 import React, { ReactElement, useEffect } from "react";
@@ -66,21 +66,11 @@ function Main() {
 					})
 				}
 			</nav>
-			<section>
-				{
-					recipes.map((el: RecipeI): ReactElement => {
-						return (
-							<RecipeCard
-								key={el._id}
-								rate={el.rate} 
-								image={el.image} 
-								title={el.title} 
-								authorLogin={el.authorLogin}
-							/>
-						);
-					})
-				}
-			</section>
+			<RecipesList
+				data={recipes}
+				length={recipes.length}
+				emptyMsg="There's no recipes by this type"
+			/>
 		</main>
 	);
 }

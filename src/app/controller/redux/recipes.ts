@@ -20,7 +20,7 @@ export const recipesSlice = createSlice({
 			return state;
 		},
 		removeSavedRecipe: (state: RecipesStateI, action): RecipesStateI => {
-			state.savedRecipes = state.savedRecipes.filter((el: SavedRecipeI) => el.id !== action.payload);
+			state.savedRecipes = state.savedRecipes.filter((el: SavedRecipeI) => el._id !== action.payload);
 			return state;
 		},
 	},

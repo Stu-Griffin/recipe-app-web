@@ -1,7 +1,7 @@
 //Components
 
 //Icons
-import star from "../../../assets/icons/star.svg";
+import Star from "../../../assets/icons/star";
 
 //Types
 
@@ -25,7 +25,7 @@ export default function RecipeCard({rate, image, title, authorLogin}: PropsI) {
 			<div className="linear-gradient">
 				<div className="recipe-title">
 					<div className="rate-box">
-						<img src={star} className="star" alt="recipe rate"/>
+						<Star width={20} height={20}/>
 						<p>{rate}</p>
 					</div>
 				</div>

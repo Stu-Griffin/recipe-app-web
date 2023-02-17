@@ -1,20 +1,24 @@
 //Components
 import InputArea from "../reusable/Input";
+import RecipesList from "../reusable/RecipeList";
 
 //Icons
 
 //Types
-import { RootState } from "../../types/store";
+import { RecipesStateI } from "../../types/recipes";
 import { ProfileStateI } from "../../types/profile";
 import { ImageListType } from "react-images-uploading";
+import { AppDispatch, RootState } from "../../types/store";
 
 //Libraries
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ImageUploading from "react-images-uploading";
 import React, { useEffect, useReducer, useState } from "react";
 
 //Functions
+import recipeAPI from "../../controller/api/recepies";
+import { changeRecipesValue } from "../../controller/redux/recipes";
 import { regularValidation, emailValidation } from "../../controller/validation";
 import { profileFormReducer, profileErrorFormReducer } from "../../controller/profile";
 
@@ -26,10 +30,12 @@ const allowedImgTypes = ["jpg", "png", "jpeg"];
 function Profile() {
 	const maxNumber = 69;
 	const navigate = useNavigate();
+	const dispatch: AppDispatch = useDispatch();
 	const [avatar, setAvatar] = useState<string>("");
 	const [disabledStatus, setDisabledStatus] = useState<boolean>(true);
 	const [userForm, userFormDispatch] = useReducer(profileFormReducer, profileFormState);
 	const { userId, user }: ProfileStateI = useSelector((state: RootState) => state.profile);
+	const { usersRecipes }: RecipesStateI = useSelector((state: RootState) => state.recipes);
 	const [userError, userErrorDispatch] = useReducer(profileErrorFormReducer, profileErrorFormState);
 
 	useEffect(() => {
@@ -39,6 +45,8 @@ function Profile() {
 	useEffect(() => {
 		if(userId === "") {
 			navigate("/sign-in/");
+		} else {
+			getUsersRecipes();
 		}
 	}, [userId]);
 
@@ -58,13 +66,11 @@ function Profile() {
 		}
 	};
 
-	const signUp = (e: React.MouseEvent<HTMLElement>): void => {
-		e.preventDefault();
-		const data: FormData = new FormData();
-		userForm.avatar && data.append("avatar", userForm.avatar);
-		userForm.login.length > 0 && data.append("login", userForm.login);
-		userForm.email.length > 0 && data.append("email", userForm.email);
-		userForm.password.length > 0 && data.append("password", userForm.password);
+	const getUsersRecipes = async (): Promise<void> => {
+		const response = await recipeAPI.getRecipeByAuthorId(userId);
+		if(response?.status === 200) {
+			dispatch(changeRecipesValue({key: "usersRecipes", value: response.data}));
+		}
 	};
 
 	const changeAvatar = (imageList: ImageListType): void => {
@@ -76,6 +82,15 @@ function Profile() {
 		} else {
 			alert(`Avatar image should be in ${allowedImgTypes} format`);
 		}
+	};
+
+	const signUp = (e: React.MouseEvent<HTMLElement>): void => {
+		e.preventDefault();
+		const data: FormData = new FormData();
+		userForm.avatar && data.append("avatar", userForm.avatar);
+		userForm.login.length > 0 && data.append("login", userForm.login);
+		userForm.email.length > 0 && data.append("email", userForm.email);
+		userForm.password.length > 0 && data.append("password", userForm.password);
 	};
 
 	return (
@@ -141,6 +156,11 @@ function Profile() {
 					disabled={disabledStatus}
 				>Save changes</button>
 			</form>
+			<RecipesList
+				data={usersRecipes}
+				length={usersRecipes.length}
+				emptyMsg="You didn't create any recipes"
+			/>
 		</section>
 	);
 }

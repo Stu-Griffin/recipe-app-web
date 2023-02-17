@@ -6,6 +6,8 @@ import SignUp from "./authorization/SignUp";
 import SavedRecipes from "./app/SavedRecipes";
 
 //Icons
+import SavedIcon from "../../assets/icons/saved";
+import ProfileIcon from "../../assets/icons/profile";
 
 //Types
 import { ReactElement } from "react";
@@ -31,6 +33,21 @@ function Navigation(): ReactElement {
 		(userId !== "") && getUserInfo();
 	}, [userId]);
 
+	const getInfoPart = (): ReactElement => {
+		if(Object.values(user).every((el: string) => el.length !== 0)) {
+			return (
+				<div>
+					<h2>Hello {user.login}</h2>
+					<h3>What are you cooking today?</h3>
+				</div>
+			);
+		} else {
+			return (
+				<h1>Food App</h1>
+			);
+		}
+	};
+
 	const getUserInfo = async (): Promise<void> => {
 		const response = await userApi.getUser(userId);
 		if(response.status === 200) {
@@ -41,22 +58,16 @@ function Navigation(): ReactElement {
 	return (
 		<Router>
 			<header>
-				<div className="info-part">
-					<Link to="/">
-						<img src={user.avatar} className="avatar" alt="User avatar"/>
-					</Link>
-					{
-						(Object.values(user).every((el: string) => el.length !== 0)) &&
-						<div className="welcome-text">
-							<h2>Hello {user.login}</h2>
-							<h3>What are you cooking today?</h3>
-						</div>
-					}
-				</div>
+				<Link to="/">
+					{getInfoPart()}
+				</Link>
 				<nav>
-					<Link to="/" className="navigation-button">Home</Link>
-					<Link to="/profile/" className="navigation-button">Profile</Link>
-					<Link to="/saved-recipes/" className="navigation-button">Saved recipes</Link>
+					<Link to="/profile/">
+						<ProfileIcon width={30} height={30}/>
+					</Link>
+					<Link to="/saved-recipes/">
+						<SavedIcon  width={30} height={30}/>
+					</Link>
 				</nav>
 			</header>
 			<Routes>

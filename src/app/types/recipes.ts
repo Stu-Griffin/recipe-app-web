@@ -25,7 +25,7 @@ export interface changeRate {
 }
 
 export interface SavedRecipeI {
-	id: string;
+	_id: string;
 	rate: number;
 	title: string;
 	image: string;
