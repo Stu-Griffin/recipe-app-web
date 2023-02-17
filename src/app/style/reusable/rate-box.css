@@ -1,0 +1,13 @@
+.rate-box {
+	width: 3rem;
+	display: flex;
+	border-radius: 10px;
+	align-items: center;
+	justify-content: center;
+	background-color: #FFE1B3;
+}
+
+.rate-box p {
+	font-size: 18px;
+	margin-left: 2.5px;
+}

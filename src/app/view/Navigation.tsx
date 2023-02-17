@@ -1,6 +1,7 @@
 //Components
 import Main from "./app/Main";
 import Profile from "./app/Profile";
+import RecipePage from "./app/RecipePage";
 import SignIn from "./authorization/SignIn";
 import SignUp from "./authorization/SignUp";
 import SavedRecipes from "./app/SavedRecipes";
@@ -43,7 +44,7 @@ function Navigation(): ReactElement {
 			);
 		} else {
 			return (
-				<h1>Food App</h1>
+				<h1>Cook well</h1>
 			);
 		}
 	};
@@ -76,6 +77,7 @@ function Navigation(): ReactElement {
 				<Route path="/sign-up/" element={<SignUp/>} />
 				<Route path="/profile/" element={<Profile/>} />
 				<Route path="/saved-recipes/" element={<SavedRecipes/>} />
+				<Route path="/recipe/:recipeId" element={<RecipePage/>} />
 			</Routes>
 		</Router>
 	);

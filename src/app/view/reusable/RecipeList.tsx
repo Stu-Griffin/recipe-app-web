@@ -32,6 +32,7 @@ export default function RecipesList({ data, length, emptyMsg }: PropsI) {
 						data.map((el: RecipeI|SavedRecipeI) => {
 							return (
 								<RecipeCard
+									id={el._id}
 									key={el._id}
 									rate={el.rate} 
 									image={el.image} 

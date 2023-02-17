@@ -1,33 +1,44 @@
 //Components
+import RateBox from "./RateBox";
 
 //Icons
-import Star from "../../../assets/icons/star";
 
 //Types
 
 //Libraries
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 //Functions
 
 //Models
 
 interface PropsI {
+	id: string;
 	rate: number; 
 	image: string; 
 	title: string; 
 	authorLogin: string;
 }
 
-export default function RecipeCard({rate, image, title, authorLogin}: PropsI) {
+export default function RecipeCard({id, rate, image, title, authorLogin}: PropsI) {
+	const navigate = useNavigate();
+
+	const move = () => {
+		navigate(`/recipe/${id}`);
+	};
+
 	return (
-		<div className="recipe-card" style={{backgroundImage: `url(${image})`}}>
+		<div 
+			onClick={move}
+			className="recipe-card" 
+			style={{backgroundImage: `url(${image})`}}
+		>
 			<div className="linear-gradient">
 				<div className="recipe-title">
-					<div className="rate-box">
-						<Star width={20} height={20}/>
-						<p>{rate}</p>
-					</div>
+					<RateBox
+						rate={rate}
+					/>
 				</div>
 				<div className="recipe-info">
 					<h3>{title}</h3>
