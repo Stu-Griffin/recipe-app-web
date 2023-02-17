@@ -14,10 +14,6 @@ import { store } from "./app/controller/redux/store";
 
 //Models
 
-//Styles
-import "./app/style/style.css";
-import "./app/style/reusable.css";
-
 export default function SignIn() {
 	return (
 		<Provider store={store}>

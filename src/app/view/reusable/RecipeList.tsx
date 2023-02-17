@@ -23,11 +23,11 @@ export default function RecipesList({ data, length, emptyMsg }: PropsI) {
 	const getList = (): ReactElement => {
 		if(length === 0) {
 			return (
-				<h1>{emptyMsg}</h1>
+				<h3 className="errorMsg">{emptyMsg}</h3>
 			);
 		} else {
 			return (
-				<div>
+				<div className="recipes-list-area">
 					{
 						data.map((el: RecipeI|SavedRecipeI) => {
 							return (
@@ -47,8 +47,8 @@ export default function RecipesList({ data, length, emptyMsg }: PropsI) {
 	};
 
 	return (
-		<article>
-			<div>
+		<article className="recipes-list">
+			<div className="recipes-list-header">
 				<h2>Your recipes</h2>
 				<p>{length} results</p>
 			</div>

@@ -1,0 +1,32 @@
+.recipes-list {
+	width: 80%;
+	margin: auto;
+	margin-top: 1rem;
+}
+
+.recipes-list-header {
+	display: flex;
+	align-items: center;
+	margin-bottom: 2rem;
+	justify-content: space-around;
+}
+
+.recipes-list-header h2 {
+	
+}
+
+.recipes-list-header p {
+	color: #A9A9A9;
+}
+
+.recipes-list-area {
+	display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.errorMsg {
+	color: red;
+	margin-top: 5rem;
+	text-align: center;
+}

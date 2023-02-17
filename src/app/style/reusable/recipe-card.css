@@ -1,0 +1,51 @@
+.recipe-card {
+	margin: 10px;
+	width: 12rem;
+	height: 12rem;
+	cursor: pointer;
+	border-radius: 20px;
+}
+
+.linear-gradient {
+	width: 10rem;
+	padding: 1rem;
+	height: 10rem;
+  display: flex;
+	border-radius: 20px;
+  flex-direction: column;
+	justify-content: space-between;
+	background: linear-gradient(rgb(0,0,0,0), rgb(0,0,0,1));
+}
+
+.recipe-title {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.rate-box {
+	width: 3rem;
+	display: flex;
+	border-radius: 10px;
+	align-items: center;
+	justify-content: center;
+	background-color: #FFE1B3;
+}
+
+.rate-box p {
+	font-size: 18px;
+	margin-left: 2.5px;
+}
+
+.recipe-info {
+
+}
+
+.recipe-info h3 {
+	color: white;
+
+}
+
+.recipe-info p {
+	color: #A9A9A9;
+
+}

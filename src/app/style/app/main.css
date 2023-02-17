@@ -1,0 +1,24 @@
+main {
+
+}
+
+.recipes-types {
+	display: flex;
+	margin-top: 1rem;
+	align-items: center;
+	justify-content: center;
+}
+
+.recipe-type {
+	margin: 20px;
+	border: none;
+	cursor: pointer;
+	font-size: 15px;
+	font-weight: bold;
+	padding: 10px 15px;
+	border-radius: 10px;
+}
+
+.recipe-type:hover {
+	background-color: #084737;
+}
