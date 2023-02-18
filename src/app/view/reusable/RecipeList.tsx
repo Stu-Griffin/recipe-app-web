@@ -4,10 +4,14 @@ import RecipeCard from "../reusable/RecipeCard";
 //Icons
 
 //Types
+import { RootState } from "../../types/store";
+import { AdittionalStateI } from "../../types/additional";
 import { RecipeI, SavedRecipeI } from "../../types/recipes";
 
 //Libraries
+import { useSelector } from "react-redux";
 import React, { ReactElement } from "react";
+import { Puff } from  "react-loader-spinner";
 
 //Functions
 
@@ -20,6 +24,8 @@ interface PropsI {
 }
 
 export default function RecipesList({ data, length, emptyMsg }: PropsI) {
+	const { loadingStatus }: AdittionalStateI = useSelector((state: RootState) => state.additional);
+
 	const getList = (): ReactElement => {
 		if(length === 0) {
 			return (
@@ -53,7 +59,16 @@ export default function RecipesList({ data, length, emptyMsg }: PropsI) {
 				<h2>Your recipes</h2>
 				<p>{length} results</p>
 			</div>
-			{getList()}
+			<Puff
+				width="80"
+				radius={1}
+				height="80"
+				color="#129575"
+				wrapperClass="loader"
+				visible={loadingStatus}
+				ariaLabel="puff-loading"
+			/>
+			{(!loadingStatus) && getList()}
 		</article>
 	);
 }

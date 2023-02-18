@@ -1,12 +1,6 @@
-section {
-	display: flex;
-	margin-top: 5rem;
-	align-items: center;
-	flex-direction: column;
-}
-
 form {
 	display: flex;
+	margin-top: 2.5rem;
 	align-items: center;
 	flex-direction: column;
 }

@@ -13,6 +13,7 @@ import { ProfileStateI } from "../../types/profile";
 //Libraries
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { Puff } from  "react-loader-spinner";
 import React, { ReactElement, useEffect, useState } from "react";
 
 //Functions
@@ -57,6 +58,7 @@ import recipeAPI from "../../controller/api/recepies";
 export default function RecipePage() {
 	const { recipeId } = useParams();
 	const [data, setData] = useState<string[]>([]);
+	const [loadingStatus, setLoadingStatus] = useState<boolean>(true);
 	const [recipe, setRecipe] = useState<RecipeI|undefined>(undefined);
 	const [activeList, setActiveList] = useState<string>("ingredients");
 	const { userId }: ProfileStateI = useSelector((state: RootState) => state.profile);
@@ -76,12 +78,16 @@ export default function RecipePage() {
 	}, [activeList, recipe]);
 
 	const getRecipe = async (): Promise<void> => {
+		setLoadingStatus(true);
 		if(recipeId) {
 			const response = await recipeAPI.getRecipeBuItsId(recipeId);
 			if(response.status === 200) {
 				setRecipe(response.data);
 			}
 		}
+		setTimeout(() => {
+			setLoadingStatus(false);
+		}, 500);
 	};
 
 	const getButtonStyle = (value: string): object => {
@@ -102,78 +108,95 @@ export default function RecipePage() {
 		console.log("save");
 	};
 
-	if(recipe) {
-		return (
-			<section className="recipe-page">
-				{
-					(userId === recipe.authorId) &&
-						<label className="delete">
-							<DeleteIcon
-								width={25}
-								height={25}
+	if(!loadingStatus) {
+		if(recipe) {
+			return (
+				<main className="recipe-page">
+					{
+						(userId === recipe.authorId) &&
+							<label className="delete">
+								<DeleteIcon
+									width={25}
+									height={25}
+								/>
+							</label>
+					}
+					<article className="recip-page-card" style={{backgroundImage: `url(${recipe.image})`}}>
+						<div className="recip-page-linear-gradient"></div>
+						<label 
+							className="rate" 
+							onClick={saveRecipe}
+						>
+							<RateBox
+								rate={recipe.rate}
 							/>
 						</label>
-				}
-				<article className="recip-page-card" style={{backgroundImage: `url(${recipe.image})`}}>
-					<div className="recip-page-linear-gradient"></div>
-					<label 
-						className="rate" 
-						onClick={saveRecipe}
-					>
-						<RateBox
-							rate={recipe.rate}
-						/>
-					</label>
-					<div className="recipe-page-content-info">
-						<div>
-							<h1>{recipe?.title}</h1>
-							<p>{recipe?.authorLogin}</p>
-						</div>
-						{
-							(userId !== "") &&
+						<div className="recipe-page-content-info">
+							<div>
+								<h1>{recipe?.title}</h1>
+								<p>{recipe?.authorLogin}</p>
+							</div>
+							{
+								(userId !== "") &&
 									<button className="saved-button">
 										<SavedIcon
 											width={25}
 											height={25}
 										/>
 									</button>
-						}
-					</div>
-				</article>
-				<p className="recipe-description">{recipe.description}</p>
-				<article className="recipe-page-list">
-					<div className="navigation">
-						<button
-							style={getButtonStyle("ingredients")}
-							onClick={() => {
-								setActiveList("ingredients");
-							}}
-						>Ingredient</button>
-						<button
-							style={getButtonStyle("steps")}
-							onClick={() => {
-								setActiveList("steps");
-							}}
-						>Procedure</button>
-					</div>
-					<div className="list">
-						{
-							data.map((el: string, index: number): ReactElement => {
-								return (
-									<div key={index}>
-										<h4>{index+1}</h4>
-										<p>{el}</p>
-									</div>
-								);
-							})
-						}
-					</div>
-				</article>
-			</section>
-		);
+							}
+						</div>
+					</article>
+					<p className="recipe-description">{recipe.description}</p>
+					<article className="recipe-page-list">
+						<div className="navigation">
+							<button
+								style={getButtonStyle("ingredients")}
+								onClick={() => {
+									setActiveList("ingredients");
+								}}
+							>Ingredient</button>
+							<button
+								style={getButtonStyle("steps")}
+								onClick={() => {
+									setActiveList("steps");
+								}}
+							>Procedure</button>
+						</div>
+						<div className="list">
+							{
+								data.map((el: string, index: number): ReactElement => {
+									return (
+										<div key={index}>
+											<h4>{index+1}</h4>
+											<p>{el}</p>
+										</div>
+									);
+								})
+							}
+						</div>
+					</article>
+				</main>
+			);
+		} else {
+			return (
+				<h1>Error</h1>
+			);
+		}
 	} else {
 		return (
-			<h1>Error</h1>
+			<Puff
+				width="80"
+				radius={1}
+				height="80"
+				color="#129575"
+				wrapperStyle={{
+					marginTop: "10rem"
+				}}
+				wrapperClass="loader"
+				visible={loadingStatus}
+				ariaLabel="puff-loading"
+			/>
 		);
 	}
 }

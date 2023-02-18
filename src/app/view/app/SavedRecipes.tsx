@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 //Functions
 import { changeRecipesValue } from "../../controller/redux/recipes";
+import { changeAdditionalValue } from "../../controller/redux/addtional";
 
 //Models
 
@@ -33,18 +34,24 @@ function SavedRecipes() {
 	}, [userId]);
 
 	const getSavedRecipes = (): void => {
+		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
 		const recipes = sessionStorage.getItem("saved-recipes");
 		if(recipes) {
 			dispatch(changeRecipesValue({key: "savedRecipes", value: recipes}));
 		}
+		setTimeout(() => {
+			dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
+		}, 500);
 	};
 
 	return (
-		<RecipesList
-			data={savedRecipes}
-			length={savedRecipes.length}
-			emptyMsg="You didn't save any recipes"
-		/>
+		<main>
+			<RecipesList
+				data={savedRecipes}
+				length={savedRecipes.length}
+				emptyMsg="You didn't save any recipes"
+			/>
+		</main>
 	);
 }
 

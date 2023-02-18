@@ -1,5 +1,6 @@
 export interface AdittionalStateI {
 	rate: string;
 	recipeType: string;
-	[key: string]: string;
+	loadingStatus: boolean;
+	[key: string]: string|boolean;
 }

@@ -19,6 +19,7 @@ import React, { useEffect, useReducer, useState } from "react";
 //Functions
 import recipeAPI from "../../controller/api/recepies";
 import { changeRecipesValue } from "../../controller/redux/recipes";
+import { changeAdditionalValue } from "../../controller/redux/addtional";
 import { regularValidation, emailValidation } from "../../controller/validation";
 import { profileFormReducer, profileErrorFormReducer } from "../../controller/profile";
 
@@ -85,16 +86,20 @@ function Profile() {
 	};
 
 	const signUp = (e: React.MouseEvent<HTMLElement>): void => {
+		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
 		e.preventDefault();
 		const data: FormData = new FormData();
 		userForm.avatar && data.append("avatar", userForm.avatar);
 		userForm.login.length > 0 && data.append("login", userForm.login);
 		userForm.email.length > 0 && data.append("email", userForm.email);
 		userForm.password.length > 0 && data.append("password", userForm.password);
+		setTimeout(() => {
+			dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
+		}, 500);
 	};
 
 	return (
-		<section>
+		<main>
 			<form>
 				<div>
 					<ImageUploading
@@ -161,7 +166,7 @@ function Profile() {
 				length={usersRecipes.length}
 				emptyMsg="You didn't create any recipes"
 			/>
-		</section>
+		</main>
 	);
 }
 

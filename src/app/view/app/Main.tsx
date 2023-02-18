@@ -30,10 +30,14 @@ function Main() {
 	}, [recipeType]);
 
 	const getRecipes = async (): Promise<void> => {
+		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
 		const response = await recipeAPI.getRecipes(recipeType, 1);
 		if(response?.status === 200) {
 			dispatch(changeRecipesValue({key: "recipes", value: response.data}));
 		}
+		setTimeout(() => {
+			dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
+		}, 500);
 	};
 
 	const recipeTypeButtonStyle = (value: string) => {
