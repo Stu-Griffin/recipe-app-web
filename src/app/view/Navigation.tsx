@@ -4,6 +4,7 @@ import Profile from "./app/Profile";
 import RecipePage from "./app/RecipePage";
 import SignIn from "./authorization/SignIn";
 import SignUp from "./authorization/SignUp";
+import CreateRecipe from "./app/CreateRecipe";
 import SavedRecipes from "./app/SavedRecipes";
 
 //Icons
@@ -22,6 +23,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
 //Functions
 import userApi from "../controller/api/user";
+import styles from "../style/navigation.module.css";
 import { changeProfileValue } from "../controller/redux/profile";
 
 //Models
@@ -58,11 +60,11 @@ function Navigation(): ReactElement {
 
 	return (
 		<Router>
-			<header>
+			<header className={styles.header}>
 				<Link to="/">
 					{getInfoPart()}
 				</Link>
-				<nav>
+				<nav className={styles.nav}>
 					<Link to="/profile/">
 						<ProfileIcon width={30} height={30}/>
 					</Link>
@@ -76,6 +78,7 @@ function Navigation(): ReactElement {
 				<Route path="/sign-in/" element={<SignIn/>} />
 				<Route path="/sign-up/" element={<SignUp/>} />
 				<Route path="/profile/" element={<Profile/>} />
+				<Route path="/create-recipe/" element={<CreateRecipe/>} />
 				<Route path="/saved-recipes/" element={<SavedRecipes/>} />
 				<Route path="/recipe/:recipeId" element={<RecipePage/>} />
 			</Routes>

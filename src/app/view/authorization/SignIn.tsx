@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useReducer, useState } from "react";
 
 //Functions
+import styles from "../../style/authorization/sign-in.module.css";
 import { emailValidation, regularValidation } from "../../controller/validation";
 import { signInUserFormReducer, signInUserErrorFormReducer } from "../../controller/users";
 
@@ -47,8 +48,8 @@ export default function SignIn(): ReactElement {
 	};
 
 	return (
-		<section className="auth-box">
-			<form>
+		<main className={styles.container}>
+			<form className={styles.form}>
 				<InputArea
 					title={"Email"}
 					value={user.email}
@@ -73,15 +74,16 @@ export default function SignIn(): ReactElement {
 					onClick={signIn}
 					style={getButtonStyle()} 
 					disabled={disabledStatus}
+					className={styles.button}
 				>Sign in</button>
 			</form>
-			<div className="navigation-are">
+			<div className={styles.navigationArea}>
 				<p>Don’t have an account?</p>
 				<Link 
 					to="/sign-up/" 
-					className="navigation"
+					className={styles.navigation}
 				>Sign up</Link>
 			</div>
-		</section>
+		</main>
 	);
 }

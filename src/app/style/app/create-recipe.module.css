@@ -1,0 +1,55 @@
+.container {
+	display: flex;
+	padding-top: 3rem;
+	align-items: center;
+	flex-direction: column;
+}
+
+.form {
+	width: 35vw;
+}
+
+.image {
+	width: 100%;
+	height: 10rem;
+	display: flex;
+	cursor: pointer;
+	align-items: center;
+  border-radius: 20px;
+	justify-content: center;
+	background-color: #129575;
+}
+
+.imageText {
+	color: white;
+	font-size: 25px;
+	font-weight: bold;
+}
+
+.checkbox {
+	width: 100%;
+	padding: 10px;
+	font-size: 18px;
+	margin-top: 2rem;
+	border-radius: 10px;
+	padding-inline: 8px;
+	border: 2px solid #969696;
+	background-color: transparent;
+}
+
+.checkboxEl {
+
+}
+
+.button {
+	border: none;
+	margin: auto;
+	display: block;
+	color: white;
+	font-size: 20px;
+	cursor: pointer;
+	margin-top: 3rem;
+	padding: 15px 20px;
+	border-radius: 10px;
+	background-color: #129575;
+}

@@ -1,5 +1,8 @@
-.recipe-page {
+.container{
+	display: flex;
 	padding-top: 5rem;
+	align-items: center;
+	flex-direction: column;
 }
 
 .delete {
@@ -8,16 +11,7 @@
 	position: absolute;
 }
 
-.recip-page-linear-gradient {
-	z-index: 10;
-	width: 80vw;
-  height: 25rem;
-	position: absolute;
-	border-radius: 20px;
-	background: linear-gradient(rgb(0,0,0,0), rgb(0,0,0,1));
-}
-
-.recip-page-card {
+.card {
 	width: 80vw;
   height: 25rem;
 	display: flex;
@@ -31,15 +25,13 @@
 	background-color: linear-gradient(rgb(0,0,0,0), rgb(0,0,0,1));
 }
 
-.recipe-page-content {
+.linearGradient {
 	z-index: 10;
-  width: 85vw;
+	width: 80vw;
   height: 25rem;
-  display: flex;
+	position: absolute;
 	border-radius: 20px;
-  align-items: flex-end;
-  flex-direction: column;
-  justify-content: space-between;
+	background: linear-gradient(rgb(0,0,0,0), rgb(0,0,0,1));
 }
 
 .rate {
@@ -50,7 +42,18 @@
   position: relative;
 }
 
-.recipe-page-content-info {
+/* .recipe-page-content {
+	z-index: 10;
+  width: 85vw;
+  height: 25rem;
+  display: flex;
+	border-radius: 20px;
+  align-items: flex-end;
+  flex-direction: column;
+  justify-content: space-between;
+} */
+
+.content {
 	width: 96%;
 	z-index: 100;
 	display: flex;
@@ -60,15 +63,15 @@
 	justify-content:  space-between;
 }
 
-.recipe-page-content-info div p {
+.author{
 	color: #D9D9D9;
 }
 
-.recipe-page-content-info h1 {
+.title {
 	color: white;
 }
 
-.saved-button {
+.button {
 	border: none;
 	display: flex;
 	width: 2.5rem;
@@ -80,22 +83,18 @@
 	background-color: white;
 }
 
-.recipe-description {
+.description {
 	width: 80vw;
 	margin-top: 1rem;
 }
 
-.recipe-page-list {
-
-}
-
-.recipe-page-list .navigation {
+.navigation {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
 
-.recipe-page-list .navigation button {
+.navigationButton {
 	border: none;
 	margin: 1rem;
 	cursor: pointer;
@@ -111,7 +110,7 @@
 	flex-direction: column;
 }
 
-.list div {
+.element {
 	width: 60%;
 	margin: 1rem;
 	padding: 1rem;
@@ -121,10 +120,10 @@
 	background-color: #D9D9D9;
 }
 
-.list div h4 {
+.index {
 
 }
 
-.list div p {
+.text {
 	margin-left: 1rem;
 }

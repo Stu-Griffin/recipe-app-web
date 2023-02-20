@@ -45,7 +45,7 @@ export interface RecipeFormStateI {
 	type: string;
 	title: string;
 	authorId: string;
-	image: Image|null;
+	image: any;
 	authorLogin: string;
 	description: string;
 	steps: Array<string>;
@@ -55,13 +55,12 @@ export interface RecipeFormStateI {
 export interface RecipeFormActionI {
 	payload: {
 		key: string;
-		value: Image|Array<string>|string|number;
+		value: Image|Array<string>|string|number|any;
 	};
 	type: string;
 }
 
 export interface RecipeErrorFormStateI {
-	type: null|boolean;
 	image: null|boolean;
 	title: null|boolean;
 	steps: null|boolean;

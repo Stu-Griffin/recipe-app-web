@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 //Functions
+import styles from "../../style/app/saved-recipes.module.css";
 import { changeRecipesValue } from "../../controller/redux/recipes";
 import { changeAdditionalValue } from "../../controller/redux/addtional";
 
@@ -45,7 +46,7 @@ function SavedRecipes() {
 	};
 
 	return (
-		<main>
+		<main className={styles.container}>
 			<RecipesList
 				data={savedRecipes}
 				length={savedRecipes.length}

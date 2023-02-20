@@ -13,6 +13,7 @@ import React, { ReactElement, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 //Functions
+import styles from "../../style/app/main.module.css";
 import recipeAPI from "../../controller/api/recepies";
 import { changeRecipesValue } from "../../controller/redux/recipes";
 import { changeAdditionalValue } from "../../controller/redux/addtional";
@@ -55,14 +56,14 @@ function Main() {
 	};
 
 	return (
-		<main>
-			<nav className="recipes-types">
+		<main className={styles.container}>
+			<nav className={styles.navigation}>
 				{
 					recipeTypes.map((el: string, index: number): ReactElement => {
 						return (
 							<button 
 								key={index}
-								className="recipe-type" 
+								className={styles.type}
 								style={recipeTypeButtonStyle(el)}
 								onClick={() => dispatch(changeAdditionalValue({key: "recipeType", value: el.toLowerCase()}))}
 							>{el}</button>

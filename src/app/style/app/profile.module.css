@@ -1,0 +1,23 @@
+.container {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+
+.form {
+	display: flex;
+	margin-top: 2.5rem;
+	align-items: center;
+	flex-direction: column;
+}
+
+.button {
+	border: none;
+	color: white;
+	font-size: 20px;
+	cursor: pointer;
+	margin-top: 25px;
+	padding: 10px 40px;
+	border-radius: 10px;
+	background-color: #129575;
+}

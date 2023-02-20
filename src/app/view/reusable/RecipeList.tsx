@@ -14,6 +14,7 @@ import React, { ReactElement } from "react";
 import { Puff } from  "react-loader-spinner";
 
 //Functions
+import styles from "../../style/reusable/recipes-list.module.css";
 
 //Models
 
@@ -29,11 +30,11 @@ export default function RecipesList({ data, length, emptyMsg }: PropsI) {
 	const getList = (): ReactElement => {
 		if(length === 0) {
 			return (
-				<h3 className="errorMsg">{emptyMsg}</h3>
+				<h3 className={styles.error}>{emptyMsg}</h3>
 			);
 		} else {
 			return (
-				<div className="recipes-list-area">
+				<div className={styles.list}>
 					{
 						data.map((el: RecipeI|SavedRecipeI) => {
 							return (
@@ -54,10 +55,10 @@ export default function RecipesList({ data, length, emptyMsg }: PropsI) {
 	};
 
 	return (
-		<article className="recipes-list">
-			<div className="recipes-list-header">
-				<h2>Your recipes</h2>
-				<p>{length} results</p>
+		<article className={styles.container}>
+			<div className={styles.header}>
+				<h2 className={styles.title}>Your recipes</h2>
+				<p className={styles.ammount}>{length} results</p>
 			</div>
 			<Puff
 				width="80"

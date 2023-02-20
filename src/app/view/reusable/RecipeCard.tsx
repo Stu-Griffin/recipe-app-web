@@ -10,6 +10,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 //Functions
+import styles from "../../style/reusable/recipe-card.module.css";
 
 //Models
 
@@ -31,18 +32,18 @@ export default function RecipeCard({id, rate, image, title, authorLogin}: PropsI
 	return (
 		<div 
 			onClick={move}
-			className="recipe-card" 
+			className={styles.container}
 			style={{backgroundImage: `url(${image})`}}
 		>
-			<div className="linear-gradient">
-				<div className="recipe-title">
+			<div className={styles.card}>
+				<div className={styles.rate}>
 					<RateBox
 						rate={rate}
 					/>
 				</div>
-				<div className="recipe-info">
-					<h3>{title}</h3>
-					<p>{authorLogin}</p>
+				<div className={styles.info}>
+					<h3 className={styles.title}>{title}</h3>
+					<p className={styles.author}>{authorLogin}</p>
 				</div>
 			</div>
 		</div>

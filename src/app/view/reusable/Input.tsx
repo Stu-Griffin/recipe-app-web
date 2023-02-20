@@ -8,6 +8,7 @@
 import React from "react";
 
 //Functions
+import styles from "../../style/reusable/input.module.css";
 
 //Models
 
@@ -50,9 +51,9 @@ export default function InputArea({ title, value, error, placeholder, onChangeFu
 	};
 
 	return (
-		<div className="input-area">
-			<h1 style={getTitleStyle()}>{title}</h1>
-			<input style={getInputStyle()} value={value} placeholder={placeholder} onChange={onChangeFunc}/>
+		<div className={styles.container}>
+			<h3 style={getTitleStyle()}>{title}</h3>
+			<input className={styles.input} style={getInputStyle()} value={value} placeholder={placeholder} onChange={onChangeFunc}/>
 		</div>
 	);
 }

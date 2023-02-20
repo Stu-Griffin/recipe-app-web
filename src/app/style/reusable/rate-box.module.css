@@ -1,4 +1,4 @@
-.rate-box {
+.container {
 	width: 3rem;
 	display: flex;
 	border-radius: 10px;
@@ -7,7 +7,7 @@
 	background-color: #FFE1B3;
 }
 
-.rate-box p {
+.rate {
 	font-size: 18px;
 	margin-left: 2.5px;
 }

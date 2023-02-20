@@ -1,28 +1,16 @@
-form {
+.container {
 	display: flex;
-	margin-top: 2.5rem;
 	align-items: center;
 	flex-direction: column;
 }
 
-.checkbox-area {
-	margin-top: 10px;
+.form {
+	display: flex;
+	margin-top: 2.5rem;
+	flex-direction: column;
 }
 
-.checkbox-area input {
-	cursor: pointer;
-	border-radius: 10px;
-	border: 1px solid #FF9C00;
-}
-
-.checkbox-area label {
-	cursor: pointer;
-	color: #FF9C00;
-	margin-left: 5px;
-	font-weight: bold;
-}
-
-form button {
+.button {
 	border: none;
 	color: white;
 	font-size: 20px;
@@ -33,14 +21,14 @@ form button {
 	background-color: #129575;
 }
 
-.navigation-are {
+.navigationArea {
 	display: flex;
 	font-size: 15px;
 	margin-top: 20px;
 	align-items: center;
 }
 
-.navigation-are .navigation {
+.navigation {
 	cursor: pointer;
 	color: #FF9C00;
 	margin-left: 5px;

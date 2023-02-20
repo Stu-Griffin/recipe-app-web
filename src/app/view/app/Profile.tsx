@@ -18,6 +18,7 @@ import React, { useEffect, useReducer, useState } from "react";
 
 //Functions
 import recipeAPI from "../../controller/api/recepies";
+import styles from "../../style/app/profile.module.css";
 import { changeRecipesValue } from "../../controller/redux/recipes";
 import { changeAdditionalValue } from "../../controller/redux/addtional";
 import { regularValidation, emailValidation } from "../../controller/validation";
@@ -44,6 +45,7 @@ function Profile() {
 	}, [user]);
 
 	useEffect(() => {
+		console.log(userId);
 		if(userId === "") {
 			navigate("/sign-in/");
 		} else {
@@ -85,7 +87,7 @@ function Profile() {
 		}
 	};
 
-	const signUp = (e: React.MouseEvent<HTMLElement>): void => {
+	const saveChanges = (e: React.MouseEvent<HTMLElement>): void => {
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
 		e.preventDefault();
 		const data: FormData = new FormData();
@@ -99,8 +101,8 @@ function Profile() {
 	};
 
 	return (
-		<main>
-			<form>
+		<main className={styles.container}>
+			<form className={styles.form}>
 				<div>
 					<ImageUploading
 						multiple
@@ -156,9 +158,10 @@ function Profile() {
 					}}
 				/>
 				<button
-					onClick={signUp}
+					onClick={saveChanges}
 					style={getButtonStyle()} 
 					disabled={disabledStatus}
+					className={styles.button}
 				>Save changes</button>
 			</form>
 			<RecipesList

@@ -17,6 +17,7 @@ import { Puff } from  "react-loader-spinner";
 import React, { ReactElement, useEffect, useState } from "react";
 
 //Functions
+import styles from "../../style/app/recipe-page.module.css";
 import recipeAPI from "../../controller/api/recepies";
 
 //Models
@@ -111,34 +112,34 @@ export default function RecipePage() {
 	if(!loadingStatus) {
 		if(recipe) {
 			return (
-				<main className="recipe-page">
+				<main className={styles.container}>
 					{
 						(userId === recipe.authorId) &&
-							<label className="delete">
+							<label className={styles.delete}>
 								<DeleteIcon
 									width={25}
 									height={25}
 								/>
 							</label>
 					}
-					<article className="recip-page-card" style={{backgroundImage: `url(${recipe.image})`}}>
-						<div className="recip-page-linear-gradient"></div>
+					<article className={styles.card} style={{backgroundImage: `url(${recipe.image})`}}>
+						<div className={styles.linearGradient}></div>
 						<label 
-							className="rate" 
 							onClick={saveRecipe}
+							className={styles.rate}
 						>
 							<RateBox
 								rate={recipe.rate}
 							/>
 						</label>
-						<div className="recipe-page-content-info">
+						<div className={styles.content}>
 							<div>
-								<h1>{recipe?.title}</h1>
-								<p>{recipe?.authorLogin}</p>
+								<h1 className={styles.title}>{recipe?.title}</h1>
+								<p className={styles.author}>{recipe?.authorLogin}</p>
 							</div>
 							{
 								(userId !== "") &&
-									<button className="saved-button">
+									<button className={styles.button}>
 										<SavedIcon
 											width={25}
 											height={25}
@@ -147,29 +148,31 @@ export default function RecipePage() {
 							}
 						</div>
 					</article>
-					<p className="recipe-description">{recipe.description}</p>
-					<article className="recipe-page-list">
-						<div className="navigation">
+					<p className={styles.description}>{recipe.description}</p>
+					<article>
+						<div className={styles.navigation}>
 							<button
 								style={getButtonStyle("ingredients")}
+								className={styles.navigationButton}
 								onClick={() => {
 									setActiveList("ingredients");
 								}}
 							>Ingredient</button>
 							<button
 								style={getButtonStyle("steps")}
+								className={styles.navigationButton}
 								onClick={() => {
 									setActiveList("steps");
 								}}
 							>Procedure</button>
 						</div>
-						<div className="list">
+						<div className={styles.list}>
 							{
 								data.map((el: string, index: number): ReactElement => {
 									return (
-										<div key={index}>
-											<h4>{index+1}</h4>
-											<p>{el}</p>
+										<div className={styles.element} key={index}>
+											<h4 className={styles.index}>{index+1}</h4>
+											<p className={styles.text}>{el}</p>
 										</div>
 									);
 								})

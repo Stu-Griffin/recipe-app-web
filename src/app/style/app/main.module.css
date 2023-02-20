@@ -1,15 +1,17 @@
-main {
-
+.container {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
 }
 
-.recipes-types {
+.navigation {
 	display: flex;
 	margin-top: 1rem;
 	align-items: center;
 	justify-content: center;
 }
 
-.recipe-type {
+.type {
 	margin: 20px;
 	border: none;
 	cursor: pointer;
@@ -19,6 +21,6 @@ main {
 	border-radius: 10px;
 }
 
-.recipe-type:hover {
+.type:hover {
 	background-color: #084737;
 }

@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useReducer, useState } from "react";
 
 //Functions
+import styles from "../../style/authorization/sign-up.module.css";
 import { emailValidation, regularValidation } from "../../controller/validation";
 import { signUpUserFormReducer, signUpUserErrorFormReducer } from "../../controller/users";
 
@@ -56,8 +57,8 @@ export default function SignUp(): ReactElement {
 	};
 
 	return (
-		<section className="auth-box">
-			<form>
+		<main className={styles.container}>
+			<form className={styles.form}>
 				<InputArea
 					title={"Login"}
 					value={user.login}
@@ -99,31 +100,34 @@ export default function SignUp(): ReactElement {
 						userErrorDispatch({type: "add", payload: {key: "confirmPassword", value: regularValidation(e.target.value) || !(e.target.value == user.password)}});
 					}}
 				/>
-				<div className="checkbox-area">
+				<div className={styles.agreement}>
 					<input 
 						id="scales" 
 						name="scales" 
 						type="checkbox" 
 						checked={checkedStatus}
 						onChange={checkBoxClick}
+						className={styles.checkbox}
 					/>
 					<label 
 						htmlFor="scales" 
+						className={styles.checkboxText}
 					>Accept terms & Condition</label>
 				</div>
 				<button
 					onClick={signUp}
 					style={getButtonStyle()} 
 					disabled={disabledStatus}
+					className={styles.button}
 				>Sign up</button>
 			</form>
-			<div className="navigation-are">
+			<div className={styles.navigationArea}>
 				<p>Already a member?</p>
 				<Link 
 					to="/sign-in/" 
-					className="navigation"
+					className={styles.navigation}
 				>Sign In</Link>
 			</div>
-		</section>
+		</main>
 	);
 }
