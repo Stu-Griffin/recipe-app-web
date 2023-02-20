@@ -6,8 +6,8 @@ class UserAPI {
 
 	async getUser(id: string) {
 		try {
-			const { data } = await axios.get(`${this.url}/${id}`);
-			return data;
+			const response = await axios.get(`${this.url}/${id}`);
+			return response;
 		} catch(e) {
 			console.log(e);
 		}
@@ -29,8 +29,8 @@ class UserAPI {
 
 	async signUp(user: UserI) {
 		try {
-			const { data } = await axios.post(`${this.url}/sign-up`, user);
-			return data;
+			const response = await axios.post(`${this.url}/sign-up`, user);
+			return response;
 		} catch (e) {
 			console.log(e);
 		}
@@ -38,8 +38,8 @@ class UserAPI {
 
 	async signIn(user: SignInUserFormStateI) {
 		try {
-			const { data } = await axios.post(`${this.url}/sign-in`, user);
-			return data;
+			const response = await axios.post(`${this.url}/sign-in`, user);
+			return response;
 		} catch (e) {
 			console.log(e);
 		}

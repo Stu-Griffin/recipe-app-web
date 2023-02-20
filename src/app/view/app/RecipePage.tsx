@@ -55,7 +55,7 @@ export default function RecipePage() {
 	}, [recipeId]);
 
 	useEffect(() => {
-		sessionStorage.setItem("saved-recipes", JSON.stringify(savedRecipes));
+		localStorage.setItem("saved-recipes", JSON.stringify(savedRecipes));
 	}, [savedRecipes]);
 
 	useEffect(() => {

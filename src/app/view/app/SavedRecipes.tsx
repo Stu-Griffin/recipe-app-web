@@ -36,7 +36,7 @@ function SavedRecipes() {
 
 	const getSavedRecipes = (): void => {
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
-		const recipes = sessionStorage.getItem("saved-recipes");
+		const recipes = localStorage.getItem("saved-recipes");
 		if(recipes) {
 			dispatch(changeRecipesValue({key: "savedRecipes", value: JSON.parse(recipes)}));
 		}

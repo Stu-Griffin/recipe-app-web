@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useReducer, useState } from "react";
 
 //Functions
+import userAPI from "../../controller/api/user";
 import styles from "../../style/authorization/sign-up.module.css";
 import { emailValidation, regularValidation } from "../../controller/validation";
 import { signUpUserFormReducer, signUpUserErrorFormReducer } from "../../controller/users";
@@ -46,14 +47,18 @@ export default function SignUp(): ReactElement {
 		}
 	};
 
-	const signUp = (e: React.MouseEvent<HTMLElement>): void => {
+	const signUp = async (e: React.MouseEvent<HTMLElement>): Promise<void> => {
 		e.preventDefault();
-		console.log({
+		const response = await userAPI.signUp({
 			login: user.login,
 			email: user.email,
 			password: user.password,
 		});
-		navigate("/sign-in/");
+		if(response?.data.status === 200) {
+			navigate("/sign-in/");
+		} else {
+			console.log(response?.data.data);
+		}
 	};
 
 	return (

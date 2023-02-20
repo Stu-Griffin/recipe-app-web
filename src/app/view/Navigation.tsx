@@ -54,9 +54,7 @@ function Navigation(): ReactElement {
 
 	const getUserInfo = async (): Promise<void> => {
 		const response = await userApi.getUser(userId);
-		if(response.status === 200) {
-			dispatch(changeProfileValue({key: "user", value: {login: response.data.login, avatar: response.data.avatar}}));
-		}
+		if(response?.data.status === 200) dispatch(changeProfileValue({key: "user", value: {login: response?.data.data.login, avatar: response?.data.data.avatar}}));
 	};
 
 	return (

@@ -14,7 +14,7 @@
 
 .card {
 	width: 80vw;
-  height: 25rem;
+  height: 40vw;
   border-radius: 20px;
 	background-size: cover;
 	background-position: center;
@@ -23,7 +23,7 @@
 
 .linearGradient {
 	width: 80vw;
-  height: 25rem;
+  height: 40vw;
 	display: flex;
   align-items: end;
 	position: absolute;
