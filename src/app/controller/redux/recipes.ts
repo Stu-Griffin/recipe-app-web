@@ -12,7 +12,7 @@ export const recipesSlice = createSlice({
 	initialState: recipesState,
 	reducers: {
 		addSavedRecipe: (state: RecipesStateI, action): RecipesStateI => {
-			state.savedRecipes.push(action.payload.value);
+			state.savedRecipes.push(action.payload);
 			return state;
 		},
 		changeRecipesValue: (state: RecipesStateI, action): RecipesStateI => {

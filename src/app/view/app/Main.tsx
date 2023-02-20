@@ -33,8 +33,8 @@ function Main() {
 	const getRecipes = async (): Promise<void> => {
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
 		const response = await recipeAPI.getRecipes(recipeType, 1);
-		if(response?.status === 200) {
-			dispatch(changeRecipesValue({key: "recipes", value: response.data}));
+		if(response?.data.status === 200) {
+			dispatch(changeRecipesValue({key: "recipes", value: response?.data.data}));
 		}
 		setTimeout(() => {
 			dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));

@@ -15,13 +15,13 @@ class UserAPI {
 
 	async changeUser(id: string, user: FormData) {
 		try {
-			const { data } = await axios({
+			const response = await axios({
 				data: user,
 				method: "put",
 				url: `${this.url}/${id}`,
 				headers: { "Content-Type": "multipart/form-data" },
 			});
-			return data;
+			return response;
 		} catch(e) {
 			console.log(e);
 		}
@@ -46,4 +46,4 @@ class UserAPI {
 	}
 }
 
-export default new UserAPI("https://recipe-app-api-amber.vercel.app/api/users");
+export default new UserAPI("http://127.0.0.1:8000/api/users");

@@ -6,8 +6,8 @@ class RecipeAPI {
 
 	async deleteRecipe(id: string) {
 		try {
-			const { data } = await axios.delete(`${this.url}/${id}`);
-			return data;
+			const response = await axios.delete(`${this.url}/${id}`);
+			return response;
 		} catch(e) {
 			console.log(e);
 		}
@@ -15,8 +15,8 @@ class RecipeAPI {
 
 	async getRecipeBuItsId(id: string) {
 		try {
-			const { data } = await axios.get(`${this.url}/${id}`);
-			return data;
+			const response = await axios.get(`${this.url}/${id}`);
+			return response;
 		} catch (e) {
 			console.log(e);
 		}
@@ -30,7 +30,7 @@ class RecipeAPI {
 				url: `${this.url}`,
 				headers: { "Content-Type": "multipart/form-data" },
 			});
-			return response?.data.status || 404;
+			return response;
 		} catch(e) {
 			console.log(e);
 		}
@@ -38,8 +38,8 @@ class RecipeAPI {
 
 	async getRecipeByAuthorId(id: string) {
 		try {
-			const { data } = await axios.get(`${this.url}/author/${id}`);
-			return data;
+			const response = await axios.get(`${this.url}/author/${id}`);
+			return response;
 		} catch(e) {
 			console.log(e);
 		}
@@ -47,8 +47,8 @@ class RecipeAPI {
 
 	async getRecipes(type: string, page: number) {
 		try {
-			const { data } = await axios.get(`${this.url}?type=${type}&page=${page}`);
-			return data;
+			const response = await axios.get(`${this.url}?type=${type}&page=${page}`);
+			return response;
 		} catch (e) {
 			console.log(e);
 		}
@@ -56,12 +56,12 @@ class RecipeAPI {
 
 	async changeRecipesRate(id: string, rate: changeRate) {
 		try {
-			const { data } = await axios.put(`${this.url}/rating/${id}`, rate);
-			return data;
+			const response = await axios.put(`${this.url}/rating/${id}`, rate);
+			return response;
 		} catch (e) {
 			console.log(e);
 		}
 	}
 }
 
-export default new RecipeAPI("https://recipe-app-api-amber.vercel.app/api/recipes");
+export default new RecipeAPI("http://127.0.0.1:8000/api/recipes");

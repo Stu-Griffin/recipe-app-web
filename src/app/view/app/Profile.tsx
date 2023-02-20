@@ -17,6 +17,8 @@ import ImageUploading from "react-images-uploading";
 import React, { useEffect, useReducer, useState } from "react";
 
 //Functions
+import { getButtonStyle } from "../../controller/style";
+import userAPI from "../../controller/api/user";
 import recipeAPI from "../../controller/api/recepies";
 import styles from "../../style/app/profile.module.css";
 import { changeRecipesValue } from "../../controller/redux/recipes";
@@ -26,6 +28,8 @@ import { profileFormReducer, profileErrorFormReducer } from "../../controller/pr
 
 //Models
 import { profileFormState, profileErrorFormState } from "../../model/profile";
+import { changeUserProfileValue } from "../../controller/redux/profile";
+import Loader from "../reusable/Loader";
 
 const allowedImgTypes = ["jpg", "png", "jpeg"];
 
@@ -45,7 +49,6 @@ function Profile() {
 	}, [user]);
 
 	useEffect(() => {
-		console.log(userId);
 		if(userId === "") {
 			navigate("/sign-in/");
 		} else {
@@ -57,23 +60,9 @@ function Profile() {
 		setDisabledStatus(!(Object.values(userError).some((el: boolean) => el === false)));
 	}, [userError]);
 
-	const getButtonStyle = (): object => {
-		if(disabledStatus) {
-			return {
-				opacity: 0.5
-			};
-		} else {
-			return {
-				opacity: 1
-			};
-		}
-	};
-
 	const getUsersRecipes = async (): Promise<void> => {
 		const response = await recipeAPI.getRecipeByAuthorId(userId);
-		if(response?.status === 200) {
-			dispatch(changeRecipesValue({key: "usersRecipes", value: response.data}));
-		}
+		if(response?.data.status === 200) dispatch(changeRecipesValue({key: "usersRecipes", value: response?.data.data}));
 	};
 
 	const changeAvatar = (imageList: ImageListType): void => {
@@ -87,21 +76,37 @@ function Profile() {
 		}
 	};
 
-	const saveChanges = (e: React.MouseEvent<HTMLElement>): void => {
-		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
-		e.preventDefault();
+	const convertData = (): FormData => {
 		const data: FormData = new FormData();
+
 		userForm.avatar && data.append("avatar", userForm.avatar);
 		userForm.login.length > 0 && data.append("login", userForm.login);
 		userForm.email.length > 0 && data.append("email", userForm.email);
 		userForm.password.length > 0 && data.append("password", userForm.password);
+
+		return data;
+	};
+
+	const saveChanges = async (e: React.MouseEvent<HTMLElement>): Promise<void> => {
+		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
+
+		e.preventDefault();
+		const response = await userAPI.changeUser(userId, convertData());
+		if(response?.data.status === 200) {
+			userFormDispatch({type: "clear", payload: {key: "", value: ""}});
+			userErrorDispatch({type: "clear", payload: {key: "", value: true}});
+			userForm.avatar && dispatch(changeUserProfileValue({key: "avatar", value: avatar}));
+			userForm.login.length > 0 && dispatch(changeUserProfileValue({key: "login", value: userForm.login}));
+		}
+
 		setTimeout(() => {
 			dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
-		}, 500);
+		}, 100);
 	};
 
 	return (
 		<main className={styles.container}>
+			<Loader/>
 			<form className={styles.form}>
 				<div>
 					<ImageUploading
@@ -159,7 +164,7 @@ function Profile() {
 				/>
 				<button
 					onClick={saveChanges}
-					style={getButtonStyle()} 
+					style={getButtonStyle(disabledStatus)} 
 					disabled={disabledStatus}
 					className={styles.button}
 				>Save changes</button>

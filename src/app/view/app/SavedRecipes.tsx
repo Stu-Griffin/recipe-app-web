@@ -38,7 +38,7 @@ function SavedRecipes() {
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
 		const recipes = sessionStorage.getItem("saved-recipes");
 		if(recipes) {
-			dispatch(changeRecipesValue({key: "savedRecipes", value: recipes}));
+			dispatch(changeRecipesValue({key: "savedRecipes", value: JSON.parse(recipes)}));
 		}
 		setTimeout(() => {
 			dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));

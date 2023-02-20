@@ -8,6 +8,7 @@ import CreateRecipe from "./app/CreateRecipe";
 import SavedRecipes from "./app/SavedRecipes";
 
 //Icons
+import AddIcon from "../../assets/icons/add";
 import SavedIcon from "../../assets/icons/saved";
 import ProfileIcon from "../../assets/icons/profile";
 
@@ -65,11 +66,17 @@ function Navigation(): ReactElement {
 					{getInfoPart()}
 				</Link>
 				<nav className={styles.nav}>
+					{
+						(userId !== "") &&
+						<Link to="/create-recipe/">
+							<AddIcon width={30} height={30}/>
+						</Link>
+					}
+					<Link to="/saved-recipes/">
+						<SavedIcon width={30} height={30} fill="transparent"/>
+					</Link>
 					<Link to="/profile/">
 						<ProfileIcon width={30} height={30}/>
-					</Link>
-					<Link to="/saved-recipes/">
-						<SavedIcon  width={30} height={30}/>
 					</Link>
 				</nav>
 			</header>

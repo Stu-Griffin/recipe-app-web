@@ -1,4 +1,5 @@
 //Components
+import Loader from "../reusable/Loader";
 import InputArea from "../reusable/Input";
 import ListAdd from "../reusable/ListAdd";
 
@@ -17,7 +18,6 @@ import React, { ReactElement, useEffect, useReducer, useState } from "react";
 //Functions
 import recipeAPI from "../../controller/api/recepies";
 import styles from "../../style/app/create-recipe.module.css";
-import { getButtonStyle } from "../../controller/style";
 import { regularValidation } from "../../controller/validation";
 import { changeAdditionalValue } from "../../controller/redux/addtional";
 import { recipeFormReducer, recipeErrorFormReducer } from "../../controller/recipes";
@@ -40,6 +40,8 @@ function CreateRecipe() {
 	const [recipError, recipeErrorDispatch] = useReducer(recipeErrorFormReducer, recipeErrorFormState);
 
 	useEffect(() => {
+		recipeDispatch({type: "add", payload: {key: "authorId", value: userId}});
+		recipeDispatch({type: "add", payload: {key: "authorLogin", value: user.login}});
 		recipeDispatch({type: "add", payload: {key: "type", value: (recipeTypes[0]).toLowerCase()}});
 	}, []);
 
@@ -63,6 +65,10 @@ function CreateRecipe() {
 		}
 	}, [recipe.ingredients]);
 
+	const move = (): void => {
+		navigate("/");
+	};
+
 	const pickImage = (imageList: ImageListType): void => {
 		const file = imageList[0].file;
 		if(allowedImgTypes.some((el: string) => el === file?.type.split("/")[1])) {
@@ -74,23 +80,30 @@ function CreateRecipe() {
 		}
 	};
 
-	const createRecipe = (e: React.MouseEvent<HTMLElement>): void => {
-		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
-		e.preventDefault();
+	const convertData = (): FormData => {
 		const data: FormData = new FormData();
-		data.append("rate", `${recipe.rate}`);
+
 		data.append("type", recipe.type);
-		data.append("steps", JSON.parse(JSON.stringify(recipe.steps)));
 		data.append("title", recipe.title);
 		data.append("image", recipe.image);
+		data.append("rate", `${recipe.rate}`);
 		data.append("authorId", recipe.authorId);
-		data.append("ingredients", JSON.parse(JSON.stringify(recipe.ingredients)));
 		data.append("authorLogin", recipe.authorLogin);
 		data.append("description", recipe.description);
+		data.append("steps", (JSON.stringify(recipe.steps)));
+		data.append("ingredients", (JSON.stringify(recipe.ingredients)));
 
-		setTimeout(() => {
-			dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
-		}, 500);
+		return data;
+	};
+
+	const createRecipe = async (e: React.MouseEvent<HTMLElement>): Promise<void> => {
+		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
+		
+		e.preventDefault();
+		const response = await recipeAPI.createRecipe(convertData());
+		if(response?.data.status === 200) move();
+		
+		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
 	};
 
 	const recipeTypeChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
@@ -99,6 +112,7 @@ function CreateRecipe() {
 	
 	return (
 		<main className={styles.container}>
+			<Loader/>
 			<form className={styles.form}>
 				<div>
 					<ImageUploading
@@ -171,9 +185,9 @@ function CreateRecipe() {
 				/>
 				<button
 					onClick={createRecipe}
-					disabled={disabledStatus}
+					// disabled={disabledStatus}
 					className={styles.button}
-					style={getButtonStyle(disabledStatus)} 
+					// style={getButtonStyle(disabledStatus)} 
 				>Create recipe</button>
 			</form>
 		</main>
