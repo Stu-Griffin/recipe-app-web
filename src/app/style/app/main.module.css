@@ -24,3 +24,16 @@
 .type:hover {
 	background-color: #084737;
 }
+
+.button {
+	border: none;
+	margin: auto;
+	display: block;
+	color: white;
+	font-size: 20px;
+	cursor: pointer;
+	padding: 15px 20px;
+	margin-block: 1rem;
+	border-radius: 10px;
+	background-color: #129575;
+}

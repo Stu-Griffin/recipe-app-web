@@ -17,6 +17,7 @@ import React, { ReactElement, useEffect, useReducer, useState } from "react";
 
 //Functions
 import recipeAPI from "../../controller/api/recepies";
+import { getButtonStyle } from "../../controller/style";
 import styles from "../../style/app/create-recipe.module.css";
 import { regularValidation } from "../../controller/validation";
 import { changeAdditionalValue } from "../../controller/redux/addtional";
@@ -43,7 +44,7 @@ function CreateRecipe() {
 		recipeDispatch({type: "add", payload: {key: "authorId", value: userId}});
 		recipeDispatch({type: "add", payload: {key: "authorLogin", value: user.login}});
 		recipeDispatch({type: "add", payload: {key: "type", value: (recipeTypes[0]).toLowerCase()}});
-	}, []);
+	}, [user]);
 
 	useEffect(() => {
 		setDisabledStatus(!(Object.values(recipError).every((el: boolean) => el === false)));
@@ -98,7 +99,7 @@ function CreateRecipe() {
 
 	const createRecipe = async (e: React.MouseEvent<HTMLElement>): Promise<void> => {
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
-		
+
 		e.preventDefault();
 		const response = await recipeAPI.createRecipe(convertData());
 		if(response?.data.status === 200) move();
@@ -174,6 +175,9 @@ function CreateRecipe() {
 					saveEl={(value: string): void => {
 						recipeDispatch({type: "addIngredients", payload: {key: "ingredients", value: value}});
 					}}
+					removeEl={(value: number): void => {
+						recipeDispatch({type: "deleteIngredients", payload: {key: "ingredients", value: value}});
+					}}
 				/>
 				<ListAdd
 					title="Steps"
@@ -182,12 +186,15 @@ function CreateRecipe() {
 					saveEl={(value: string): void => {
 						recipeDispatch({type: "addSteps", payload: {key: "steps", value: value}});
 					}}
+					removeEl={(value: number): void => {
+						recipeDispatch({type: "deleteSteps", payload: {key: "steps", value: value}});
+					}}
 				/>
 				<button
 					onClick={createRecipe}
-					// disabled={disabledStatus}
+					disabled={disabledStatus}
 					className={styles.button}
-					// style={getButtonStyle(disabledStatus)} 
+					style={getButtonStyle(disabledStatus)} 
 				>Create recipe</button>
 			</form>
 		</main>

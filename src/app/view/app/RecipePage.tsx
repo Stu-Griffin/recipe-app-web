@@ -127,7 +127,6 @@ export default function RecipePage() {
 
 	const deleteRecipe = async (): Promise<void> => {
 		const response = await recipeAPI.deleteRecipe((recipe as RecipeI)._id);
-		console.log(response);
 		if(response?.data.status === 200) move();
 	};
 

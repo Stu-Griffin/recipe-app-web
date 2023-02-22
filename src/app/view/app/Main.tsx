@@ -4,44 +4,51 @@ import RecipesList from "../reusable/RecipeList";
 //Icons
 
 //Types
-import { RecipesStateI } from "../../types/recipes";
+import { ReactElement } from "react";
+import { RecipeI } from "../../types/recipes";
 import { AdittionalStateI } from "../../types/additional";
 import { AppDispatch, RootState } from "../../types/store";
 
 //Libraries
-import React, { ReactElement, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 //Functions
 import styles from "../../style/app/main.module.css";
 import recipeAPI from "../../controller/api/recepies";
-import { changeRecipesValue } from "../../controller/redux/recipes";
 import { changeAdditionalValue } from "../../controller/redux/addtional";
 
 //Models
 import { recipeTypes } from "../../model/recipes";
 
-function Main() {
+export default function Main(): ReactElement {
 	const dispatch: AppDispatch = useDispatch();
-	const { recipes }: RecipesStateI = useSelector((state: RootState) => state.recipes);
-	const { recipeType }: AdittionalStateI = useSelector((state: RootState) => state.additional);
+	const [currentPage, setCurrentPage] = useState<number>(1);
+	const [recipes, setRecipes] = useState<Array<RecipeI>>([]);
+	const { recipeType, loadingStatus }: AdittionalStateI = useSelector((state: RootState) => state.additional);
 
 	useEffect(() => {
 		getRecipes();
-	}, [recipeType]);
+	}, [recipeType, currentPage]);
+
+	const changeCurrentPage = (): void => {
+		setCurrentPage(currentPage+1);
+	};
 
 	const getRecipes = async (): Promise<void> => {
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
-		const response = await recipeAPI.getRecipes(recipeType, 1);
-		if(response?.data.status === 200) {
-			dispatch(changeRecipesValue({key: "recipes", value: response?.data.data}));
-		}
-		setTimeout(() => {
-			dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
-		}, 500);
+		const response = await recipeAPI.getRecipes(recipeType, currentPage);
+		if(response?.data.status === 200) setRecipes([...recipes, ...(response?.data.data as Array<RecipeI>)]);
+		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
 	};
 
-	const recipeTypeButtonStyle = (value: string) => {
+	const changeRecipesType = (type: string): void => {
+		setRecipes([]);
+		setCurrentPage(1);
+		dispatch(changeAdditionalValue({key: "recipeType", value: type}));
+	};
+
+	const recipeTypeButtonStyle = (value: string): object => {
 		if(recipeType === value.toLowerCase()) {
 			return {
 				color: "white",
@@ -65,7 +72,7 @@ function Main() {
 								key={index}
 								className={styles.type}
 								style={recipeTypeButtonStyle(el)}
-								onClick={() => dispatch(changeAdditionalValue({key: "recipeType", value: el.toLowerCase()}))}
+								onClick={() => changeRecipesType(el.toLowerCase())}
 							>{el}</button>
 						);
 					})
@@ -76,8 +83,7 @@ function Main() {
 				length={recipes.length}
 				emptyMsg="There's no recipes by this type"
 			/>
+			{(!(recipes.length%8) && recipes.length > 0 && !loadingStatus) && <button className={styles.button} onClick={changeCurrentPage}>Load more</button>}
 		</main>
 	);
 }
-
-export default Main;

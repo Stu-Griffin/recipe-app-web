@@ -46,4 +46,4 @@ class UserAPI {
 	}
 }
 
-export default new UserAPI("http://127.0.0.1:8000/api/users");
+export default new UserAPI("https://recipe-app-api-amber.vercel.app/api/users");

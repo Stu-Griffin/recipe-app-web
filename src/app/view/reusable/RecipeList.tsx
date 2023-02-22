@@ -60,6 +60,7 @@ export default function RecipesList({ data, length, emptyMsg }: PropsI) {
 				<h2 className={styles.title}>Your recipes</h2>
 				<p className={styles.ammount}>{length} results</p>
 			</div>
+			{(!loadingStatus && data.length !== 0) && getList()}
 			<Puff
 				width="80"
 				radius={1}
@@ -69,7 +70,6 @@ export default function RecipesList({ data, length, emptyMsg }: PropsI) {
 				visible={loadingStatus}
 				ariaLabel="puff-loading"
 			/>
-			{(!loadingStatus) && getList()}
 		</article>
 	);
 }

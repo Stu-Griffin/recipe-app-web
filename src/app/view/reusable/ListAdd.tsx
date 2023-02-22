@@ -2,6 +2,7 @@
 import InputArea from "../reusable/Input";
 
 //Icons
+import DeleteIcon from "../../../assets/icons/delete";
 
 //Types
 import { ReactElement, useEffect } from "react";
@@ -22,9 +23,10 @@ interface PropsI {
 	data: Array<string>;
 	placeholder: string;
 	saveEl: (value: string) => void;
+	removeEl: (value: number) => void;
 }
 
-function ListAdd({data, title, placeholder, saveEl}: PropsI): ReactElement {
+function ListAdd({data, title, placeholder, saveEl, removeEl}: PropsI): ReactElement {
 	const [value, setValue] = useState<string>("");
 	const [error, setError] = useState<boolean|null>(null);
 	const [disabledStatus, setDisabledStatus] = useState<boolean>(true);
@@ -61,11 +63,20 @@ function ListAdd({data, title, placeholder, saveEl}: PropsI): ReactElement {
 			</div>
 			<div className={styles.list}>
 				{
-					data.map((el: string): ReactElement => {
+					data.map((el: string, index: number): ReactElement => {
 						return (
 							<div className={styles.element} key={uuid()}>
 								<p className={styles.text}>{el}</p>
-								<button className={styles.delete}>delete</button>
+								<DeleteIcon
+									style={{
+										cursor: "pointer"
+									}}
+									width={22.5}
+									height={22.5}
+									onClick={(): void => {
+										removeEl(index);
+									}}
+								/>
 							</div>
 						);
 					})

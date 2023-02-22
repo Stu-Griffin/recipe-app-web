@@ -1,11 +1,12 @@
 //Components
+import Loader from "../reusable/Loader";
 import InputArea from "../reusable/Input";
 import RecipesList from "../reusable/RecipeList";
 
 //Icons
 
 //Types
-import { RecipesStateI } from "../../types/recipes";
+import { RecipeI } from "../../types/recipes";
 import { ProfileStateI } from "../../types/profile";
 import { ImageListType } from "react-images-uploading";
 import { AppDispatch, RootState } from "../../types/store";
@@ -17,19 +18,17 @@ import ImageUploading from "react-images-uploading";
 import React, { useEffect, useReducer, useState } from "react";
 
 //Functions
-import { getButtonStyle } from "../../controller/style";
 import userAPI from "../../controller/api/user";
 import recipeAPI from "../../controller/api/recepies";
 import styles from "../../style/app/profile.module.css";
-import { changeRecipesValue } from "../../controller/redux/recipes";
+import { getButtonStyle } from "../../controller/style";
+import { changeUserProfileValue } from "../../controller/redux/profile";
 import { changeAdditionalValue } from "../../controller/redux/addtional";
 import { regularValidation, emailValidation } from "../../controller/validation";
 import { profileFormReducer, profileErrorFormReducer } from "../../controller/profile";
 
 //Models
 import { profileFormState, profileErrorFormState } from "../../model/profile";
-import { changeUserProfileValue } from "../../controller/redux/profile";
-import Loader from "../reusable/Loader";
 
 const allowedImgTypes = ["jpg", "png", "jpeg"];
 
@@ -38,10 +37,10 @@ function Profile() {
 	const navigate = useNavigate();
 	const dispatch: AppDispatch = useDispatch();
 	const [avatar, setAvatar] = useState<string>("");
+	const [recipes, setRecipes] = useState<Array<RecipeI>>([]);
 	const [disabledStatus, setDisabledStatus] = useState<boolean>(true);
 	const [userForm, userFormDispatch] = useReducer(profileFormReducer, profileFormState);
 	const { userId, user }: ProfileStateI = useSelector((state: RootState) => state.profile);
-	const { usersRecipes }: RecipesStateI = useSelector((state: RootState) => state.recipes);
 	const [userError, userErrorDispatch] = useReducer(profileErrorFormReducer, profileErrorFormState);
 
 	useEffect(() => {
@@ -49,20 +48,27 @@ function Profile() {
 	}, [user]);
 
 	useEffect(() => {
-		if(userId === "") {
-			navigate("/sign-in/");
-		} else {
-			getUsersRecipes();
-		}
+		(userId === "") ? navigate("/sign-in/") : getUsersRecipes();
 	}, [userId]);
 
 	useEffect(() => {
 		setDisabledStatus(!(Object.values(userError).some((el: boolean) => el === false)));
 	}, [userError]);
 
+	const convertData = (): FormData => {
+		const data: FormData = new FormData();
+		userForm.avatar && data.append("avatar", userForm.avatar);
+		userForm.login.length > 0 && data.append("login", userForm.login);
+		userForm.email.length > 0 && data.append("email", userForm.email);
+		userForm.password.length > 0 && data.append("password", userForm.password);
+		return data;
+	};
+
 	const getUsersRecipes = async (): Promise<void> => {
+		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
 		const response = await recipeAPI.getRecipeByAuthorId(userId);
-		if(response?.data.status === 200) dispatch(changeRecipesValue({key: "usersRecipes", value: response?.data.data}));
+		if(response?.data.status === 200) setRecipes(response?.data.data);
+		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
 	};
 
 	const changeAvatar = (imageList: ImageListType): void => {
@@ -76,20 +82,8 @@ function Profile() {
 		}
 	};
 
-	const convertData = (): FormData => {
-		const data: FormData = new FormData();
-
-		userForm.avatar && data.append("avatar", userForm.avatar);
-		userForm.login.length > 0 && data.append("login", userForm.login);
-		userForm.email.length > 0 && data.append("email", userForm.email);
-		userForm.password.length > 0 && data.append("password", userForm.password);
-
-		return data;
-	};
-
 	const saveChanges = async (e: React.MouseEvent<HTMLElement>): Promise<void> => {
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
-
 		e.preventDefault();
 		const response = await userAPI.changeUser(userId, convertData());
 		if(response?.data.status === 200) {
@@ -98,12 +92,9 @@ function Profile() {
 			userForm.avatar && dispatch(changeUserProfileValue({key: "avatar", value: avatar}));
 			userForm.login.length > 0 && dispatch(changeUserProfileValue({key: "login", value: userForm.login}));
 		}
-
-		setTimeout(() => {
-			dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
-		}, 100);
+		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
 	};
-
+	
 	return (
 		<main className={styles.container}>
 			<Loader/>
@@ -117,18 +108,22 @@ function Profile() {
 						onChange={changeAvatar}
 					>
 						{({ onImageUpload }) => (
-							<img 
-								src={avatar}
-								alt="user avatar"
-								onClick={onImageUpload}
-								style={{
-									width: "122px",
-									height: "122px",
-									cursor: "pointer",
-									borderRadius: "100px",
-									border: "1px solid black",
-								}}
-							/>
+							(avatar === "")
+								?
+								<Loader/>
+								:
+								<img 
+									src={avatar}
+									alt="user avatar"
+									onClick={onImageUpload}
+									style={{
+										width: "122px",
+										height: "122px",
+										cursor: "pointer",
+										borderRadius: "100px",
+										border: "1px solid black",
+									}}
+								/>
 						)}
 					</ImageUploading>
 				</div>
@@ -170,8 +165,8 @@ function Profile() {
 				>Save changes</button>
 			</form>
 			<RecipesList
-				data={usersRecipes}
-				length={usersRecipes.length}
+				data={recipes}
+				length={recipes.length}
 				emptyMsg="You didn't create any recipes"
 			/>
 		</main>

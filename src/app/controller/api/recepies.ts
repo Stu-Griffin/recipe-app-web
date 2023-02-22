@@ -64,4 +64,4 @@ class RecipeAPI {
 	}
 }
 
-export default new RecipeAPI("http://127.0.0.1:8000/api/recipes");
+export default new RecipeAPI("https://recipe-app-api-amber.vercel.app/api/recipes");
