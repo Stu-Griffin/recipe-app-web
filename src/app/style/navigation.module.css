@@ -1,14 +1,19 @@
 .header {
 	display: flex;
-	padding: 15px 30px;
 	align-items: center;
+	padding: 1rem 1.5rem;
 	background-color: #D9D9D9;
 	justify-content: space-between;
 }
 
-.nav {
-	width: 7rem;
-	display: flex;
+.navigation {
+	right: 0px;
+  width: 5rem;
+	position: absolute;
 	align-items: center;
+  padding-block: 0.5rem;
+	background-color: #D9D9D9;
 	justify-content: space-between;
+	flex-direction: column-reverse;
+  border-bottom-left-radius: 15px;
 }

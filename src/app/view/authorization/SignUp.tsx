@@ -69,9 +69,9 @@ export default function SignUp(): ReactElement {
 					value={user.login}
 					error={userError.login}
 					placeholder={"Enter Login"}
-					onChangeFunc={(e: React.ChangeEvent<HTMLInputElement>): void => {
-						userDispatch({type: "add", payload: {key: "login", value: e.target.value}});
-						userErrorDispatch({type: "add", payload: {key: "login", value: regularValidation(e.target.value)}});
+					onChangeFunc={(e: string): void => {
+						userDispatch({type: "add", payload: {key: "login", value: e}});
+						userErrorDispatch({type: "add", payload: {key: "login", value: regularValidation(e)}});
 					}}
 				/>
 				<InputArea
@@ -79,9 +79,9 @@ export default function SignUp(): ReactElement {
 					value={user.email}
 					error={userError.email}
 					placeholder={"Enter Email"}
-					onChangeFunc={(e: React.ChangeEvent<HTMLInputElement>): void => {
-						userDispatch({type: "add", payload: {key: "email", value: e.target.value}});
-						userErrorDispatch({type: "add", payload: {key: "email", value: emailValidation(e.target.value)}});
+					onChangeFunc={(e: string): void => {
+						userDispatch({type: "add", payload: {key: "email", value: e}});
+						userErrorDispatch({type: "add", payload: {key: "email", value: emailValidation(e)}});
 					}}
 				/>
 				<InputArea
@@ -89,10 +89,10 @@ export default function SignUp(): ReactElement {
 					value={user.password}
 					error={userError.password}
 					placeholder={"Enter Password"}
-					onChangeFunc={(e: React.ChangeEvent<HTMLInputElement>): void => {
-						userDispatch({type: "add", payload: {key: "password", value: e.target.value}});
-						userErrorDispatch({type: "add", payload: {key: "password", value: regularValidation(e.target.value)}});
-						userErrorDispatch({type: "add", payload: {key: "confirmPassword", value: !(e.target.value === user.confirmPassword)}});
+					onChangeFunc={(e: string): void => {
+						userDispatch({type: "add", payload: {key: "password", value: e}});
+						userErrorDispatch({type: "add", payload: {key: "password", value: regularValidation(e)}});
+						userErrorDispatch({type: "add", payload: {key: "confirmPassword", value: !(e === user.confirmPassword)}});
 					}}
 				/>
 				<InputArea
@@ -100,9 +100,9 @@ export default function SignUp(): ReactElement {
 					value={user.confirmPassword}
 					error={userError.confirmPassword}
 					placeholder={"Enter Confirm password"}
-					onChangeFunc={(e: React.ChangeEvent<HTMLInputElement>): void => {
-						userDispatch({type: "add", payload: {key: "confirmPassword", value: e.target.value}});
-						userErrorDispatch({type: "add", payload: {key: "confirmPassword", value: regularValidation(e.target.value) || !(e.target.value == user.password)}});
+					onChangeFunc={(e: string): void => {
+						userDispatch({type: "add", payload: {key: "confirmPassword", value: e}});
+						userErrorDispatch({type: "add", payload: {key: "confirmPassword", value: regularValidation(e) || !(e == user.password)}});
 					}}
 				/>
 				<div className={styles.agreement}>

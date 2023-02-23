@@ -65,9 +65,9 @@ export default function SignIn(): ReactElement {
 					value={user.email}
 					error={userError.email}
 					placeholder={"Enter Email"}
-					onChangeFunc={(e: React.ChangeEvent<HTMLInputElement>): void => {
-						userDispatch({type: "add", payload: {key: "email", value: e.target.value}});
-						userErrorDispatch({type: "add", payload: {key: "email", value: emailValidation(e.target.value)}});
+					onChangeFunc={(e: string): void => {
+						userDispatch({type: "add", payload: {key: "email", value: e}});
+						userErrorDispatch({type: "add", payload: {key: "email", value: emailValidation(e)}});
 					}}
 				/>
 				<InputArea
@@ -75,9 +75,9 @@ export default function SignIn(): ReactElement {
 					value={user.password}
 					error={userError.password}
 					placeholder={"Enter Password"}
-					onChangeFunc={(e: React.ChangeEvent<HTMLInputElement>): void => {
-						userDispatch({type: "add", payload: {key: "password", value: e.target.value}});
-						userErrorDispatch({type: "add", payload: {key: "password", value: regularValidation(e.target.value)}});
+					onChangeFunc={(e: string): void => {
+						userDispatch({type: "add", payload: {key: "password", value: e}});
+						userErrorDispatch({type: "add", payload: {key: "password", value: regularValidation(e)}});
 					}}
 				/>
 				<button

@@ -114,48 +114,47 @@ function CreateRecipe() {
 		<main className={styles.container}>
 			<Loader/>
 			<form className={styles.form}>
-				<div>
-					<ImageUploading
-						multiple
-						value={[]}
-						dataURLKey="data_url"
-						maxNumber={maxNumber}
-						onChange={pickImage}
-					>
-						{({ onImageUpload }) => (
-							(image === "") 
-								?
-								<div className={styles.image} onClick={onImageUpload}>
-									<p className={styles.imageText}>Pick recipe image</p>
-								</div>
-								:
-								<img 
-									src={image}
-									alt="user avatar"
-									onClick={onImageUpload}
-									className={styles.image}
-								/>
-						)}
-					</ImageUploading>
-				</div>
+				<ImageUploading
+					multiple
+					value={[]}
+					onChange={pickImage}
+					dataURLKey="data_url"
+					maxNumber={maxNumber}
+				>
+					{({ onImageUpload }) => (
+						(image === "") 
+							?
+							<div className={styles.image} onClick={onImageUpload}>
+								<p className={styles.imageText}>Pick recipe image</p>
+							</div>
+							:
+							<img 
+								src={image}
+								alt="user avatar"
+								onClick={onImageUpload}
+								className={styles.image}
+							/>
+					)}
+				</ImageUploading>
 				<InputArea
 					error={false}
 					title={"Title"}
 					value={recipe.title}
 					placeholder={"Enter Title"}
-					onChangeFunc={(e: React.ChangeEvent<HTMLInputElement>): void => {
-						recipeDispatch({type: "add", payload: {key: "title", value: e.target.value}});
-						recipeErrorDispatch({type: "add", payload: {key: "title", value: regularValidation(e.target.value)}});
+					onChangeFunc={(e: string): void => {
+						recipeDispatch({type: "add", payload: {key: "title", value: e}});
+						recipeErrorDispatch({type: "add", payload: {key: "title", value: regularValidation(e)}});
 					}}
 				/>
 				<InputArea
 					error={false}
+					multiple={true}
 					title={"Description"}
 					value={recipe.description}
 					placeholder={"Enter Description"}
-					onChangeFunc={(e: React.ChangeEvent<HTMLInputElement>): void => {
-						recipeDispatch({type: "add", payload: {key: "description", value: e.target.value}});
-						recipeErrorDispatch({type: "add", payload: {key: "description", value: regularValidation(e.target.value)}});
+					onChangeFunc={(e: string): void => {
+						recipeDispatch({type: "add", payload: {key: "description", value: e}});
+						recipeErrorDispatch({type: "add", payload: {key: "description", value: regularValidation(e)}});
 					}}
 				/>
 				<select className={styles.checkbox} name="select" onChange={recipeTypeChange}>

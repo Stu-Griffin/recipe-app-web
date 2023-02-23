@@ -15,13 +15,15 @@ import styles from "../../style/reusable/input.module.css";
 interface PropsI {
 	title: string;
 	value: string;
+	style?: object;
+	multiple?: boolean;
 	error: boolean|null;
 	placeholder: string;
-	onChangeFunc: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	onChangeFunc: (e: string) => void;
 }
 
 
-export default function InputArea({ title, value, error, placeholder, onChangeFunc }: PropsI) {
+export default function InputArea({ style, title, value, error, placeholder, onChangeFunc, multiple }: PropsI) {
 	const getTitleStyle = (): object => {
 		if(error && error !== null) {
 			return {
@@ -51,9 +53,15 @@ export default function InputArea({ title, value, error, placeholder, onChangeFu
 	};
 
 	return (
-		<div className={styles.container}>
+		<div className={styles.container} style={style}>
 			<h3 style={getTitleStyle()}>{title}</h3>
-			<input className={styles.input} style={getInputStyle()} value={value} placeholder={placeholder} onChange={onChangeFunc}/>
+			{
+				(multiple)
+					?
+					<textarea style={getInputStyle()} className={styles.input} value={value} placeholder={placeholder} onChange={(e) => onChangeFunc(e.target.value)}></textarea>
+					:
+					<input className={styles.input} style={getInputStyle()} value={value} placeholder={placeholder} onChange={(e) => onChangeFunc(e.target.value)}/>
+			}
 		</div>
 	);
 }

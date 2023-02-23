@@ -50,13 +50,16 @@ function ListAdd({data, title, placeholder, saveEl, removeEl, moveEl}: PropsI): 
 		<div className={styles.container}>
 			<div className={styles.inputArea}>
 				<InputArea
+					style={{
+						width: "64%"
+					}}
 					value={value}
 					error={false}
 					title={title}
 					placeholder={placeholder}
-					onChangeFunc={(e: React.ChangeEvent<HTMLInputElement>): void => {
-						setValue(e.target.value);
-						setError(regularValidation(e.target.value));
+					onChangeFunc={(e: string): void => {
+						setValue(e);
+						setError(regularValidation(e));
 					}}
 				/>
 				<button

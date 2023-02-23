@@ -3,11 +3,11 @@
 }
 
 .input {
-	/* width: 94%; */
-	width: 91%;
 	padding: 10px;
 	margin-top: 5px;
 	font-size: 18px;
+	resize: vertical;
 	border-radius: 10px;
 	border: 2px solid #969696;
+	width: -webkit-fill-available;
 }

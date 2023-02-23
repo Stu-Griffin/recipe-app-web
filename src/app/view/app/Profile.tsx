@@ -132,9 +132,9 @@ function Profile() {
 					title={"Login"}
 					value={userForm.login}
 					placeholder={"Enter Login"}
-					onChangeFunc={(e: React.ChangeEvent<HTMLInputElement>): void => {
-						userFormDispatch({type: "add", payload: {key: "login", value: e.target.value}});
-						userErrorDispatch({type: "add", payload: {key: "login", value: regularValidation(e.target.value)}});
+					onChangeFunc={(e: string): void => {
+						userFormDispatch({type: "add", payload: {key: "login", value: e}});
+						userErrorDispatch({type: "add", payload: {key: "login", value: regularValidation(e)}});
 					}}
 				/>
 				<InputArea
@@ -142,9 +142,9 @@ function Profile() {
 					title={"Email"}
 					value={userForm.email}
 					placeholder={"Enter Email"}
-					onChangeFunc={(e: React.ChangeEvent<HTMLInputElement>): void => {
-						userFormDispatch({type: "add", payload: {key: "email", value: e.target.value}});
-						userErrorDispatch({type: "add", payload: {key: "email", value: emailValidation(e.target.value)}});
+					onChangeFunc={(e: string): void => {
+						userFormDispatch({type: "add", payload: {key: "email", value: e}});
+						userErrorDispatch({type: "add", payload: {key: "email", value: emailValidation(e)}});
 					}}
 				/>
 				<InputArea
@@ -152,9 +152,9 @@ function Profile() {
 					title={"Password"}
 					value={userForm.password}
 					placeholder={"Enter Password"}
-					onChangeFunc={(e: React.ChangeEvent<HTMLInputElement>): void => {
-						userFormDispatch({type: "add", payload: {key: "password", value: e.target.value}});
-						userErrorDispatch({type: "add", payload: {key: "password", value: regularValidation(e.target.value)}});
+					onChangeFunc={(e: string): void => {
+						userFormDispatch({type: "add", payload: {key: "password", value: e}});
+						userErrorDispatch({type: "add", payload: {key: "password", value: regularValidation(e)}});
 					}}
 				/>
 				<button
