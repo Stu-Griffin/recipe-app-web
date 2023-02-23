@@ -35,9 +35,8 @@ function CreateRecipe() {
 	const dispatch: AppDispatch = useDispatch();
 	const [image, setImage] = useState<string>("");
 	const [disabledStatus, setDisabledStatus] = useState<boolean>(true);
-	const { userId, user }: ProfileStateI = useSelector((state: RootState) => state.profile);
-
 	const [recipe, recipeDispatch] = useReducer(recipeFormReducer, recipeFormState);
+	const { userId, user }: ProfileStateI = useSelector((state: RootState) => state.profile);
 	const [recipError, recipeErrorDispatch] = useReducer(recipeErrorFormReducer, recipeErrorFormState);
 
 	useEffect(() => {
@@ -178,6 +177,9 @@ function CreateRecipe() {
 					removeEl={(value: number): void => {
 						recipeDispatch({type: "deleteIngredients", payload: {key: "ingredients", value: value}});
 					}}
+					moveEl={(what: number, where: number, el: string): void => {
+						recipeDispatch({type: "moveIngredient", payload: {key: "ingredients", value: {what, where, el}}});
+					}}
 				/>
 				<ListAdd
 					title="Steps"
@@ -188,6 +190,9 @@ function CreateRecipe() {
 					}}
 					removeEl={(value: number): void => {
 						recipeDispatch({type: "deleteSteps", payload: {key: "steps", value: value}});
+					}}
+					moveEl={(what: number, where: number, el: string): void => {
+						recipeDispatch({type: "moveSteps", payload: {key: "steps", value: {what, where, el}}});
 					}}
 				/>
 				<button
