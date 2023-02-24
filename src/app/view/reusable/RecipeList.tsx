@@ -5,7 +5,7 @@ import RecipeCard from "../reusable/RecipeCard";
 
 //Types
 import { RootState } from "../../types/store";
-import { AdittionalStateI } from "../../types/additional";
+import { AdditionalStateI } from "../../types/additional";
 import { RecipeI, SavedRecipeI } from "../../types/recipes";
 
 //Libraries
@@ -25,7 +25,7 @@ interface PropsI {
 }
 
 export default function RecipesList({ data, length, emptyMsg }: PropsI) {
-	const { loadingStatus }: AdittionalStateI = useSelector((state: RootState) => state.additional);
+	const { loadingStatus }: AdditionalStateI = useSelector((state: RootState) => state.additional);
 
 	const getList = (): ReactElement => {
 		if(length === 0) {

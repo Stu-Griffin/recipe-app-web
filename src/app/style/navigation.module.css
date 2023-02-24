@@ -17,3 +17,7 @@
 	flex-direction: column-reverse;
   border-bottom-left-radius: 15px;
 }
+
+.navigation > a {
+	margin-block: 0.5rem;
+}

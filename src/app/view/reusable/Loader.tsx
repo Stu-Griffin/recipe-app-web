@@ -4,7 +4,7 @@
 
 //Types
 import { RootState } from "../../types/store";
-import { AdittionalStateI } from "../../types/additional";
+import { AdditionalStateI } from "../../types/additional";
 
 //Libraries
 
@@ -33,7 +33,7 @@ const customStyles = {
 Modal.setAppElement("#root");
 
 export default function Loader() {
-	const { loadingStatus }: AdittionalStateI = useSelector((state: RootState) => state.additional);
+	const { loadingStatus }: AdditionalStateI = useSelector((state: RootState) => state.additional);
 
 	return (
 		<Modal

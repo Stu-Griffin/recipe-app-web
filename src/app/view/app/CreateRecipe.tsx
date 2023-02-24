@@ -16,11 +16,11 @@ import { useDispatch, useSelector } from "react-redux";
 import React, { ReactElement, useEffect, useReducer, useState } from "react";
 
 //Functions
-import recipeAPI from "../../controller/api/recepies";
+import recipeAPI from "../../controller/api/recipes";
 import { getButtonStyle } from "../../controller/style";
 import styles from "../../style/app/create-recipe.module.css";
 import { regularValidation } from "../../controller/validation";
-import { changeAdditionalValue } from "../../controller/redux/addtional";
+import { changeAdditionalValue } from "../../controller/redux/additional";
 import { recipeFormReducer, recipeErrorFormReducer } from "../../controller/recipes";
 
 //Models
@@ -29,7 +29,7 @@ import { recipeFormState, recipeErrorFormState } from "../../model/recipes";
 
 const allowedImgTypes = ["jpg", "png", "jpeg"];
 
-function CreateRecipe() {
+export default function CreateRecipe() {
 	const maxNumber = 69;
 	const navigate = useNavigate();
 	const dispatch: AppDispatch = useDispatch();
@@ -204,5 +204,3 @@ function CreateRecipe() {
 		</main>
 	);
 }
-
-export default CreateRecipe;

@@ -6,8 +6,8 @@ const profileState: ProfileStateI = {
 		login: "",
 		avatar: "",
 	},
-	// userId: "",
-	userId: "63f241c7ed638a95b83f7575",
+	userId: "",
+	// userId: "63f241c7ed638a95b83f7575",
 };
 
 export const profileSlice = createSlice({

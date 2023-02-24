@@ -27,7 +27,7 @@ interface PropsI {
 	moveEl: (what: number, where: number, el: string) => void;
 }
 
-function ListAdd({data, title, placeholder, saveEl, removeEl, moveEl}: PropsI): ReactElement {
+export default function ListAdd({data, title, placeholder, saveEl, removeEl, moveEl}: PropsI): ReactElement {
 	const [value, setValue] = useState<string>("");
 	const [error, setError] = useState<boolean|null>(null);
 	const [disabledStatus, setDisabledStatus] = useState<boolean>(true);
@@ -108,5 +108,3 @@ function ListAdd({data, title, placeholder, saveEl, removeEl, moveEl}: PropsI): 
 		</div>
 	);
 }
-
-export default ListAdd;

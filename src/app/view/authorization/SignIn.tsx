@@ -1,4 +1,5 @@
 //Components
+import Loader from "../reusable/Loader";
 import InputArea from "../reusable/Input";
 
 //Icons
@@ -14,6 +15,7 @@ import React, { useReducer, useState } from "react";
 //Functions
 import userAPI from "../../controller/api/user";
 import styles from "../../style/authorization/sign-in.module.css";
+import { changeAdditionalValue } from "../../controller/redux/additional";
 import { emailValidation, regularValidation } from "../../controller/validation";
 import { signInUserFormReducer, signInUserErrorFormReducer } from "../../controller/users";
 
@@ -26,6 +28,7 @@ import { changeProfileValue } from "../../controller/redux/profile";
 export default function SignIn(): ReactElement {
 	const navigate = useNavigate();
 	const dispatch: AppDispatch = useDispatch();
+	const [checkedStatus, setCheckedStatus] = useState<boolean>(false);
 	const [disabledStatus, setDisabledStatus] = useState<boolean>(true);
 	const [user, userDispatch] = useReducer(signInUserFormReducer, signInUserFormState);
 	const [userError, userErrorDispatch] = useReducer(signInUserErrorFormReducer, signInUserErrorFormState);
@@ -33,6 +36,10 @@ export default function SignIn(): ReactElement {
 	useEffect(() => {
 		setDisabledStatus(!(Object.values(userError).every((el: boolean) => el === false)));
 	}, [userError]);
+
+	const checkBoxClick = (): void => {
+		setCheckedStatus((state: boolean) => !state);
+	};
 
 	const getButtonStyle = (): object => {
 		if(disabledStatus) {
@@ -48,17 +55,21 @@ export default function SignIn(): ReactElement {
 
 	const signIn = async (e: React.MouseEvent<HTMLElement>): Promise<void> => {
 		e.preventDefault();
+		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
 		const response = await userAPI.signIn(user);
 		if(response?.data.status === 200) {
 			dispatch(changeProfileValue({key: "userId", value: response.data.data}));
+			(checkedStatus) && localStorage.setItem("user", response.data.data);
 			navigate("/");
 		} else {
 			console.log(response?.data.data);
 		}
+		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
 	};
 
 	return (
 		<main className={styles.container}>
+			<Loader/>
 			<form className={styles.form}>
 				<InputArea
 					title={"Email"}
@@ -71,6 +82,7 @@ export default function SignIn(): ReactElement {
 					}}
 				/>
 				<InputArea
+					type={"password"}
 					title={"Password"}
 					value={user.password}
 					error={userError.password}
@@ -80,6 +92,20 @@ export default function SignIn(): ReactElement {
 						userErrorDispatch({type: "add", payload: {key: "password", value: regularValidation(e)}});
 					}}
 				/>
+				<div className={styles.rememberMe}>
+					<input 
+						id="scales" 
+						name="scales" 
+						type="checkbox" 
+						checked={checkedStatus}
+						onChange={checkBoxClick}
+						className={styles.checkbox}
+					/>
+					<label 
+						htmlFor="scales" 
+						className={styles.checkboxText}
+					>Remember me</label>
+				</div>
 				<button
 					onClick={signIn}
 					style={getButtonStyle()} 

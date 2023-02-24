@@ -1,4 +1,4 @@
-export interface AdittionalStateI {
+export interface AdditionalStateI {
 	rate: string;
 	recipeType: string;
 	loadingStatus: boolean;

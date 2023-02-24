@@ -6,7 +6,7 @@ import RecipesList from "../reusable/RecipeList";
 //Types
 import { ReactElement } from "react";
 import { RecipeI } from "../../types/recipes";
-import { AdittionalStateI } from "../../types/additional";
+import { AdditionalStateI } from "../../types/additional";
 import { AppDispatch, RootState } from "../../types/store";
 
 //Libraries
@@ -15,8 +15,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 //Functions
 import styles from "../../style/app/main.module.css";
-import recipeAPI from "../../controller/api/recepies";
-import { changeAdditionalValue } from "../../controller/redux/addtional";
+import recipeAPI from "../../controller/api/recipes";
+import { changeAdditionalValue } from "../../controller/redux/additional";
 
 //Models
 import { recipeTypes } from "../../model/recipes";
@@ -25,7 +25,7 @@ export default function Main(): ReactElement {
 	const dispatch: AppDispatch = useDispatch();
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [recipes, setRecipes] = useState<Array<RecipeI>>([]);
-	const { recipeType, loadingStatus }: AdittionalStateI = useSelector((state: RootState) => state.additional);
+	const { recipeType, loadingStatus }: AdditionalStateI = useSelector((state: RootState) => state.additional);
 
 	useEffect(() => {
 		getRecipes();
@@ -38,14 +38,16 @@ export default function Main(): ReactElement {
 	const getRecipes = async (): Promise<void> => {
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
 		const response = await recipeAPI.getRecipes(recipeType, currentPage);
-		if(response?.data.status === 200) setRecipes([...recipes, ...(response?.data.data as Array<RecipeI>)]);
-		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
+		if(response?.data.status === 200) {
+			setRecipes([...recipes, ...(response?.data.data as Array<RecipeI>)]);
+			dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
+		}
 	};
 
-	const changeRecipesType = (type: string): void => {
+	const changeRecipesType = async (type: string): Promise<void> => {
 		setRecipes([]);
 		setCurrentPage(1);
-		dispatch(changeAdditionalValue({key: "recipeType", value: type}));
+		dispatch(changeAdditionalValue({key: "recipeType", value: type}));		
 	};
 
 	const recipeTypeButtonStyle = (value: string): object => {

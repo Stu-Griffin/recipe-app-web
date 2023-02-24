@@ -4,6 +4,7 @@ import InputArea from "../reusable/Input";
 import RecipesList from "../reusable/RecipeList";
 
 //Icons
+import ExitIcon from "../../../assets/icons/exit";
 
 //Types
 import { RecipeI } from "../../types/recipes";
@@ -19,11 +20,12 @@ import React, { useEffect, useReducer, useState } from "react";
 
 //Functions
 import userAPI from "../../controller/api/user";
-import recipeAPI from "../../controller/api/recepies";
+import recipeAPI from "../../controller/api/recipes";
 import styles from "../../style/app/profile.module.css";
 import { getButtonStyle } from "../../controller/style";
+import { changeProfileValue } from "../../controller/redux/profile";
 import { changeUserProfileValue } from "../../controller/redux/profile";
-import { changeAdditionalValue } from "../../controller/redux/addtional";
+import { changeAdditionalValue } from "../../controller/redux/additional";
 import { regularValidation, emailValidation } from "../../controller/validation";
 import { profileFormReducer, profileErrorFormReducer } from "../../controller/profile";
 
@@ -32,7 +34,7 @@ import { profileFormState, profileErrorFormState } from "../../model/profile";
 
 const allowedImgTypes = ["jpg", "png", "jpeg"];
 
-function Profile() {
+export default function Profile() {
 	const maxNumber = 69;
 	const navigate = useNavigate();
 	const dispatch: AppDispatch = useDispatch();
@@ -48,12 +50,26 @@ function Profile() {
 	}, [user]);
 
 	useEffect(() => {
-		(userId === "") ? navigate("/sign-in/") : getUsersRecipes();
+		if(userId === "") {
+			const user = localStorage.getItem("user");
+			if(user) {
+				dispatch(changeProfileValue({key: "userId", value: user}));
+			} else {
+				navigate("/sign-in/");
+			}
+		} else {
+			getUsersRecipes();
+		}
 	}, [userId]);
 
 	useEffect(() => {
 		setDisabledStatus(!(Object.values(userError).some((el: boolean) => el === false)));
 	}, [userError]);
+
+	const exit = (): void => {
+		navigate("/sign-in/");
+		localStorage.removeItem("user");
+	};
 
 	const convertData = (): FormData => {
 		const data: FormData = new FormData();
@@ -98,6 +114,7 @@ function Profile() {
 	return (
 		<main className={styles.container}>
 			<Loader/>
+			<ExitIcon className={styles.exitIcon} width={40} height={40} onClick={exit}/>
 			<form className={styles.form}>
 				<div>
 					<ImageUploading
@@ -172,5 +189,3 @@ function Profile() {
 		</main>
 	);
 }
-
-export default Profile;

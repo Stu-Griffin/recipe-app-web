@@ -2,7 +2,7 @@ import axios from "axios";
 import { changeRate } from "../../types/recipes";
 
 class RecipeAPI {
-	constructor(protected url: string) {}
+	constructor(protected url: string, private cancelToken: any) {}
 
 	async deleteRecipe(id: string) {
 		try {
@@ -46,8 +46,10 @@ class RecipeAPI {
 	}
 
 	async getRecipes(type: string, page: number) {
+		if (typeof this.cancelToken !== typeof undefined) this.cancelToken.cancel("Operation canceled due to new request.");
+		this.cancelToken = axios.CancelToken.source();
 		try {
-			const response = await axios.get(`${this.url}?type=${type}&page=${page}`);
+			const response = await axios.get(`${this.url}?type=${type}&page=${page}`, { cancelToken: this.cancelToken.token });
 			return response;
 		} catch (e) {
 			console.log(e);
@@ -64,4 +66,4 @@ class RecipeAPI {
 	}
 }
 
-export default new RecipeAPI("https://recipe-app-api-amber.vercel.app/api/recipes");
+export default new RecipeAPI("https://recipe-app-api-amber.vercel.app/api/recipes", undefined);

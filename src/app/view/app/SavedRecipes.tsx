@@ -15,18 +15,28 @@ import { useDispatch, useSelector } from "react-redux";
 
 //Functions
 import styles from "../../style/app/saved-recipes.module.css";
-import { changeAdditionalValue } from "../../controller/redux/addtional";
+import { changeProfileValue } from "../../controller/redux/profile";
+import { changeAdditionalValue } from "../../controller/redux/additional";
 
 //Models
 
 export default function SavedRecipes(): ReactElement {
 	const navigate = useNavigate();
 	const dispatch: AppDispatch = useDispatch();
-	const { userId }: ProfileStateI = useSelector((state: RootState) => state.profile);
 	const [recipes, setRecipes] = useState<Array<SavedRecipeI>>([]);
+	const { userId }: ProfileStateI = useSelector((state: RootState) => state.profile);
 
 	useEffect(() => {
-		(userId === "") ? navigate("/sign-in/") : getSavedRecipes();
+		if(userId === "") {
+			const user = localStorage.getItem("user");
+			if(user) {
+				dispatch(changeProfileValue({key: "userId", value: user}));
+			} else {
+				navigate("/sign-in/");
+			}
+		} else {
+			getSavedRecipes();
+		}
 	}, [userId]);
 
 	const getSavedRecipes = (): void => {

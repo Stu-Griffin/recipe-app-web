@@ -6,9 +6,9 @@ import SavedIcon from "../../../assets/icons/saved";
 import DeleteIcon from "../../../assets/icons/delete";
 
 //Types
-import { RecipeI, RecipesStateI, SavedRecipeI } from "../../types/recipes";
-import { AppDispatch, RootState } from "../../types/store";
 import { ProfileStateI } from "../../types/profile";
+import { AppDispatch, RootState } from "../../types/store";
+import { RecipeI, RecipesStateI, SavedRecipeI } from "../../types/recipes";
 
 //Libraries
 import Modal from "react-modal";
@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import React, { ReactElement, useEffect, useState } from "react";
 
 //Functions
-import recipeAPI from "../../controller/api/recepies";
+import recipeAPI from "../../controller/api/recipes";
 import styles from "../../style/app/recipe-page.module.css";
 import { removeSavedRecipe, addSavedRecipe } from "../../controller/redux/recipes";
 
@@ -164,7 +164,7 @@ export default function RecipePage() {
 						<div className={styles.linearGradient}>
 							<label 
 								className={styles.rate}
-								onClick={() => toggle()}
+								onClick={() => (userId !== "") && toggle()}
 							>
 								<RateBox
 									rate={recipe.rate}

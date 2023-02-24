@@ -16,6 +16,7 @@ interface PropsI {
 	title: string;
 	value: string;
 	style?: object;
+	type ?: string;
 	multiple?: boolean;
 	error: boolean|null;
 	placeholder: string;
@@ -23,7 +24,7 @@ interface PropsI {
 }
 
 
-export default function InputArea({ style, title, value, error, placeholder, onChangeFunc, multiple }: PropsI) {
+export default function InputArea({ style, title, type, value, error, placeholder, onChangeFunc, multiple }: PropsI) {
 	const getTitleStyle = (): object => {
 		if(error && error !== null) {
 			return {
@@ -60,7 +61,7 @@ export default function InputArea({ style, title, value, error, placeholder, onC
 					?
 					<textarea style={getInputStyle()} className={styles.input} value={value} placeholder={placeholder} onChange={(e) => onChangeFunc(e.target.value)}></textarea>
 					:
-					<input className={styles.input} style={getInputStyle()} value={value} placeholder={placeholder} onChange={(e) => onChangeFunc(e.target.value)}/>
+					<input type={type} className={styles.input} style={getInputStyle()} value={value} placeholder={placeholder} onChange={(e) => onChangeFunc(e.target.value)}/>
 			}
 		</div>
 	);

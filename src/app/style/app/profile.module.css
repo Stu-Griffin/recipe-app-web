@@ -4,6 +4,13 @@
 	flex-direction: column;
 }
 
+.exitIcon {
+	top: 7rem;
+	right: 10vw;
+	cursor: pointer;
+	position: absolute;
+}
+
 .form {
 	display: flex;
 	margin-top: 2.5rem;

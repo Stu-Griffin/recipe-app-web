@@ -31,13 +31,18 @@ import { changeProfileValue } from "../controller/redux/profile";
 
 //Models
 
-function Navigation(): ReactElement {
+export default function Navigation(): ReactElement {
 	const dispatch: AppDispatch = useDispatch();
 	const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false);
 	const { userId, user }: ProfileStateI = useSelector((state: RootState) => state.profile);
 
 	useEffect(() => {
-		(userId !== "") && getUserInfo();
+		if(userId !== "") {
+			getUserInfo();
+		} else {
+			const user = localStorage.getItem("user");
+			if(user) dispatch(changeProfileValue({key: "userId", value: user}));
+		}
 	}, [userId]);
 
 	const toggle = (): void => {
@@ -47,12 +52,10 @@ function Navigation(): ReactElement {
 	const menuStyle = (): object => {
 		if(menuIsOpen) {
 			return {
-				height: "10rem",
 				display: "flex",
 			};
 		} else {
 			return {
-				height: "0rem",
 				display: "none",
 			};
 		}
@@ -120,5 +123,3 @@ function Navigation(): ReactElement {
 		</Router>
 	);
 }
-
-export default Navigation;
