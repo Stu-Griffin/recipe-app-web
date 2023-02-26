@@ -10,6 +10,7 @@ export interface RecipeI {
 	_id: string;
 	type: string;
 	rate: number;
+	imgId: string;
 	image: string;
 	title: string;
 	authorId: string;

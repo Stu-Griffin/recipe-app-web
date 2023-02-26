@@ -120,7 +120,7 @@ export default function RecipePage() {
 	};
 
 	const deleteRecipe = async (): Promise<void> => {
-		const response = await recipeAPI.deleteRecipe((recipe as RecipeI)._id);
+		const response = await recipeAPI.deleteRecipe((recipe as RecipeI)._id, (recipe as RecipeI).imgId);
 		if(response?.status === 200) navigate("/");
 	};
 

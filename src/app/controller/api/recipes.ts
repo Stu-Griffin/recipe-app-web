@@ -4,9 +4,9 @@ import { changeRate } from "../../types/recipes";
 class RecipeAPI {
 	constructor(protected url: string, private cancelToken: any) {}
 
-	async deleteRecipe(id: string) {
+	async deleteRecipe(id: string, imgId: string) {
 		try {
-			const response = await axios.delete(`${this.url}/${id}`);
+			const response = await axios.delete(`${this.url}/${id}`, {data: { imgId: imgId }});
 			if(response) return response.data;
 		} catch(e) {
 			console.log(e);

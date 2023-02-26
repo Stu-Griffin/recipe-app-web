@@ -74,6 +74,7 @@ export default function Profile() {
 	const convertData = (): FormData => {
 		const data: FormData = new FormData();
 		userForm.avatar && data.append("avatar", userForm.avatar);
+		userForm.avatar && data.append("avatarId", user.avatarId);
 		userForm.login.length > 0 && data.append("login", userForm.login);
 		userForm.email.length > 0 && data.append("email", userForm.email);
 		userForm.password.length > 0 && data.append("password", userForm.password);
@@ -104,11 +105,12 @@ export default function Profile() {
 
 		const response = await userAPI.changeUser(userId, convertData());
 		if(response?.status === 200) {
-			userFormDispatch({type: "clear", payload: {key: "", value: ""}});
-			userErrorDispatch({type: "clear", payload: {key: "", value: true}});
 			userForm.avatar && dispatch(changeUserProfileValue({key: "avatar", value: avatar}));
+			(response.avatarId) && dispatch(changeUserProfileValue({key: "avatarId", value: response.avatarId}));
 			userForm.login.length > 0 && dispatch(changeUserProfileValue({key: "login", value: userForm.login}));
 		}
+		userFormDispatch({type: "clear", payload: {key: "", value: null}});
+		userErrorDispatch({type: "clear", payload: {key: "", value: null}});
 
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
 	};
