@@ -54,6 +54,7 @@ export default function SavedRecipes(): ReactElement {
 			<RecipesList
 				data={savedRecipes}
 				deleteAbility={true}
+				title="Your saved recipes"
 				length={savedRecipes.length}
 				emptyMsg="You didn't save any recipes"
 			/>

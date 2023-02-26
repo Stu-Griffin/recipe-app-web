@@ -98,6 +98,7 @@ export default function RecipePage() {
 			newRecipe.rate = Math.round((((recipe as RecipeI).rate)+(rating))/2);
 			setRecipe(newRecipe);
 		}
+		console.log(response?.data);
 
 		setLoadingStatus(false);
 	};
@@ -120,8 +121,11 @@ export default function RecipePage() {
 	};
 
 	const deleteRecipe = async (): Promise<void> => {
+		setLoadingStatus(true);
 		const response = await recipeAPI.deleteRecipe((recipe as RecipeI)._id, (recipe as RecipeI).imgId);
+		setLoadingStatus(false);
 		if(response?.status === 200) navigate("/");
+		console.log(response?.data);
 	};
 
 	if(!loadingStatus) {

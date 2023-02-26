@@ -84,7 +84,7 @@ export default function Navigation(): ReactElement {
 
 	const getUserInfo = async (): Promise<void> => {
 		const response = await userApi.getUser(userId);
-		if(response?.status === 200 && response?.data) dispatch(changeProfileValue({key: "user", value: {login: response?.data.login, avatar: response?.data.avatar}}));
+		if(response?.status === 200 && response?.data) dispatch(changeProfileValue({key: "user", value: {login: response?.data.login, avatar: response?.data.avatar, avatarId: response?.data.avatarId}}));
 	};
 
 	const getMenuIcon = (): ReactElement => {
@@ -106,14 +106,14 @@ export default function Navigation(): ReactElement {
 			<nav className={styles.navigation} style={menuStyle()}>
 				{
 					(userId !== "") &&
-						<Link to="/create-recipe/">
+						<Link to="/create-recipe/" onClick={() => setMenuIsOpen(false)}>
 							<AddIcon width={30} height={30}/>
 						</Link>
 				}
-				<Link to="/saved-recipes/">
+				<Link to="/saved-recipes/" onClick={() => setMenuIsOpen(false)}>
 					<SavedIcon width={30} height={30} fill="transparent"/>
 				</Link>
-				<Link to="/profile/">
+				<Link to="/profile/" onClick={() => setMenuIsOpen(false)}>
 					<ProfileIcon width={30} height={30}/>
 				</Link>
 			</nav>

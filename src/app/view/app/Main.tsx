@@ -66,6 +66,7 @@ export default function Main(): ReactElement {
 			</nav>
 			<RecipesList
 				data={recipes}
+				title="Recipes"
 				deleteAbility={false}
 				length={recipes.length}
 				emptyMsg="There's no recipes by this type"

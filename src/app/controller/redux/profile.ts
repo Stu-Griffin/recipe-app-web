@@ -5,6 +5,7 @@ const profileState: ProfileStateI = {
 	user: {
 		login: "",
 		avatar: "",
+		avatarId: "",
 	},
 	userId: "",
 	// userId: "63f241c7ed638a95b83f7575",

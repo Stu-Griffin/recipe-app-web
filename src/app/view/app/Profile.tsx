@@ -23,11 +23,10 @@ import userAPI from "../../controller/api/user";
 import recipeAPI from "../../controller/api/recipes";
 import styles from "../../style/app/profile.module.css";
 import { getButtonStyle } from "../../controller/style";
-import { changeProfileValue } from "../../controller/redux/profile";
-import { changeUserProfileValue } from "../../controller/redux/profile";
 import { changeAdditionalValue } from "../../controller/redux/additional";
 import { regularValidation, emailValidation } from "../../controller/validation";
 import { profileFormReducer, profileErrorFormReducer } from "../../controller/profile";
+import { changeProfileValue, changeUserProfileValue } from "../../controller/redux/profile";
 
 //Models
 import { profileFormState, profileErrorFormState } from "../../model/profile";
@@ -94,6 +93,7 @@ export default function Profile() {
 			setAvatar(imageList[0].data_url);
 			userFormDispatch({type: "add", payload: {key: "avatar", value: file}});
 			userErrorDispatch({type: "add", payload: {key: "avatar", value: false}});
+			
 		} else {
 			alert(`Avatar image should be in ${allowedImgTypes} format`);
 		}
@@ -108,7 +108,8 @@ export default function Profile() {
 			userForm.avatar && dispatch(changeUserProfileValue({key: "avatar", value: avatar}));
 			(response.avatarId) && dispatch(changeUserProfileValue({key: "avatarId", value: response.avatarId}));
 			userForm.login.length > 0 && dispatch(changeUserProfileValue({key: "login", value: userForm.login}));
-		}
+		} 
+		console.log(response?.data);
 		userFormDispatch({type: "clear", payload: {key: "", value: null}});
 		userErrorDispatch({type: "clear", payload: {key: "", value: null}});
 
@@ -187,6 +188,7 @@ export default function Profile() {
 			</form>
 			<RecipesList
 				data={recipes}
+				title="Your recipes"
 				deleteAbility={false}
 				length={recipes.length}
 				emptyMsg="You didn't create any recipes"

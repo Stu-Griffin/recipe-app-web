@@ -23,13 +23,14 @@ import { useDispatch } from "react-redux";
 //Models
 
 interface PropsI {
+	title: string;
 	length: number;
 	emptyMsg: string;
 	deleteAbility: boolean;
 	data: RecipeI[]|SavedRecipeI[];
 }
 
-export default function RecipesList({ data, length, emptyMsg, deleteAbility }: PropsI) {
+export default function RecipesList({ data, length, emptyMsg, deleteAbility, title }: PropsI) {
 	const nodeRef = useRef(null);
 	const dispatch: AppDispatch = useDispatch();
 	const [deleteStatus, setDeleteStatus] = useState<boolean>(false);
@@ -87,10 +88,10 @@ export default function RecipesList({ data, length, emptyMsg, deleteAbility }: P
 	return (
 		<article className={styles.container}>
 			<div className={styles.header}>
-				<h2 className={styles.title}>Your recipes</h2>
+				<h2 className={styles.title}>{title}</h2>
 				<p className={styles.ammount}>{length} results</p>
 			</div>
-			{(!loadingStatus && data.length !== 0) && getList()}
+			{(!loadingStatus) && getList()}
 			<Puff
 				width="80"
 				radius={1}

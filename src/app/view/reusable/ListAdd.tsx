@@ -44,6 +44,7 @@ export default function ListAdd({data, title, placeholder, saveEl, removeEl, mov
 		e.preventDefault();
 		saveEl(value);
 		setValue("");
+		setError(true);
 	};
 
 	return (
