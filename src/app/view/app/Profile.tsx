@@ -83,7 +83,7 @@ export default function Profile() {
 	const getUsersRecipes = async (): Promise<void> => {
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
 		const response = await recipeAPI.getRecipeByAuthorId(userId);
-		if(response?.data.status === 200) setRecipes(response?.data.data);
+		if(response?.status === 200) setRecipes(response?.data);
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
 	};
 
@@ -99,15 +99,17 @@ export default function Profile() {
 	};
 
 	const saveChanges = async (e: React.MouseEvent<HTMLElement>): Promise<void> => {
-		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
 		e.preventDefault();
+		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
+
 		const response = await userAPI.changeUser(userId, convertData());
-		if(response?.data.status === 200) {
+		if(response?.status === 200) {
 			userFormDispatch({type: "clear", payload: {key: "", value: ""}});
 			userErrorDispatch({type: "clear", payload: {key: "", value: true}});
 			userForm.avatar && dispatch(changeUserProfileValue({key: "avatar", value: avatar}));
 			userForm.login.length > 0 && dispatch(changeUserProfileValue({key: "login", value: userForm.login}));
 		}
+
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
 	};
 	
@@ -183,6 +185,7 @@ export default function Profile() {
 			</form>
 			<RecipesList
 				data={recipes}
+				deleteAbility={false}
 				length={recipes.length}
 				emptyMsg="You didn't create any recipes"
 			/>

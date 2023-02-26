@@ -35,6 +35,7 @@ export interface SavedRecipeI {
 
 export interface RecipesStateI {
 	savedRecipes: SavedRecipeI[];
+	[key: string]: SavedRecipeI[];
 }
 
 export interface RecipeFormStateI {

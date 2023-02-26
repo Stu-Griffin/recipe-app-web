@@ -6,24 +6,25 @@ import InputArea from "../reusable/Input";
 
 //Types
 import { ReactElement, useEffect } from "react";
+import { AppDispatch } from "../../types/store";
 
 //Libraries
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import React, { useReducer, useState } from "react";
 
 //Functions
 import userAPI from "../../controller/api/user";
+import { getButtonStyle } from "../../controller/style";
 import styles from "../../style/authorization/sign-in.module.css";
+import { changeProfileValue } from "../../controller/redux/profile";
 import { changeAdditionalValue } from "../../controller/redux/additional";
 import { emailValidation, regularValidation } from "../../controller/validation";
 import { signInUserFormReducer, signInUserErrorFormReducer } from "../../controller/users";
 
 //Models
 import { signInUserFormState, signInUserErrorFormState } from "../../model/users";
-import { AppDispatch } from "../../types/store";
-import { useDispatch } from "react-redux";
-import { changeProfileValue } from "../../controller/redux/profile";
 
 export default function SignIn(): ReactElement {
 	const navigate = useNavigate();
@@ -37,33 +38,19 @@ export default function SignIn(): ReactElement {
 		setDisabledStatus(!(Object.values(userError).every((el: boolean) => el === false)));
 	}, [userError]);
 
-	const checkBoxClick = (): void => {
-		setCheckedStatus((state: boolean) => !state);
-	};
-
-	const getButtonStyle = (): object => {
-		if(disabledStatus) {
-			return {
-				opacity: 0.5
-			};
-		} else {
-			return {
-				opacity: 1
-			};
-		}
-	};
-
 	const signIn = async (e: React.MouseEvent<HTMLElement>): Promise<void> => {
 		e.preventDefault();
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
+	
 		const response = await userAPI.signIn(user);
-		if(response?.data.status === 200) {
-			dispatch(changeProfileValue({key: "userId", value: response.data.data}));
-			(checkedStatus) && localStorage.setItem("user", response.data.data);
+		if(response?.status === 200) {
+			dispatch(changeProfileValue({key: "userId", value: response.data}));
+			(checkedStatus) && localStorage.setItem("user", response.data);
 			navigate("/");
 		} else {
-			console.log(response?.data.data);
+			console.log(response?.data);
 		}
+	
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
 	};
 
@@ -98,8 +85,8 @@ export default function SignIn(): ReactElement {
 						name="scales" 
 						type="checkbox" 
 						checked={checkedStatus}
-						onChange={checkBoxClick}
 						className={styles.checkbox}
+						onChange={() => setCheckedStatus((state: boolean) => !state)}
 					/>
 					<label 
 						htmlFor="scales" 
@@ -108,9 +95,9 @@ export default function SignIn(): ReactElement {
 				</div>
 				<button
 					onClick={signIn}
-					style={getButtonStyle()} 
 					disabled={disabledStatus}
 					className={styles.button}
+					style={getButtonStyle(disabledStatus)} 
 				>Sign in</button>
 			</form>
 			<div className={styles.navigationArea}>

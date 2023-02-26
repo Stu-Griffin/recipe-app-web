@@ -1,19 +1,24 @@
 //Components
+import Loader from "../reusable/Loader";
 import InputArea from "../reusable/Input";
 
 //Icons
 
 //Types
+import { AppDispatch } from "../../types/store";
 import { ReactElement, useEffect } from "react";
 
 //Libraries
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import React, { useReducer, useState } from "react";
 
 //Functions
 import userAPI from "../../controller/api/user";
+import { getButtonStyle } from "../../controller/style";
 import styles from "../../style/authorization/sign-up.module.css";
+import { changeAdditionalValue } from "../../controller/redux/additional";
 import { emailValidation, regularValidation } from "../../controller/validation";
 import { signUpUserFormReducer, signUpUserErrorFormReducer } from "../../controller/users";
 
@@ -22,6 +27,7 @@ import { signUpUserFormState, signUpUserErrorFormState } from "../../model/users
 
 export default function SignUp(): ReactElement {
 	const navigate = useNavigate();
+	const dispatch: AppDispatch = useDispatch();
 	const [checkedStatus, setCheckedStatus] = useState<boolean>(false);
 	const [disabledStatus, setDisabledStatus] = useState<boolean>(true);
 	const [user, userDispatch] = useReducer(signUpUserFormReducer, signUpUserFormState);
@@ -31,38 +37,19 @@ export default function SignUp(): ReactElement {
 		setDisabledStatus(!(Object.values(userError).every((el: boolean) => el === false) && checkedStatus));
 	}, [userError, checkedStatus]);
 
-	const checkBoxClick = (): void => {
-		setCheckedStatus((state: boolean) => !state);
-	};
-
-	const getButtonStyle = (): object => {
-		if(disabledStatus) {
-			return {
-				opacity: 0.5
-			};
-		} else {
-			return {
-				opacity: 1
-			};
-		}
-	};
-
 	const signUp = async (e: React.MouseEvent<HTMLElement>): Promise<void> => {
 		e.preventDefault();
-		const response = await userAPI.signUp({
-			login: user.login,
-			email: user.email,
-			password: user.password,
-		});
-		if(response?.data.status === 200) {
-			navigate("/sign-in/");
-		} else {
-			console.log(response?.data.data);
-		}
+		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
+
+		const response = await userAPI.signUp({ login: user.login, email: user.email, password: user.password });
+		(response?.status === 200) ? navigate("/sign-in/") : console.log(response?.data);
+
+		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
 	};
 
 	return (
 		<main className={styles.container}>
+			<Loader/>
 			<form className={styles.form}>
 				<InputArea
 					title={"Login"}
@@ -111,8 +98,8 @@ export default function SignUp(): ReactElement {
 						name="scales" 
 						type="checkbox" 
 						checked={checkedStatus}
-						onChange={checkBoxClick}
 						className={styles.checkbox}
+						onChange={() => setCheckedStatus((state: boolean) => !state)}
 					/>
 					<label 
 						htmlFor="scales" 
@@ -121,9 +108,9 @@ export default function SignUp(): ReactElement {
 				</div>
 				<button
 					onClick={signUp}
-					style={getButtonStyle()} 
 					disabled={disabledStatus}
 					className={styles.button}
+					style={getButtonStyle(disabledStatus)} 
 				>Sign up</button>
 			</form>
 			<div className={styles.navigationArea}>

@@ -25,6 +25,12 @@
   justify-content: center;
 }
 
+.recipe {
+	display: flex;
+	align-items: flex-end;
+	flex-direction: column;
+}
+
 .error {
 	color: red;
 	margin-top: 5rem;

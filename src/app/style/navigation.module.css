@@ -9,6 +9,7 @@
 .navigation {
 	right: 0px;
   width: 5rem;
+	z-index: 10;
 	position: absolute;
 	align-items: center;
   padding-block: 0.5rem;

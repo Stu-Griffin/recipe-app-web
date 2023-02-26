@@ -22,6 +22,7 @@ import React, { ReactElement, useEffect, useState } from "react";
 //Functions
 import recipeAPI from "../../controller/api/recipes";
 import styles from "../../style/app/recipe-page.module.css";
+import { recipeTypeButtonStyle } from "../../controller/style";
 import { removeSavedRecipe, addSavedRecipe } from "../../controller/redux/recipes";
 
 //Models
@@ -55,10 +56,6 @@ export default function RecipePage() {
 	}, [recipeId]);
 
 	useEffect(() => {
-		localStorage.setItem("saved-recipes", JSON.stringify(savedRecipes));
-	}, [savedRecipes]);
-
-	useEffect(() => {
 		if(recipe) {
 			if(activeList === "ingredients") {
 				setData(recipe.ingredients);
@@ -68,24 +65,8 @@ export default function RecipePage() {
 		}
 	}, [activeList, recipe]);
 
-	const move = (): void => {
-		navigate("/");
-	};
-
 	const toggle = (): void => {
 		setIsOpen(!modalIsOpen);
-	};
-
-	const changeRate = async (): Promise<void> => {
-		toggle();
-		setLoadingStatus(true);
-		const response = await recipeAPI.changeRecipesRate((recipe as RecipeI)._id, { newRate: rating, rate: (recipe as RecipeI).rate });
-		if(response?.data.status === 200) {
-			const newRecipe = JSON.parse(JSON.stringify(recipe));
-			newRecipe.rate = Math.round((((recipe as RecipeI).rate)+(rating))/2);
-			setRecipe(newRecipe);
-		}
-		setLoadingStatus(false);
 	};
 
 	const saveRecipe = (): void => {
@@ -107,41 +88,40 @@ export default function RecipePage() {
 		return savedRecipes.some((el: SavedRecipeI) => el._id === recipe?._id);
 	};
 
+	const changeRate = async (): Promise<void> => {
+		toggle();
+		setLoadingStatus(true);
+
+		const response = await recipeAPI.changeRecipesRate((recipe as RecipeI)._id, { newRate: rating, rate: (recipe as RecipeI).rate });
+		if(response?.status === 200) {
+			const newRecipe = JSON.parse(JSON.stringify(recipe));
+			newRecipe.rate = Math.round((((recipe as RecipeI).rate)+(rating))/2);
+			setRecipe(newRecipe);
+		}
+
+		setLoadingStatus(false);
+	};
+
 	const handleRating = (rate: number): void => {
 		setRating(rate);
 	};
 
 	const getRecipe = async (): Promise<void> => {
 		setLoadingStatus(true);
+
 		if(recipeId) {
 			const response = await recipeAPI.getRecipeBuItsId(recipeId);
-			if(response?.data.status === 200) {
-				setRecipe(response?.data.data);
-			}
+			if(response?.status === 200) setRecipe(response?.data);
 		}
+
 		setTimeout(() => {
 			setLoadingStatus(false);
-		}, 500);
+		}, 1500);
 	};
-
 
 	const deleteRecipe = async (): Promise<void> => {
 		const response = await recipeAPI.deleteRecipe((recipe as RecipeI)._id);
-		if(response?.data.status === 200) move();
-	};
-
-	const getButtonStyle = (value: string): object => {
-		if(value === activeList) {
-			return {
-				color: "white",
-				backgroundColor: "#129575",
-			};
-		} else {
-			return {
-				color: "#129575",
-				backgroundColor: "white",
-			};
-		}
+		if(response?.status === 200) navigate("/");
 	};
 
 	if(!loadingStatus) {
@@ -205,18 +185,14 @@ export default function RecipePage() {
 					<article>
 						<div className={styles.navigation}>
 							<button
-								style={getButtonStyle("ingredients")}
 								className={styles.navigationButton}
-								onClick={() => {
-									setActiveList("ingredients");
-								}}
+								onClick={() => setActiveList("ingredients")}
+								style={recipeTypeButtonStyle(activeList, "ingredients")}
 							>Ingredient</button>
 							<button
-								style={getButtonStyle("steps")}
 								className={styles.navigationButton}
-								onClick={() => {
-									setActiveList("steps");
-								}}
+								onClick={() => setActiveList("steps")}
+								style={recipeTypeButtonStyle(activeList, "steps")}
 							>Procedure</button>
 						</div>
 						<div className={styles.list}>

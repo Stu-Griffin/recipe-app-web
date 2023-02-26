@@ -101,7 +101,7 @@ export default function CreateRecipe() {
 
 		e.preventDefault();
 		const response = await recipeAPI.createRecipe(convertData());
-		if(response?.data.status === 200) move();
+		if(response?.status === 200) move();
 		
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
 	};

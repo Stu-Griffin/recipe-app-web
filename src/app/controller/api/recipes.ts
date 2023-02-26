@@ -7,7 +7,7 @@ class RecipeAPI {
 	async deleteRecipe(id: string) {
 		try {
 			const response = await axios.delete(`${this.url}/${id}`);
-			return response;
+			if(response) return response.data;
 		} catch(e) {
 			console.log(e);
 		}
@@ -16,7 +16,7 @@ class RecipeAPI {
 	async getRecipeBuItsId(id: string) {
 		try {
 			const response = await axios.get(`${this.url}/${id}`);
-			return response;
+			if(response) return response.data;
 		} catch (e) {
 			console.log(e);
 		}
@@ -30,7 +30,7 @@ class RecipeAPI {
 				url: `${this.url}`,
 				headers: { "Content-Type": "multipart/form-data" },
 			});
-			return response;
+			if(response) return response.data;
 		} catch(e) {
 			console.log(e);
 		}
@@ -39,7 +39,7 @@ class RecipeAPI {
 	async getRecipeByAuthorId(id: string) {
 		try {
 			const response = await axios.get(`${this.url}/author/${id}`);
-			return response;
+			if(response) return response.data;
 		} catch(e) {
 			console.log(e);
 		}
@@ -50,7 +50,7 @@ class RecipeAPI {
 		this.cancelToken = axios.CancelToken.source();
 		try {
 			const response = await axios.get(`${this.url}?type=${type}&page=${page}`, { cancelToken: this.cancelToken.token });
-			return response;
+			if(response) return response.data;
 		} catch (e) {
 			console.log(e);
 		}
@@ -59,7 +59,7 @@ class RecipeAPI {
 	async changeRecipesRate(id: string, rate: changeRate) {
 		try {
 			const response = await axios.put(`${this.url}/rating/${id}`, rate);
-			return response;
+			if(response) return response.data;
 		} catch (e) {
 			console.log(e);
 		}

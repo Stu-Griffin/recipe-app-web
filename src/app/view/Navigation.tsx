@@ -28,12 +28,14 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import userApi from "../controller/api/user";
 import styles from "../style/navigation.module.css";
 import { changeProfileValue } from "../controller/redux/profile";
+import { RecipesStateI } from "../types/recipes";
 
 //Models
 
 export default function Navigation(): ReactElement {
 	const dispatch: AppDispatch = useDispatch();
 	const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false);
+	const { savedRecipes }: RecipesStateI = useSelector((state: RootState) => state.recipes);
 	const { userId, user }: ProfileStateI = useSelector((state: RootState) => state.profile);
 
 	useEffect(() => {
@@ -44,6 +46,10 @@ export default function Navigation(): ReactElement {
 			if(user) dispatch(changeProfileValue({key: "userId", value: user}));
 		}
 	}, [userId]);
+
+	useEffect(() => {
+		localStorage.setItem("saved-recipes", JSON.stringify(savedRecipes));
+	}, [savedRecipes]);
 
 	const toggle = (): void => {
 		setMenuIsOpen(!menuIsOpen);
@@ -78,7 +84,7 @@ export default function Navigation(): ReactElement {
 
 	const getUserInfo = async (): Promise<void> => {
 		const response = await userApi.getUser(userId);
-		if(response?.data.status === 200) dispatch(changeProfileValue({key: "user", value: {login: response?.data.data.login, avatar: response?.data.data.avatar}}));
+		if(response?.status === 200 && response?.data) dispatch(changeProfileValue({key: "user", value: {login: response?.data.login, avatar: response?.data.avatar}}));
 	};
 
 	const getMenuIcon = (): ReactElement => {

@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 //Functions
 import styles from "../../style/app/main.module.css";
 import recipeAPI from "../../controller/api/recipes";
+import { recipeTypeButtonStyle } from "../../controller/style";
 import { changeAdditionalValue } from "../../controller/redux/additional";
 
 //Models
@@ -31,15 +32,12 @@ export default function Main(): ReactElement {
 		getRecipes();
 	}, [recipeType, currentPage]);
 
-	const changeCurrentPage = (): void => {
-		setCurrentPage(currentPage+1);
-	};
-
 	const getRecipes = async (): Promise<void> => {
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
+		
 		const response = await recipeAPI.getRecipes(recipeType, currentPage);
-		if(response?.data.status === 200) {
-			setRecipes([...recipes, ...(response?.data.data as Array<RecipeI>)]);
+		if(response?.status === 200) {
+			setRecipes([...recipes, ...(response?.data as RecipeI[])]);
 			dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
 		}
 	};
@@ -48,20 +46,6 @@ export default function Main(): ReactElement {
 		setRecipes([]);
 		setCurrentPage(1);
 		dispatch(changeAdditionalValue({key: "recipeType", value: type}));		
-	};
-
-	const recipeTypeButtonStyle = (value: string): object => {
-		if(recipeType === value.toLowerCase()) {
-			return {
-				color: "white",
-				backgroundColor: "#129575",
-			};
-		} else {
-			return {
-				color: "#129575",
-				backgroundColor: "white",
-			};
-		}
 	};
 
 	return (
@@ -73,7 +57,7 @@ export default function Main(): ReactElement {
 							<button 
 								key={index}
 								className={styles.type}
-								style={recipeTypeButtonStyle(el)}
+								style={recipeTypeButtonStyle(recipeType, el)}
 								onClick={() => changeRecipesType(el.toLowerCase())}
 							>{el}</button>
 						);
@@ -82,10 +66,18 @@ export default function Main(): ReactElement {
 			</nav>
 			<RecipesList
 				data={recipes}
+				deleteAbility={false}
 				length={recipes.length}
 				emptyMsg="There's no recipes by this type"
 			/>
-			{(!(recipes.length%8) && recipes.length > 0 && !loadingStatus) && <button className={styles.button} onClick={changeCurrentPage}>Load more</button>}
+			{
+				(!(recipes.length%8) && recipes.length > 0 && !loadingStatus) 
+				&& 
+				<button 
+					className={styles.button} 
+					onClick={() => setCurrentPage(currentPage+1)}
+				>Load more</button>
+			}
 		</main>
 	);
 }

@@ -17,9 +17,13 @@ export const recipesSlice = createSlice({
 			state.savedRecipes = state.savedRecipes.filter((el: SavedRecipeI) => el._id !== action.payload);
 			return state;
 		},
+		changeRecipeValue: (state: RecipesStateI, action): RecipesStateI => {
+			state[action.payload.key] = action.payload.value;
+			return state;
+		},
 	},
 });
 
-export const { addSavedRecipe, removeSavedRecipe } = recipesSlice.actions;
+export const { addSavedRecipe, removeSavedRecipe, changeRecipeValue } = recipesSlice.actions;
 
 export default recipesSlice.reducer;

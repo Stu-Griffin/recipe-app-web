@@ -7,7 +7,7 @@ class UserAPI {
 	async getUser(id: string) {
 		try {
 			const response = await axios.get(`${this.url}/${id}`);
-			return response;
+			if(response) return response.data;
 		} catch(e) {
 			console.log(e);
 		}
@@ -21,7 +21,7 @@ class UserAPI {
 				url: `${this.url}/${id}`,
 				headers: { "Content-Type": "multipart/form-data" },
 			});
-			return response;
+			if(response) return response.data;
 		} catch(e) {
 			console.log(e);
 		}
@@ -30,7 +30,7 @@ class UserAPI {
 	async signUp(user: UserI) {
 		try {
 			const response = await axios.post(`${this.url}/sign-up`, user);
-			return response;
+			if(response) return response.data;
 		} catch (e) {
 			console.log(e);
 		}
@@ -39,7 +39,7 @@ class UserAPI {
 	async signIn(user: SignInUserFormStateI) {
 		try {
 			const response = await axios.post(`${this.url}/sign-in`, user);
-			return response;
+			if(response) return response.data;
 		} catch (e) {
 			console.log(e);
 		}
