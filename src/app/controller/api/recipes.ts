@@ -1,4 +1,5 @@
 import axios from "axios";
+import env from "react-dotenv";
 import { changeRate } from "../../types/recipes";
 
 class RecipeAPI {
@@ -66,4 +67,4 @@ class RecipeAPI {
 	}
 }
 
-export default new RecipeAPI("https://recipe-app-api-amber.vercel.app/api/recipes", undefined);
+export default new RecipeAPI(`${env.API_URL}/api/recipes`, undefined);

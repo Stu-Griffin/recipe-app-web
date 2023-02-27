@@ -1,4 +1,5 @@
 import axios from "axios";
+import env from "react-dotenv";
 import { SignInUserFormStateI, UserI } from "../../types/user";
 
 class UserAPI {
@@ -46,4 +47,4 @@ class UserAPI {
 	}
 }
 
-export default new UserAPI("https://recipe-app-api-amber.vercel.app/api/users");
+export default new UserAPI(`${env.API_URL}/api/users`);

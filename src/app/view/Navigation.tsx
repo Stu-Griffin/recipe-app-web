@@ -16,6 +16,7 @@ import ProfileIcon from "../../assets/icons/profile";
 
 //Types
 import { ReactElement } from "react";
+import { RecipesStateI } from "../types/recipes";
 import { ProfileStateI } from "../types/profile";
 import { AppDispatch, RootState } from "../types/store";
 
@@ -28,7 +29,6 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import userApi from "../controller/api/user";
 import styles from "../style/navigation.module.css";
 import { changeProfileValue } from "../controller/redux/profile";
-import { RecipesStateI } from "../types/recipes";
 
 //Models
 
