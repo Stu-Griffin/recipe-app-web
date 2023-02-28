@@ -1,12 +1,13 @@
 .container {
 	display: flex;
+	padding-top: 5rem;
 	align-items: center;
 	flex-direction: column;
 }
 
 .form {
 	display: flex;
-	margin-top: 2.5rem;
+	margin-top: 1rem;
 	flex-direction: column;
 }
 

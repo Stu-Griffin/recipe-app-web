@@ -5,11 +5,29 @@ import { SignInUserFormStateI, UserI } from "../../types/user";
 class UserAPI {
 	constructor(protected url: string) {}
 
+	async signUp(user: UserI) {
+		try {
+			const response = await axios.post(`${this.url}/sign-up`, user);
+			if(response) return response.data;
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
 	async getUser(id: string) {
 		try {
 			const response = await axios.get(`${this.url}/${id}`);
 			if(response) return response.data;
 		} catch(e) {
+			console.log(e);
+		}
+	}
+
+	async signIn(user: SignInUserFormStateI) {
+		try {
+			const response = await axios.post(`${this.url}/sign-in`, user);
+			if(response) return response.data;
+		} catch (e) {
 			console.log(e);
 		}
 	}
@@ -28,20 +46,11 @@ class UserAPI {
 		}
 	}
 
-	async signUp(user: UserI) {
+	async deleteUser(id: string, avatarId: string) {
 		try {
-			const response = await axios.post(`${this.url}/sign-up`, user);
+			const response = await axios.delete(`${this.url}/${id}`, { data: { avatarId: avatarId } });
 			if(response) return response.data;
-		} catch (e) {
-			console.log(e);
-		}
-	}
-
-	async signIn(user: SignInUserFormStateI) {
-		try {
-			const response = await axios.post(`${this.url}/sign-in`, user);
-			if(response) return response.data;
-		} catch (e) {
+		} catch(e) {
 			console.log(e);
 		}
 	}

@@ -17,8 +17,8 @@ import ProfileIcon from "../../assets/icons/profile";
 //Types
 import { ReactElement } from "react";
 import { RecipesStateI } from "../types/recipes";
-import { ProfileStateI } from "../types/profile";
 import { AppDispatch, RootState } from "../types/store";
+import { ProfileStateI, ProfileUserI } from "../types/profile";
 
 //Libraries
 import React, { useEffect, useState } from "react";
@@ -68,7 +68,13 @@ export default function Navigation(): ReactElement {
 	};
 
 	const getInfoPart = (): ReactElement => {
-		if(Object.values(user).every((el: string) => el.length !== 0)) {
+		if(Object.values(user).some((el: string) => {
+			if(el) {
+				return el.length !== 0;
+			} else {
+				return false;
+			}
+		})) {
 			return (
 				<div>
 					<h3>Hello {user.login}</h3>
@@ -84,47 +90,113 @@ export default function Navigation(): ReactElement {
 
 	const getUserInfo = async (): Promise<void> => {
 		const response = await userApi.getUser(userId);
-		if(response?.status === 200 && response?.data) dispatch(changeProfileValue({key: "user", value: {login: response?.data.login, avatar: response?.data.avatar, avatarId: response?.data.avatarId}}));
+		if(response?.status === 200 && response?.data) {
+			const profile: ProfileUserI = {
+				login: response?.data.login, 
+				avatar: response?.data.avatar, 
+				avatarId: response?.data.avatarId,
+			};
+			dispatch(changeProfileValue({key: "user", value: profile}));
+		} else {
+			localStorage.removeItem("user");
+			dispatch(changeProfileValue({key: "userId", value: ""}));
+		}
 	};
 
 	const getMenuIcon = (): ReactElement => {
 		if(menuIsOpen) {
-			return <CrossIcon onClick={toggle} style={{cursor: "pointer"}} width={30} height={30}/>;
+			return <CrossIcon 
+				width={30} 
+				height={30}
+				onClick={toggle} 
+				style={{cursor: "pointer"}} 
+			/>;
 		} else {
-			return <MenuIcon onClick={toggle} style={{cursor: "pointer"}} width={30} height={30}/>;
+			return <MenuIcon
+				width={30} 
+				height={30}
+				onClick={toggle} 
+				style={{cursor: "pointer"}}
+			/>;
 		}
 	};
 
 	return (
 		<Router>
 			<header className={styles.header}>
-				<Link to="/" onClick={() => setMenuIsOpen(false)}>
+				<Link 
+					to="/" 
+					onClick={() => setMenuIsOpen(false)}
+				>
 					{getInfoPart()}
 				</Link>
 				{getMenuIcon()}
 			</header>
-			<nav className={styles.navigation} style={menuStyle()}>
+			<nav
+				style={menuStyle()} 
+				className={styles.navigation}
+			>
 				{
 					(userId !== "") &&
-						<Link to="/create-recipe/" onClick={() => setMenuIsOpen(false)}>
-							<AddIcon width={30} height={30}/>
+						<Link 
+							to="/create-recipe/" 
+							onClick={() => setMenuIsOpen(false)}
+						>
+							<AddIcon 
+								width={30} 
+								height={30}
+							/>
 						</Link>
 				}
-				<Link to="/saved-recipes/" onClick={() => setMenuIsOpen(false)}>
-					<SavedIcon width={30} height={30} fill="transparent"/>
+				<Link 
+					to="/saved-recipes/" 
+					onClick={() => setMenuIsOpen(false)}
+				>
+					<SavedIcon 
+						width={30} 
+						height={30} 
+						fill="transparent"
+					/>
 				</Link>
-				<Link to="/profile/" onClick={() => setMenuIsOpen(false)}>
-					<ProfileIcon width={30} height={30}/>
+				<Link 
+					to="/profile/" 
+					onClick={() => setMenuIsOpen(false)}
+				>
+					<ProfileIcon 
+						width={30} 
+						height={30}
+					/>
 				</Link>
 			</nav>
 			<Routes>
-				<Route path="/" element={<Main/>} />
-				<Route path="/sign-in/" element={<SignIn/>} />
-				<Route path="/sign-up/" element={<SignUp/>} />
-				<Route path="/profile/" element={<Profile/>} />
-				<Route path="/create-recipe/" element={<CreateRecipe/>} />
-				<Route path="/saved-recipes/" element={<SavedRecipes/>} />
-				<Route path="/recipe/:recipeId" element={<RecipePage/>} />
+				<Route 
+					path="/" 
+					element={<Main/>} 
+				/>
+				<Route 
+					path="/sign-in/" 
+					element={<SignIn/>} 
+				/>
+				<Route 
+					path="/sign-up/" 
+					element={<SignUp/>} 
+				/>
+				<Route 
+					path="/profile/" 
+					element={<Profile/>} 
+				/>
+				<Route 
+					element={<RecipePage/>} 
+					path="/recipe/:recipeId" 
+				/>
+				<Route 
+					path="/create-recipe/" 
+					element={<CreateRecipe/>} 
+				/>
+				<Route 
+					path="/saved-recipes/" 
+					element={<SavedRecipes/>} 
+				/>
 			</Routes>
 		</Router>
 	);

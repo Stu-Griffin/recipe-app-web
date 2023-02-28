@@ -10,15 +10,14 @@ import { AdditionalStateI } from "../../types/additional";
 import { RecipeI, SavedRecipeI } from "../../types/recipes";
 
 //Libraries
-import { useSelector } from "react-redux";
 import { Puff } from  "react-loader-spinner";
+import { useSelector, useDispatch } from "react-redux";
 import { CSSTransition } from "react-transition-group";
 import React, { ReactElement, useState, useRef } from "react";
 
 //Functions
 import styles from "../../style/reusable/recipes-list.module.css";
 import { removeSavedRecipe } from "../../controller/redux/recipes";
-import { useDispatch } from "react-redux";
 
 //Models
 
@@ -33,7 +32,7 @@ interface PropsI {
 export default function RecipesList({ data, length, emptyMsg, deleteAbility, title }: PropsI) {
 	const nodeRef = useRef(null);
 	const dispatch: AppDispatch = useDispatch();
-	const [deleteStatus, setDeleteStatus] = useState<boolean>(false);
+	const [deleteId, setDeleteId] = useState<string|null>(null);
 	const { loadingStatus }: AdditionalStateI = useSelector((state: RootState) => state.additional);
 
 	const getList = (): ReactElement => {
@@ -52,20 +51,20 @@ export default function RecipesList({ data, length, emptyMsg, deleteAbility, tit
 										timeout={300}
 										unmountOnExit
 										nodeRef={nodeRef}
-										in={!deleteStatus}
 										classNames="recipe"
-										onExited={() => dispatch(removeSavedRecipe(el._id))}
+										in={!(deleteId === el._id)}
+										onExited={() => dispatch(removeSavedRecipe(deleteId))}
 									>
 										<div className={styles.recipe} ref={nodeRef}>
 											{
 												(deleteAbility) 
-										&&
-										<CrossIcon 
-											width={30} 
-											height={30} 
-											style={{cursor: "pointer"}}
-											onClick={() => setDeleteStatus(true)}
-										/>
+												&&
+												<CrossIcon 
+													width={30} 
+													height={30} 
+													style={{cursor: "pointer"}}
+													onClick={() => setDeleteId(el._id)}
+												/>
 											}
 											<RecipeCard
 												id={el._id}

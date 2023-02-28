@@ -5,6 +5,8 @@ import RecipesList from "../reusable/RecipeList";
 
 //Icons
 import ExitIcon from "../../../assets/icons/exit";
+import DefaultAvatar from "../../../assets/icons/avatar";
+import DeleteProfileIcon from "../../../assets/icons/deleteProfile";
 
 //Types
 import { RecipeI } from "../../types/recipes";
@@ -13,9 +15,9 @@ import { ImageListType } from "react-images-uploading";
 import { AppDispatch, RootState } from "../../types/store";
 
 //Libraries
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ImageUploading from "react-images-uploading";
+import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useReducer, useState } from "react";
 
 //Functions
@@ -72,18 +74,32 @@ export default function Profile() {
 
 	const convertData = (): FormData => {
 		const data: FormData = new FormData();
+
 		userForm.avatar && data.append("avatar", userForm.avatar);
 		userForm.avatar && data.append("avatarId", user.avatarId);
 		userForm.login.length > 0 && data.append("login", userForm.login);
 		userForm.email.length > 0 && data.append("email", userForm.email);
 		userForm.password.length > 0 && data.append("password", userForm.password);
+
 		return data;
+	};
+
+	const deleteProfile = async (): Promise<void> => {
+		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
+
+		const response = await userAPI.deleteUser(userId, user.avatarId);
+		if(response?.status === 200) exit();
+		console.log(response?.data);
+		
+		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
 	};
 
 	const getUsersRecipes = async (): Promise<void> => {
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
+
 		const response = await recipeAPI.getRecipeByAuthorId(userId);
 		if(response?.status === 200) setRecipes(response?.data);
+		
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
 	};
 
@@ -93,7 +109,6 @@ export default function Profile() {
 			setAvatar(imageList[0].data_url);
 			userFormDispatch({type: "add", payload: {key: "avatar", value: file}});
 			userErrorDispatch({type: "add", payload: {key: "avatar", value: false}});
-			
 		} else {
 			alert(`Avatar image should be in ${allowedImgTypes} format`);
 		}
@@ -119,7 +134,20 @@ export default function Profile() {
 	return (
 		<main className={styles.container}>
 			<Loader/>
-			<ExitIcon className={styles.exitIcon} width={40} height={40} onClick={exit}/>
+			<div className={styles.profileActionArea}>
+				<DeleteProfileIcon 
+					width={40} 
+					height={40} 
+					onClick={deleteProfile}
+					className={styles.profileActionIcon} 
+				/>
+				<ExitIcon 
+					width={40} 
+					height={40} 
+					onClick={exit}
+					className={styles.profileActionIcon}
+				/>
+			</div>
 			<form className={styles.form}>
 				<div>
 					<ImageUploading
@@ -130,14 +158,26 @@ export default function Profile() {
 						onChange={changeAvatar}
 					>
 						{({ onImageUpload }) => (
-							(avatar === "")
+							(avatar) 
 								?
-								<Loader/>
+								(avatar === "")
+									?
+									<Loader/>
+									:
+									<img 
+										style={{
+											width: "122px",
+											height: "122px",
+											cursor: "pointer",
+											borderRadius: "100px",
+											border: "1px solid black",
+										}}
+										src={avatar}
+										alt="user avatar"
+										onClick={onImageUpload}
+									/>
 								:
-								<img 
-									src={avatar}
-									alt="user avatar"
-									onClick={onImageUpload}
+								<DefaultAvatar
 									style={{
 										width: "122px",
 										height: "122px",
@@ -145,6 +185,7 @@ export default function Profile() {
 										borderRadius: "100px",
 										border: "1px solid black",
 									}}
+									onClick={onImageUpload}
 								/>
 						)}
 					</ImageUploading>
@@ -181,9 +222,9 @@ export default function Profile() {
 				/>
 				<button
 					onClick={saveChanges}
-					style={getButtonStyle(disabledStatus)} 
 					disabled={disabledStatus}
 					className={styles.button}
+					style={getButtonStyle(disabledStatus)} 
 				>Save changes</button>
 			</form>
 			<RecipesList

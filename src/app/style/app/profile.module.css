@@ -4,11 +4,17 @@
 	flex-direction: column;
 }
 
-.exitIcon {
-	top: 7rem;
-	right: 10vw;
-	cursor: pointer;
+.profileActionArea {
+	top: 6rem;
+	width: 18rem;
+	display: flex;
 	position: absolute;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.profileActionIcon {
+	cursor: pointer;
 }
 
 .form {

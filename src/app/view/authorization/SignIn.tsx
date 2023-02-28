@@ -57,6 +57,7 @@ export default function SignIn(): ReactElement {
 	return (
 		<main className={styles.container}>
 			<Loader/>
+			<h1>Sign in</h1>
 			<form className={styles.form}>
 				<InputArea
 					title={"Email"}

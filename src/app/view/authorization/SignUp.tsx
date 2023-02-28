@@ -50,6 +50,7 @@ export default function SignUp(): ReactElement {
 	return (
 		<main className={styles.container}>
 			<Loader/>
+			<h1>Sign up</h1>
 			<form className={styles.form}>
 				<InputArea
 					title={"Login"}
