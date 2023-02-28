@@ -3,6 +3,7 @@ import { AdditionalStateI } from "../../types/additional";
 
 const additionalState: AdditionalStateI = {
 	rate: "all",
+	editRecipeId: "",
 	loadingStatus: false,
 	recipeType: "appetizers",
 };

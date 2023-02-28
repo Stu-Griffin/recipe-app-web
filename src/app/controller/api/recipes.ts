@@ -37,6 +37,20 @@ class RecipeAPI {
 		}
 	}
 
+	async editRecipe(recipe: FormData, id: string) {
+		try {
+			const response = await axios({
+				data: recipe,
+				method: "put",
+				url: `${this.url}/${id}`,
+				headers: { "Content-Type": "multipart/form-data" },
+			});
+			if(response) return response.data;
+		} catch(e) {
+			console.log(e);
+		}
+	}
+
 	async getRecipeByAuthorId(id: string) {
 		try {
 			const response = await axios.get(`${this.url}/author/${id}`);

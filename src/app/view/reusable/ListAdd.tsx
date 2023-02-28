@@ -20,14 +20,16 @@ import { regularValidation } from "../../controller/validation";
 
 interface PropsI {
 	title: string;
+	multiple?: boolean;
 	data: Array<string>;
 	placeholder: string;
+	listNumbering?: boolean;
 	saveEl: (value: string) => void;
 	removeEl: (value: number) => void;
 	moveEl: (what: number, where: number, el: string) => void;
 }
 
-export default function ListAdd({data, title, placeholder, saveEl, removeEl, moveEl}: PropsI): ReactElement {
+export default function ListAdd({multiple, listNumbering, data, title, placeholder, saveEl, removeEl, moveEl}: PropsI): ReactElement {
 	const [value, setValue] = useState<string>("");
 	const [error, setError] = useState<boolean|null>(null);
 	const [disabledStatus, setDisabledStatus] = useState<boolean>(true);
@@ -57,6 +59,7 @@ export default function ListAdd({data, title, placeholder, saveEl, removeEl, mov
 					value={value}
 					error={false}
 					title={title}
+					multiple={multiple}
 					placeholder={placeholder}
 					onChangeFunc={(e: string): void => {
 						setValue(e);
@@ -82,6 +85,7 @@ export default function ListAdd({data, title, placeholder, saveEl, removeEl, mov
 												{(provided) => {
 													return (
 														<div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className={styles.element}>
+															{(listNumbering) && <h2>{index+1}</h2>}
 															<p className={styles.text}>{el}</p>
 															<DeleteIcon
 																style={{

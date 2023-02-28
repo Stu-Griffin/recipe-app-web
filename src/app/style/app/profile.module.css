@@ -1,5 +1,6 @@
 .container {
 	display: flex;
+	padding-top: 3rem;
 	align-items: center;
 	flex-direction: column;
 }
@@ -8,6 +9,7 @@
 	top: 6rem;
 	width: 18rem;
 	display: flex;
+	margin-top: 3rem;
 	position: absolute;
   align-items: center;
   justify-content: space-between;

@@ -5,11 +5,17 @@
 	flex-direction: column;
 }
 
-.delete {
-	top: 8rem;
-	right: 4vw;
-	cursor: pointer;
+.actionButtonArea {
+	top: 7rem;
+	width: 88vw;
+	display: flex;
 	position: absolute;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.actionButton {
+	cursor: pointer;
 }
 
 .card {
@@ -129,4 +135,10 @@
 
 .text {
 	margin-left: 1rem;
+}
+
+.errorMsg {
+	color: red;
+	margin-top: 10rem;
+	text-align: center;
 }

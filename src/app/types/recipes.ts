@@ -54,7 +54,7 @@ export interface RecipeFormStateI {
 export interface RecipeFormActionI {
 	payload: {
 		key: string;
-		value: Image|Array<string>|string|number|any;
+		value: Image|Array<string>|string|number|any|RecipeFormStateI;
 	};
 	type: string;
 }
@@ -70,7 +70,7 @@ export interface RecipeErrorFormStateI {
 export interface RecipeErrorFormActionI {
 	payload: {
 		key: string;
-		value: boolean;
+		value: boolean|RecipeErrorFormStateI;
 	};
 	type: string;
 }

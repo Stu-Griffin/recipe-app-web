@@ -2,6 +2,7 @@
 import RateBox from "../reusable/RateBox";
 
 //Icons
+import EditIcon from "../../../assets/icons/edit";
 import SavedIcon from "../../../assets/icons/saved";
 import DeleteIcon from "../../../assets/icons/delete";
 
@@ -23,6 +24,7 @@ import React, { ReactElement, useEffect, useState } from "react";
 import recipeAPI from "../../controller/api/recipes";
 import styles from "../../style/app/recipe-page.module.css";
 import { recipeTypeButtonStyle } from "../../controller/style";
+import { changeAdditionalValue } from "../../controller/redux/additional";
 import { removeSavedRecipe, addSavedRecipe } from "../../controller/redux/recipes";
 
 //Models
@@ -128,21 +130,37 @@ export default function RecipePage() {
 		console.log(response?.data);
 	};
 
+	const editRecipe = () => {
+		dispatch(changeAdditionalValue({key: "editRecipeId", value: recipe?._id}));
+		navigate("/create-recipe/");
+	};
+
 	if(!loadingStatus) {
 		if(recipe) {
 			return (
 				<main className={styles.container}>
 					{
 						(userId === recipe.authorId) &&
+						<div className={styles.actionButtonArea}>
+							<label
+								onClick={editRecipe}
+								className={styles.actionButton}
+							>
+								<EditIcon
+									width={35}
+									height={35}
+								/>
+							</label>
 							<label
 								onClick={deleteRecipe}
-								className={styles.delete}
+								className={styles.actionButton}
 							>
 								<DeleteIcon
 									width={25}
 									height={25}
 								/>
 							</label>
+						</div>
 					}
 					<article className={styles.card} style={{backgroundImage: `url(${recipe.image})`}}>
 						<div className={styles.linearGradient}>
@@ -216,7 +234,7 @@ export default function RecipePage() {
 			);
 		} else {
 			return (
-				<h1>Error</h1>
+				<h1 className={styles.errorMsg}>This recipe was deleted</h1>
 			);
 		}
 	} else {

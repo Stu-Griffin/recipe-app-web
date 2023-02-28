@@ -2,6 +2,8 @@ import { RecipeFormStateI, RecipeFormActionI, RecipeErrorFormStateI, RecipeError
 
 export function recipeFormReducer(state: RecipeFormStateI, action: RecipeFormActionI): RecipeFormStateI {
 	switch (action.type) {
+	case "set": 
+		return action.payload.value;
 	case "add":
 		return {...state, [action.payload.key]: action.payload.value};
 	case "addSteps":
@@ -27,6 +29,8 @@ export function recipeFormReducer(state: RecipeFormStateI, action: RecipeFormAct
 
 export function recipeErrorFormReducer(state: RecipeErrorFormStateI, action: RecipeErrorFormActionI): RecipeErrorFormStateI {
 	switch (action.type) {
+	case "set": 
+		return (action.payload.value as RecipeErrorFormStateI);
 	case "add":
 		return {...state, [action.payload.key]: action.payload.value};
 	default:

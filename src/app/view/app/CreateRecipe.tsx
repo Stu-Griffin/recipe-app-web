@@ -7,6 +7,7 @@ import ListAdd from "../reusable/ListAdd";
 
 //Types
 import { ProfileStateI } from "../../types/profile";
+import { AdditionalStateI } from "../../types/additional";
 import { AppDispatch, RootState } from "../../types/store";
 
 //Libraries
@@ -26,6 +27,7 @@ import { recipeFormReducer, recipeErrorFormReducer } from "../../controller/reci
 //Models
 import { recipeTypes } from "../../model/recipes";
 import { recipeFormState, recipeErrorFormState } from "../../model/recipes";
+import { RecipeErrorFormStateI, RecipeFormStateI } from "../../types/recipes";
 
 const allowedImgTypes = ["jpg", "png", "jpeg"];
 
@@ -34,16 +36,52 @@ export default function CreateRecipe() {
 	const navigate = useNavigate();
 	const dispatch: AppDispatch = useDispatch();
 	const [image, setImage] = useState<string>("");
+	const [imgId, setImgId] = useState<string>("");
 	const [disabledStatus, setDisabledStatus] = useState<boolean>(true);
 	const [recipe, recipeDispatch] = useReducer(recipeFormReducer, recipeFormState);
 	const { userId, user }: ProfileStateI = useSelector((state: RootState) => state.profile);
+	const { editRecipeId }: AdditionalStateI = useSelector((state: RootState) => state.additional);
 	const [recipError, recipeErrorDispatch] = useReducer(recipeErrorFormReducer, recipeErrorFormState);
 
 	useEffect(() => {
-		recipeDispatch({type: "add", payload: {key: "authorId", value: userId}});
-		recipeDispatch({type: "add", payload: {key: "authorLogin", value: user.login}});
-		recipeDispatch({type: "add", payload: {key: "type", value: (recipeTypes[0]).toLowerCase()}});
+		if(editRecipeId === "") {
+			recipeDispatch({type: "add", payload: {key: "authorId", value: userId}});
+			recipeDispatch({type: "add", payload: {key: "authorLogin", value: user.login}});
+			recipeDispatch({type: "add", payload: {key: "type", value: (recipeTypes[0]).toLowerCase()}});
+		} else {
+			setRecipe();
+		}
 	}, [user]);
+
+	const setRecipe = async (): Promise<void> => {
+		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
+		const response = await recipeAPI.getRecipeBuItsId(editRecipeId);
+		if(response?.status === 200 && response?.data) {
+			const recipeEdit: RecipeFormStateI = {
+				authorLogin: user.login,
+				rate: response.data.rate,
+				type: response.data.type,
+				steps: response.data.steps,
+				title: response.data.title,
+				image: response.data.image,
+				authorId: response.data.authorId,
+				ingredients: response.data.ingredients,
+				description: response.data.description,
+			};
+			const recipeEditErrors: RecipeErrorFormStateI = {
+				image: false,
+				title: false,
+				steps: false,
+				ingredients: false,
+				description: false,
+			};
+			setImage(response.data.image);
+			setImgId(response.data.imgId);
+			recipeDispatch({type: "set", payload: {key: "", value: recipeEdit}});
+			recipeErrorDispatch({type: "set", payload: {key: "", value: recipeEditErrors}});
+		}
+		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
+	};
 
 	useEffect(() => {
 		setDisabledStatus(!(Object.values(recipError).every((el: boolean) => el === false)));
@@ -93,15 +131,26 @@ export default function CreateRecipe() {
 		data.append("steps", (JSON.stringify(recipe.steps)));
 		data.append("ingredients", (JSON.stringify(recipe.ingredients)));
 
+		(editRecipeId !== "") && data.append("imgId", imgId);
+
 		return data;
 	};
 
 	const createRecipe = async (e: React.MouseEvent<HTMLElement>): Promise<void> => {
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
 
+		let response;
 		e.preventDefault();
-		const response = await recipeAPI.createRecipe(convertData());
-		if(response?.status === 200) move();
+		if(editRecipeId === "") {
+			response = await recipeAPI.createRecipe(convertData());
+		} else {
+			response = await recipeAPI.editRecipe(convertData(), editRecipeId);
+		}
+
+		if(response?.status === 200) {
+			dispatch(changeAdditionalValue({key: "editRecipeId", value: ""}));
+			move();
+		}
 		console.log(response?.data);
 
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
@@ -158,7 +207,7 @@ export default function CreateRecipe() {
 						recipeErrorDispatch({type: "add", payload: {key: "description", value: regularValidation(e)}});
 					}}
 				/>
-				<select className={styles.checkbox} name="select" onChange={recipeTypeChange}>
+				<select className={styles.checkbox} name="select" defaultValue={recipe.type} onChange={recipeTypeChange}>
 					{
 						recipeTypes.map((el: string): ReactElement => {
 							return (
@@ -183,7 +232,9 @@ export default function CreateRecipe() {
 				/>
 				<ListAdd
 					title="Steps"
+					multiple={true}
 					data={recipe.steps}
+					listNumbering={true}
 					placeholder="Enter Steps"
 					saveEl={(value: string): void => {
 						recipeDispatch({type: "addSteps", payload: {key: "steps", value: value}});
@@ -200,7 +251,7 @@ export default function CreateRecipe() {
 					disabled={disabledStatus}
 					className={styles.button}
 					style={getButtonStyle(disabledStatus)} 
-				>Create recipe</button>
+				>{(editRecipeId === "") ? "Create" : "Change"} recipe</button>
 			</form>
 		</main>
 	);

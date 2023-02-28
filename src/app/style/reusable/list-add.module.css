@@ -25,14 +25,14 @@
 
 .element {
 	display: flex;
+	padding: 10px;
 	align-items: center;
 	justify-content: space-between;
-	padding: 10px;
 	border-bottom: 1px solid black;
 }
 
 .text {
-	width: 95%;
+	width: 90%;
 	font-size: 18px;
 }
 
