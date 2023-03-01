@@ -69,23 +69,39 @@
 	margin-bottom: 1rem;
 	margin-inline: auto;
 	align-items: center;
-	justify-content:  space-between;
+	justify-content: flex-end;
 }
 
-.author{
-	color: #D9D9D9;
+.avatar {
+	width: 75px;
+	height: 75px;
+	border-radius: 100px;
 }
 
-.title {
-	color: white;
+.recipeMainInfo {
+	width: 80vw;
+	display: flex;
+  margin-top: 1rem;
+	align-items: center;
+}
+
+.info {
+	margin-left: 2rem;
+}
+
+.author, .title {
+	color: black;
 }
 
 .button {
+	right: 1rem;
 	border: none;
+	bottom: 1rem;
 	display: flex;
 	width: 2.5rem;
 	height: 2.5rem;
 	cursor: pointer;
+	position: relative;
 	align-items: center;
 	border-radius: 100px;
 	justify-content: center;
@@ -101,6 +117,13 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+
+@media screen and (max-width: 500px) {
+  .navigation {
+		margin-top: 1rem;
+		flex-direction: column;
+	}
 }
 
 .navigationButton {

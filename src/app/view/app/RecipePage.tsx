@@ -5,6 +5,7 @@ import RateBox from "../reusable/RateBox";
 import EditIcon from "../../../assets/icons/edit";
 import SavedIcon from "../../../assets/icons/saved";
 import DeleteIcon from "../../../assets/icons/delete";
+import DefaultAvatar from "../../../assets/icons/avatar";
 
 //Types
 import { ProfileStateI } from "../../types/profile";
@@ -21,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import React, { ReactElement, useEffect, useState } from "react";
 
 //Functions
+import userAPI from "../../controller/api/user";
 import recipeAPI from "../../controller/api/recipes";
 import styles from "../../style/app/recipe-page.module.css";
 import { recipeTypeButtonStyle } from "../../controller/style";
@@ -50,7 +52,8 @@ export default function RecipePage() {
 	const [loadingStatus, setLoadingStatus] = useState<boolean>(true);
 	const [recipe, setRecipe] = useState<RecipeI|undefined>(undefined);
 	const [activeList, setActiveList] = useState<string>("ingredients");
-	const { userId }: ProfileStateI = useSelector((state: RootState) => state.profile);
+	const [authorAvatar, setAuthorAvatar] = useState<string|undefined>(undefined);
+	const { userId, user }: ProfileStateI = useSelector((state: RootState) => state.profile);
 	const { savedRecipes }: RecipesStateI = useSelector((state: RootState) => state.recipes);
 
 	useEffect(() => {
@@ -114,7 +117,14 @@ export default function RecipePage() {
 
 		if(recipeId) {
 			const response = await recipeAPI.getRecipeBuItsId(recipeId);
-			if(response?.status === 200) setRecipe(response?.data);
+			if(response?.status === 200 && response?.data) {
+				const user = await userAPI.getUser(response.data.authorId);
+				if(user.status === 200 && user.data) {
+					response.data.authorLogin = user.data.login;
+					setAuthorAvatar(user.data.avatar);
+				}
+				setRecipe(response.data);
+			}
 		}
 
 		setTimeout(() => {
@@ -130,9 +140,17 @@ export default function RecipePage() {
 		console.log(response?.data);
 	};
 
-	const editRecipe = () => {
+	const editRecipe = (): void => {
 		dispatch(changeAdditionalValue({key: "editRecipeId", value: recipe?._id}));
 		navigate("/create-recipe/");
+	};
+
+	const getAuthorLogin = (): string => {
+		if(recipe?.authorLogin === user.login) {
+			return "You";
+		} else {
+			return ((recipe as RecipeI).authorLogin.length > 15 ? `${(recipe as RecipeI).authorLogin.slice(0, 15)}...` : (recipe as RecipeI).authorLogin);
+		}
 	};
 
 	if(!loadingStatus) {
@@ -182,14 +200,9 @@ export default function RecipePage() {
 									<button className={styles.changeRateButton} onClick={changeRate}>Vote</button>
 								</div>
 							</Modal>
-							<div className={styles.content}>
-								<div>
-									<h1 className={styles.title}>{recipe?.title}</h1>
-									<p className={styles.author}>{recipe?.authorLogin}</p>
-								</div>
-								{
-									(userId !== "") &&
-									<button 
+							{
+								(userId !== "") &&
+									<label 
 										onClick={saveRecipe}
 										className={styles.button}
 									>
@@ -198,11 +211,30 @@ export default function RecipePage() {
 											height={25}
 											fill={checkSavedRecipes() ? "black" : "transparent"}
 										/>
-									</button>
-								}
-							</div>
+									</label>
+							}
 						</div>
 					</article>
+					<div className={styles.recipeMainInfo}>
+						{
+							(authorAvatar !== "" && authorAvatar) 
+								?
+								<img 
+									className={styles.avatar}
+									src={authorAvatar} 
+									alt="author avatar"
+								/>
+								:
+								<DefaultAvatar
+									width={75}
+									height={75}
+								/>
+						}
+						<div className={styles.info}>
+							<h3 className={styles.title}>{recipe?.title}</h3>
+							<h4 className={styles.author}>By: {getAuthorLogin()}</h4>
+						</div>
+					</div>
 					<p className={styles.description}>{recipe.description}</p>
 					<article>
 						<div className={styles.navigation}>

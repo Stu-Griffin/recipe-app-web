@@ -87,7 +87,7 @@ export default function RecipesList({ data, length, emptyMsg, deleteAbility, tit
 	return (
 		<article className={styles.container}>
 			<div className={styles.header}>
-				<h2 className={styles.title}>{title}</h2>
+				<h3 className={styles.title}>{title}</h3>
 				<p className={styles.ammount}>{length} results</p>
 			</div>
 			{(!loadingStatus) && getList()}
