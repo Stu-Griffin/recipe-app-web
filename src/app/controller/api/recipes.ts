@@ -1,6 +1,6 @@
 import axios from "axios";
 import env from "react-dotenv";
-import { changeRate } from "../../types/recipes";
+import { changeRate, RecipeSearchConfigI } from "../../types/recipes";
 
 class RecipeAPI {
 	constructor(protected url: string, private cancelToken: any) {}
@@ -60,11 +60,19 @@ class RecipeAPI {
 		}
 	}
 
-	async getRecipes(type: string, page: number) {
+	async getRecipes(type: string, page: number|undefined, options: RecipeSearchConfigI) {
 		if (typeof this.cancelToken !== typeof undefined) this.cancelToken.cancel("Operation canceled due to new request.");
 		this.cancelToken = axios.CancelToken.source();
+		
 		try {
-			const response = await axios.get(`${this.url}?type=${type}&page=${page}`, { cancelToken: this.cancelToken.token });
+			const response = await axios.get(`${this.url}`, { 
+				params: { 
+					type: type,
+					page: page,
+					...options
+				},
+				cancelToken: this.cancelToken.token 
+			});
 			if(response) return response.data;
 		} catch (e) {
 			console.log(e);

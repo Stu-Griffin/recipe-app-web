@@ -27,9 +27,10 @@ interface PropsI {
 	emptyMsg: string;
 	deleteAbility: boolean;
 	data: RecipeI[]|SavedRecipeI[];
+	ammountClickHandler?: () => void;
 }
 
-export default function RecipesList({ data, length, emptyMsg, deleteAbility, title }: PropsI) {
+export default function RecipesList({ ammountClickHandler, data, length, emptyMsg, deleteAbility, title }: PropsI) {
 	const nodeRef = useRef(null);
 	const dispatch: AppDispatch = useDispatch();
 	const [deleteId, setDeleteId] = useState<string|null>(null);
@@ -88,7 +89,10 @@ export default function RecipesList({ data, length, emptyMsg, deleteAbility, tit
 		<article className={styles.container}>
 			<div className={styles.header}>
 				<h3 className={styles.title}>{title}</h3>
-				<p className={styles.ammount}>{length} results</p>
+				<p 
+					className={styles.ammount}
+					onClick={ammountClickHandler}
+				>{length} results</p>
 			</div>
 			{(!loadingStatus) && getList()}
 			<Puff

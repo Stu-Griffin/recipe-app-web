@@ -1,4 +1,4 @@
-import { RecipeFormStateI, RecipeFormActionI, RecipeErrorFormStateI, RecipeErrorFormActionI } from "../types/recipes";
+import { RecipeFormStateI, RecipeFormActionI, RecipeErrorFormStateI, RecipeErrorSearchConfigI, RecipeSearchConfigI, RecipeErrorFormActionI } from "../types/recipes";
 
 export function recipeFormReducer(state: RecipeFormStateI, action: RecipeFormActionI): RecipeFormStateI {
 	switch (action.type) {
@@ -31,6 +31,28 @@ export function recipeErrorFormReducer(state: RecipeErrorFormStateI, action: Rec
 	switch (action.type) {
 	case "set": 
 		return (action.payload.value as RecipeErrorFormStateI);
+	case "add":
+		return {...state, [action.payload.key]: action.payload.value};
+	default:
+		return state;
+	}
+}
+
+export function recipeSearchConfigReducer(state: RecipeSearchConfigI, action: any): RecipeSearchConfigI {
+	switch (action.type) {
+	case "set": 
+		return action.payload.value;
+	case "add":
+		return {...state, [action.payload.key]: action.payload.value};
+	default:
+		return state;
+	}
+}
+
+export function recipeErrorSearchConfigReducer(state: RecipeErrorSearchConfigI, action: any): RecipeErrorSearchConfigI {
+	switch (action.type) {
+	case "set": 
+		return action.payload.value;
 	case "add":
 		return {...state, [action.payload.key]: action.payload.value};
 	default:

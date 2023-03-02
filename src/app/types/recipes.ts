@@ -59,6 +59,12 @@ export interface RecipeFormActionI {
 	type: string;
 }
 
+export interface RecipeSearchConfigI {
+	rate: string;
+	title: string;
+	author: string;
+}
+
 export interface RecipeErrorFormStateI {
 	image: null|boolean;
 	title: null|boolean;
@@ -73,4 +79,10 @@ export interface RecipeErrorFormActionI {
 		value: boolean|RecipeErrorFormStateI;
 	};
 	type: string;
+}
+
+export interface RecipeErrorSearchConfigI {
+	rate: null|boolean;
+	title: null|boolean;
+	author: null|boolean;
 }

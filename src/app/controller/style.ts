@@ -10,8 +10,8 @@ export const getButtonStyle = (status: boolean): object => {
 	}
 };
 
-export const recipeTypeButtonStyle = (recipeType: string, value: string): object => {
-	if(recipeType === value.toLowerCase()) {
+export const recipeTypeButtonStyle = (savedValue: string, value: string): object => {
+	if(savedValue === value.toLowerCase()) {
 		return {
 			color: "white",
 			backgroundColor: "#129575",
