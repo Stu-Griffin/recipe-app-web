@@ -5,14 +5,14 @@ import RecipesList from "../reusable/RecipeList";
 //Icons
 
 //Types
-import { ReactElement } from "react";
+import { ReactElement, useEffect } from "react";
 import { AdditionalStateI } from "../../types/additional";
 import { AppDispatch, RootState } from "../../types/store";
 import { RecipeI, RecipeSearchConfigI } from "../../types/recipes";
 
 //Libraries
 import Modal from "react-modal";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 //Functions

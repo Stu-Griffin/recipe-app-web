@@ -14,13 +14,13 @@ export interface ProfileFormStateI {
 	login: string;
 	email: string;
 	password: string;
-	avatar: any;
+	avatar: File|null;
 }
 
 export interface ProfileFormActionI {
 	payload: {
 		key: string;
-		value: any|string|null;
+		value: File|string|null|undefined;
 	};
 	type: string;
 }

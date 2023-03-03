@@ -85,8 +85,6 @@ export default function SearchArea({ search }: PropsI): ReactElement {
 			<button
 				onClick={() => {
 					search(searchConfig);
-					searchConfigDispatch({type: "set", payload: {key: "", value: recipeSearchConfig}});
-					errorSearchConfigDispatch({type: "set", payload: {key: "", value: recipeErrorSearchConfig}});
 				}}
 				disabled={searchButtonDisabled} 
 				className={styles.searchButton}

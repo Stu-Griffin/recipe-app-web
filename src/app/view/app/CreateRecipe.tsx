@@ -77,12 +77,12 @@ export default function CreateRecipe() {
 
 		data.append("type", recipe.type);
 		data.append("title", recipe.title);
-		data.append("image", recipe.image);
 		data.append("rate", `${recipe.rate}`);
 		data.append("authorId", recipe.authorId);
 		data.append("authorLogin", recipe.authorLogin);
 		data.append("description", recipe.description);
 		data.append("steps", (JSON.stringify(recipe.steps)));
+		data.append("image", JSON.parse(JSON.stringify(recipe.image)));
 		data.append("ingredients", (JSON.stringify(recipe.ingredients)));
 
 		(editRecipeId !== "") && data.append("imgId", imgId);

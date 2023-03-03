@@ -34,6 +34,12 @@ export interface SavedRecipeI {
 	authorLogin: string;
 }
 
+export interface PickImageArgI {
+	el: string;  
+	what: number; 
+	where: number; 
+}
+
 export interface RecipesStateI {
 	savedRecipes: SavedRecipeI[];
 	[key: string]: SavedRecipeI[];
@@ -44,7 +50,7 @@ export interface RecipeFormStateI {
 	type: string;
 	title: string;
 	authorId: string;
-	image: any;
+	image: File|null;
 	authorLogin: string;
 	description: string;
 	steps: Array<string>;
@@ -54,7 +60,7 @@ export interface RecipeFormStateI {
 export interface RecipeFormActionI {
 	payload: {
 		key: string;
-		value: Image|Array<string>|string|number|any|RecipeFormStateI;
+		value: Image|Array<string>|string|number|File|RecipeFormStateI|PickImageArgI|undefined;
 	};
 	type: string;
 }
@@ -85,4 +91,20 @@ export interface RecipeErrorSearchConfigI {
 	rate: null|boolean;
 	title: null|boolean;
 	author: null|boolean;
+}
+
+export interface RecipeSearchConfigActionI {
+	payload: {
+		key: string;
+		value: string;
+	};
+	type: string;
+}
+
+export interface RecipeErrorSearchConfigActionI {
+	payload: {
+		key: string;
+		value: boolean|null;
+	};
+	type: string;
 }
