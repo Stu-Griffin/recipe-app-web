@@ -53,11 +53,7 @@ export default function Profile() {
 	useEffect(() => {
 		if(userId === "") {
 			const user = localStorage.getItem("user");
-			if(user) {
-				dispatch(changeProfileValue({key: "userId", value: user}));
-			} else {
-				navigate("/sign-in/");
-			}
+			(user) ? dispatch(changeProfileValue({key: "userId", value: user})) : navigate("/sign-in/");
 		} else {
 			getUsersRecipes();
 		}
@@ -115,9 +111,9 @@ export default function Profile() {
 	};
 
 	const saveChanges = async (e: React.MouseEvent<HTMLElement>): Promise<void> => {
-		e.preventDefault();
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
 
+		e.preventDefault();
 		const response = await userAPI.changeUser(userId, convertData());
 		if(response?.status === 200) {
 			userForm.avatar && dispatch(changeUserProfileValue({key: "avatar", value: avatar}));

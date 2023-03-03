@@ -8,7 +8,6 @@ const profileState: ProfileStateI = {
 		avatarId: "",
 	},
 	userId: "",
-	// userId: "63f241c7ed638a95b83f7575",
 };
 
 export const profileSlice = createSlice({

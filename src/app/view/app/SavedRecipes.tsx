@@ -30,11 +30,7 @@ export default function SavedRecipes(): ReactElement {
 	useEffect(() => {
 		if(userId === "") {
 			const user = localStorage.getItem("user");
-			if(user) {
-				dispatch(changeProfileValue({key: "userId", value: user}));
-			} else {
-				navigate("/sign-in/");
-			}
+			(user) ? dispatch(changeProfileValue({key: "userId", value: user})) : navigate("/sign-in/");
 		} else {
 			getSavedRecipes();
 		}

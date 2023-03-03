@@ -59,9 +59,22 @@ export default function InputArea({ style, title, type, value, error, placeholde
 			{
 				(multiple)
 					?
-					<textarea style={getInputStyle()} className={styles.input} value={value} placeholder={placeholder} onChange={(e) => onChangeFunc(e.target.value)}></textarea>
+					<textarea 
+						value={value} 
+						style={getInputStyle()} 
+						className={styles.input} 
+						placeholder={placeholder} 
+						onChange={(e) => onChangeFunc(e.target.value)}
+					></textarea>
 					:
-					<input type={type} className={styles.input} style={getInputStyle()} value={value} placeholder={placeholder} onChange={(e) => onChangeFunc(e.target.value)}/>
+					<input 
+						type={type} 
+						value={value} 
+						style={getInputStyle()} 
+						className={styles.input} 
+						placeholder={placeholder} 
+						onChange={(e) => onChangeFunc(e.target.value)}
+					/>
 			}
 		</div>
 	);

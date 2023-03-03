@@ -26,11 +26,7 @@ export default function RecipeCard({id, rate, image, title, authorLogin}: PropsI
 	const navigate = useNavigate();
 
 	const getTitle = (): string => {
-		if(title?.length > 12) {
-			return `${title.slice(0, 12)}...`;
-		} else {
-			return title;
-		}
+		return (title?.length > 12) ? `${title.slice(0, 12)}...` : title;
 	};
 
 	return (

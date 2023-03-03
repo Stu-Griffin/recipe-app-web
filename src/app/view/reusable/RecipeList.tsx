@@ -5,8 +5,8 @@ import RecipeCard from "../reusable/RecipeCard";
 import CrossIcon from "../../../assets/icons/cross";
 
 //Types
-import { AppDispatch, RootState } from "../../types/store";
 import { AdditionalStateI } from "../../types/additional";
+import { AppDispatch, RootState } from "../../types/store";
 import { RecipeI, SavedRecipeI } from "../../types/recipes";
 
 //Libraries
@@ -56,7 +56,10 @@ export default function RecipesList({ ammountClickHandler, data, length, emptyMs
 										in={!(deleteId === el._id)}
 										onExited={() => dispatch(removeSavedRecipe(deleteId))}
 									>
-										<div className={styles.recipe} ref={nodeRef}>
+										<div
+											ref={nodeRef}
+											className={styles.recipe}
+										>
 											{
 												(deleteAbility) 
 												&&

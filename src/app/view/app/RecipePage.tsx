@@ -61,13 +61,7 @@ export default function RecipePage() {
 	}, [recipeId]);
 
 	useEffect(() => {
-		if(recipe) {
-			if(activeList === "ingredients") {
-				setData(recipe.ingredients);
-			} else {
-				setData(recipe.steps);
-			}
-		}
+		if(recipe) (activeList === "ingredients") ? setData(recipe.ingredients) : setData(recipe.steps);
 	}, [activeList, recipe]);
 
 	const toggle = (): void => {
@@ -89,23 +83,21 @@ export default function RecipePage() {
 		}
 	};
 
-	const checkSavedRecipes = (): boolean => {
-		return savedRecipes.some((el: SavedRecipeI) => el._id === recipe?._id);
+	const editRecipe = (): void => {
+		dispatch(changeAdditionalValue({key: "editRecipeId", value: recipe?._id}));
+		navigate("/create-recipe/");
 	};
 
-	const changeRate = async (): Promise<void> => {
-		toggle();
-		setLoadingStatus(true);
-
-		const response = await recipeAPI.changeRecipesRate((recipe as RecipeI)._id, { newRate: rating, rate: (recipe as RecipeI).rate });
-		if(response?.status === 200) {
-			const newRecipe = JSON.parse(JSON.stringify(recipe));
-			newRecipe.rate = Math.round((((recipe as RecipeI).rate)+(rating))/2);
-			setRecipe(newRecipe);
+	const getAuthorLogin = (): string => {
+		if(recipe?.authorLogin === user.login) {
+			return "You";
+		} else {
+			return ((recipe as RecipeI).authorLogin.length > 15 ? `${(recipe as RecipeI).authorLogin.slice(0, 15)}...` : (recipe as RecipeI).authorLogin);
 		}
-		console.log(response?.data);
+	};
 
-		setLoadingStatus(false);
+	const checkSavedRecipes = (): boolean => {
+		return savedRecipes.some((el: SavedRecipeI) => el._id === recipe?._id);
 	};
 
 	const handleRating = (rate: number): void => {
@@ -132,25 +124,27 @@ export default function RecipePage() {
 		}, 1500);
 	};
 
+	const changeRate = async (): Promise<void> => {
+		setLoadingStatus(true);
+
+		toggle();
+		const response = await recipeAPI.changeRecipesRate((recipe as RecipeI)._id, { newRate: rating, rate: (recipe as RecipeI).rate });
+		if(response?.status === 200) {
+			const newRecipe = JSON.parse(JSON.stringify(recipe));
+			newRecipe.rate = Math.round((((recipe as RecipeI).rate)+(rating))/2);
+			setRecipe(newRecipe);
+		}
+		console.log(response?.data);
+
+		setLoadingStatus(false);
+	};
+
 	const deleteRecipe = async (): Promise<void> => {
 		setLoadingStatus(true);
 		const response = await recipeAPI.deleteRecipe((recipe as RecipeI)._id, (recipe as RecipeI).imgId);
 		setLoadingStatus(false);
 		if(response?.status === 200) navigate("/");
 		console.log(response?.data);
-	};
-
-	const editRecipe = (): void => {
-		dispatch(changeAdditionalValue({key: "editRecipeId", value: recipe?._id}));
-		navigate("/create-recipe/");
-	};
-
-	const getAuthorLogin = (): string => {
-		if(recipe?.authorLogin === user.login) {
-			return "You";
-		} else {
-			return ((recipe as RecipeI).authorLogin.length > 15 ? `${(recipe as RecipeI).authorLogin.slice(0, 15)}...` : (recipe as RecipeI).authorLogin);
-		}
 	};
 
 	if(!loadingStatus) {
@@ -197,7 +191,10 @@ export default function RecipePage() {
 							>
 								<div className={styles.changeRateBox}>
 									<Rating onClick={handleRating}/>
-									<button className={styles.changeRateButton} onClick={changeRate}>Vote</button>
+									<button 
+										onClick={changeRate}
+										className={styles.changeRateButton} 
+									>Vote</button>
 								</div>
 							</Modal>
 							{

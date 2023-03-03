@@ -1,31 +1,28 @@
 //Components
-import InputArea from "../reusable/Input";
+import SearchArea from "./SearchArea";
 import RecipesList from "../reusable/RecipeList";
 
 //Icons
 
 //Types
 import { ReactElement } from "react";
-import { RecipeI, RecipeSearchConfigI } from "../../types/recipes";
 import { AdditionalStateI } from "../../types/additional";
 import { AppDispatch, RootState } from "../../types/store";
+import { RecipeI, RecipeSearchConfigI } from "../../types/recipes";
 
 //Libraries
 import Modal from "react-modal";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useEffect, useState, useReducer } from "react";
 
 //Functions
 import styles from "../../style/app/main.module.css";
 import recipeAPI from "../../controller/api/recipes";
-import { getButtonStyle } from "../../controller/style";
 import { recipeTypeButtonStyle } from "../../controller/style";
-import { regularValidation } from "../../controller/validation";
 import { changeAdditionalValue } from "../../controller/redux/additional";
-import { recipeErrorSearchConfigReducer, recipeSearchConfigReducer } from "../../controller/recipes";
 
 //Models
-import { recipeTypes, recipeErrorSearchConfig, recipeSearchConfig } from "../../model/recipes";
+import { recipeSearchConfig, recipeTypes } from "../../model/recipes";
 
 const customStyles = {
 	content: {
@@ -43,17 +40,10 @@ export default function Main(): ReactElement {
 	const [modalIsOpen, setIsOpen] = useState<boolean>(false);
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [recipes, setRecipes] = useState<Array<RecipeI>>([]);
-	const [searchButtonDisabled, setSearchButtonDisabled] = useState<boolean>(true);
-	const [searchConfig, searchConfigDispatch] = useReducer(recipeSearchConfigReducer, recipeSearchConfig);
 	const { recipeType, loadingStatus }: AdditionalStateI = useSelector((state: RootState) => state.additional);
-	const [errorSearchConfig, errorSearchConfigDispatch] = useReducer(recipeErrorSearchConfigReducer, recipeErrorSearchConfig);
 
 	useEffect(() => {
-		setSearchButtonDisabled(!Object.values(errorSearchConfig).some((el: boolean|null) => el === false));
-	}, [errorSearchConfig]);
-
-	useEffect(() => {
-		getRecipes(recipeType, currentPage, searchConfig, false);
+		getRecipes(recipeType, currentPage, recipeSearchConfig, false);
 	}, [recipeType, currentPage]);
 
 	const toggle = (): void => {
@@ -64,15 +54,9 @@ export default function Main(): ReactElement {
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
 		const response = await recipeAPI.getRecipes(type, page, options);
 		if(response?.status === 200 && response?.data) {
-			if(searchStatus) {
-				setRecipes([...(response?.data as RecipeI[])]);
-				searchConfigDispatch({type: "set", payload: {key: "", value: recipeSearchConfig}});
-				errorSearchConfigDispatch({type: "set", payload: {key: "", value: recipeErrorSearchConfig}});
-			} else {
-				setRecipes([...recipes, ...(response?.data as RecipeI[])]);
-			}
-			dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
+			(searchStatus) ? setRecipes([...(response?.data as RecipeI[])]) : setRecipes([...recipes, ...(response?.data as RecipeI[])]);
 		}
+		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
 	};
 
 	const changeRecipesType = async (type: string): Promise<void> => {
@@ -102,65 +86,12 @@ export default function Main(): ReactElement {
 				isOpen={modalIsOpen}
 				onRequestClose={toggle}
 			>
-				<div className={styles.modal}>
-					<InputArea
-						error={null}
-						title="Author login"
-						placeholder="Author login"
-						value={searchConfig.author}
-						onChangeFunc={(e: string) => {
-							searchConfigDispatch({type: "add", payload: {key: "author", value: e}});
-							errorSearchConfigDispatch({type: "add", payload: {key: "author", value: regularValidation(e)}});
-						}}
-					/>
-					<InputArea
-						error={null}
-						title="Recipe title"
-						placeholder="Recipe title"
-						value={searchConfig.title}
-						onChangeFunc={(e: string) => {
-							searchConfigDispatch({type: "add", payload: {key: "title", value: e}});
-							errorSearchConfigDispatch({type: "add", payload: {key: "title", value: regularValidation(e)}});
-						}}
-					/>
-					<div className={styles.ratesArea}>
-						<h3>Recipes rates</h3>
-						<div className={styles.ratesList}>
-							{
-								["5", "4", "3", "2", "1"].map((el: string, index: number): ReactElement => {
-									return (
-										<button 
-											key={index}
-											onClick={() => {
-												searchConfigDispatch({type: "add", payload: {key: "rate", value: el}});
-												errorSearchConfigDispatch({type: "add", payload: {key: "rate", value: regularValidation(el)}});
-											}}
-											className={styles.rates}
-											style={recipeTypeButtonStyle(searchConfig.rate, el)}
-										>{el}</button>
-									);
-								})
-							}
-							<button 
-								onClick={() => {
-									searchConfigDispatch({type: "add", payload: {key: "rate", value: ""}});
-									errorSearchConfigDispatch({type: "add", payload: {key: "rate", value: regularValidation("")}});
-								}}
-								className={styles.rates}
-								style={recipeTypeButtonStyle(searchConfig.rate, "")}
-							>clear</button>
-						</div>
-					</div>
-					<button
-						disabled={searchButtonDisabled} 
-						className={styles.searchButton}
-						style={getButtonStyle(searchButtonDisabled)}
-						onClick={() => {
-							toggle();
-							getRecipes(recipeType, undefined, searchConfig, true);
-						}}
-					>Search</button>
-				</div>
+				<SearchArea
+					search={(config: RecipeSearchConfigI): void => {
+						toggle();
+						getRecipes(recipeType, undefined, config, true);
+					}}
+				/>
 			</Modal>
 			<RecipesList
 				data={recipes}

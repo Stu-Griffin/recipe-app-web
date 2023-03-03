@@ -9,11 +9,12 @@ import ListAdd from "../reusable/ListAdd";
 import { ProfileStateI } from "../../types/profile";
 import { AdditionalStateI } from "../../types/additional";
 import { AppDispatch, RootState } from "../../types/store";
+import { RecipeErrorFormStateI, RecipeFormStateI } from "../../types/recipes";
 
 //Libraries
 import { useNavigate } from "react-router-dom";
-import ImageUploading, { ImageListType } from "react-images-uploading";
 import { useDispatch, useSelector } from "react-redux";
+import ImageUploading, { ImageListType } from "react-images-uploading";
 import React, { ReactElement, useEffect, useReducer, useState } from "react";
 
 //Functions
@@ -25,9 +26,7 @@ import { changeAdditionalValue } from "../../controller/redux/additional";
 import { recipeFormReducer, recipeErrorFormReducer } from "../../controller/recipes";
 
 //Models
-import { recipeTypes } from "../../model/recipes";
-import { recipeFormState, recipeErrorFormState } from "../../model/recipes";
-import { RecipeErrorFormStateI, RecipeFormStateI } from "../../types/recipes";
+import { recipeFormState, recipeErrorFormState, recipeTypes } from "../../model/recipes";
 
 const allowedImgTypes = ["jpg", "png", "jpeg"];
 
@@ -53,36 +52,6 @@ export default function CreateRecipe() {
 		}
 	}, [user]);
 
-	const setRecipe = async (): Promise<void> => {
-		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
-		const response = await recipeAPI.getRecipeBuItsId(editRecipeId);
-		if(response?.status === 200 && response?.data) {
-			const recipeEdit: RecipeFormStateI = {
-				authorLogin: user.login,
-				rate: response.data.rate,
-				type: response.data.type,
-				steps: response.data.steps,
-				title: response.data.title,
-				image: response.data.image,
-				authorId: response.data.authorId,
-				ingredients: response.data.ingredients,
-				description: response.data.description,
-			};
-			const recipeEditErrors: RecipeErrorFormStateI = {
-				image: false,
-				title: false,
-				steps: false,
-				ingredients: false,
-				description: false,
-			};
-			setImage(response.data.image);
-			setImgId(response.data.imgId);
-			recipeDispatch({type: "set", payload: {key: "", value: recipeEdit}});
-			recipeErrorDispatch({type: "set", payload: {key: "", value: recipeEditErrors}});
-		}
-		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
-	};
-
 	useEffect(() => {
 		setDisabledStatus(!(Object.values(recipError).every((el: boolean) => el === false)));
 	}, [recipError]);
@@ -103,21 +72,6 @@ export default function CreateRecipe() {
 		}
 	}, [recipe.ingredients]);
 
-	const move = (): void => {
-		navigate("/");
-	};
-
-	const pickImage = (imageList: ImageListType): void => {
-		const file = imageList[0].file;
-		if(allowedImgTypes.some((el: string) => el === file?.type.split("/")[1])) {
-			setImage(imageList[0].data_url);
-			recipeDispatch({type: "add", payload: {key: "image", value: file}});
-			recipeErrorDispatch({type: "add", payload: {key: "image", value: false}});
-		} else {
-			alert(`Image should be in ${allowedImgTypes} format`);
-		}
-	};
-
 	const convertData = (): FormData => {
 		const data: FormData = new FormData();
 
@@ -136,28 +90,68 @@ export default function CreateRecipe() {
 		return data;
 	};
 
-	const createRecipe = async (e: React.MouseEvent<HTMLElement>): Promise<void> => {
+	const setRecipe = async (): Promise<void> => {
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
+		
+		const response = await recipeAPI.getRecipeBuItsId(editRecipeId);
+		if(response?.status === 200 && response?.data) {
+			const recipeEdit: RecipeFormStateI = {
+				authorLogin: user.login,
+				rate: response.data.rate,
+				type: response.data.type,
+				steps: response.data.steps,
+				title: response.data.title,
+				image: response.data.image,
+				authorId: response.data.authorId,
+				ingredients: response.data.ingredients,
+				description: response.data.description,
+			};
+			const recipeEditErrors: RecipeErrorFormStateI = {
+				image: false,
+				title: false,
+				steps: false,
+				ingredients: false,
+				description: false,
+			};
 
-		let response;
-		e.preventDefault();
-		if(editRecipeId === "") {
-			response = await recipeAPI.createRecipe(convertData());
-		} else {
-			response = await recipeAPI.editRecipe(convertData(), editRecipeId);
+			setImage(response.data.image);
+			setImgId(response.data.imgId);
+
+			recipeDispatch({type: "set", payload: {key: "", value: recipeEdit}});
+			recipeErrorDispatch({type: "set", payload: {key: "", value: recipeEditErrors}});
 		}
-
-		if(response?.status === 200) {
-			dispatch(changeAdditionalValue({key: "editRecipeId", value: ""}));
-			move();
-		}
-		console.log(response?.data);
-
+		
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
+	};
+
+	const pickImage = (imageList: ImageListType): void => {
+		const file = imageList[0].file;
+		if(allowedImgTypes.some((el: string) => el === file?.type.split("/")[1])) {
+			setImage(imageList[0].data_url);
+			recipeDispatch({type: "add", payload: {key: "image", value: file}});
+			recipeErrorDispatch({type: "add", payload: {key: "image", value: false}});
+		} else {
+			console.log(`Image should be in ${allowedImgTypes} format`);
+		}
 	};
 
 	const recipeTypeChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
 		recipeDispatch({type: "add", payload: {key: "type", value: (e.target.value).toLowerCase()}});
+	};
+
+	const createRecipe = async (e: React.MouseEvent<HTMLElement>): Promise<void> => {
+		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
+
+		e.preventDefault();
+		const response = (editRecipeId === "") ? await recipeAPI.createRecipe(convertData()) : await recipeAPI.editRecipe(convertData(), editRecipeId);
+
+		if(response?.status === 200) {
+			dispatch(changeAdditionalValue({key: "editRecipeId", value: ""}));
+			navigate("/");
+		}
+		console.log(response?.data);
+
+		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
 	};
 	
 	return (
@@ -165,7 +159,6 @@ export default function CreateRecipe() {
 			<Loader/>
 			<form className={styles.form}>
 				<ImageUploading
-					multiple
 					value={[]}
 					onChange={pickImage}
 					dataURLKey="data_url"
@@ -174,7 +167,10 @@ export default function CreateRecipe() {
 					{({ onImageUpload }) => (
 						(image === "") 
 							?
-							<div className={styles.image} onClick={onImageUpload}>
+							<div 
+								onClick={onImageUpload}
+								className={styles.image} 
+							>
 								<p className={styles.imageText}>Pick recipe image</p>
 							</div>
 							:
@@ -211,7 +207,11 @@ export default function CreateRecipe() {
 					{
 						recipeTypes.map((el: string): ReactElement => {
 							return (
-								<option className={styles.checkboxEl} key={el} value={el}>{el}</option>
+								<option 
+									key={el} 
+									value={el}
+									className={styles.checkboxEl} 
+								>{el}</option>
 							);
 						})
 					}

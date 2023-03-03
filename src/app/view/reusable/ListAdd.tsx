@@ -84,7 +84,12 @@ export default function ListAdd({multiple, listNumbering, data, title, placehold
 											<Draggable key={index} draggableId={`${index}`} index={index}>
 												{(provided) => {
 													return (
-														<div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className={styles.element}>
+														<div 
+															ref={provided.innerRef} 
+															className={styles.element}
+															{...provided.draggableProps} 
+															{...provided.dragHandleProps} 
+														>
 															{(listNumbering) && <h2>{index+1}</h2>}
 															<p className={styles.text}>{el}</p>
 															<DeleteIcon

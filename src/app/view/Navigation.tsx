@@ -67,6 +67,24 @@ export default function Navigation(): ReactElement {
 		}
 	};
 
+	const getMenuIcon = (): ReactElement => {
+		if(menuIsOpen) {
+			return <CrossIcon 
+				width={30} 
+				height={30}
+				onClick={toggle} 
+				style={{cursor: "pointer"}} 
+			/>;
+		} else {
+			return <MenuIcon
+				width={30} 
+				height={30}
+				onClick={toggle} 
+				style={{cursor: "pointer"}}
+			/>;
+		}
+	};
+
 	const getInfoPart = (): ReactElement => {
 		if(Object.values(user).some((el: string) => {
 			if(el) {
@@ -100,24 +118,6 @@ export default function Navigation(): ReactElement {
 		} else {
 			localStorage.removeItem("user");
 			dispatch(changeProfileValue({key: "userId", value: ""}));
-		}
-	};
-
-	const getMenuIcon = (): ReactElement => {
-		if(menuIsOpen) {
-			return <CrossIcon 
-				width={30} 
-				height={30}
-				onClick={toggle} 
-				style={{cursor: "pointer"}} 
-			/>;
-		} else {
-			return <MenuIcon
-				width={30} 
-				height={30}
-				onClick={toggle} 
-				style={{cursor: "pointer"}}
-			/>;
 		}
 	};
 
