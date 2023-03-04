@@ -50,6 +50,12 @@ export default function Main(): ReactElement {
 		setIsOpen(!modalIsOpen);
 	};
 
+	const changeRecipesType = async (type: string): Promise<void> => {
+		setRecipes([]);
+		setCurrentPage(1);
+		dispatch(changeAdditionalValue({key: "recipeType", value: type}));		
+	};
+
 	const getRecipes = async (type: string, page: number|undefined, options: RecipeSearchConfigI, searchStatus: boolean): Promise<void> => {
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
 		const response = await recipeAPI.getRecipes(type, page, options);
@@ -57,12 +63,6 @@ export default function Main(): ReactElement {
 			(searchStatus) ? setRecipes([...(response?.data as RecipeI[])]) : setRecipes([...recipes, ...(response?.data as RecipeI[])]);
 		}
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
-	};
-
-	const changeRecipesType = async (type: string): Promise<void> => {
-		setRecipes([]);
-		setCurrentPage(1);
-		dispatch(changeAdditionalValue({key: "recipeType", value: type}));		
 	};
 
 	return (

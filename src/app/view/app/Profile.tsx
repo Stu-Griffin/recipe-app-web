@@ -93,7 +93,7 @@ export default function Profile() {
 	const getUsersRecipes = async (): Promise<void> => {
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
 
-		const response = await recipeAPI.getRecipeByAuthorId(userId);
+		const response = await recipeAPI.getRecipesByAuthorId(userId);
 		if(response?.status === 200) setRecipes(response?.data);
 		
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));

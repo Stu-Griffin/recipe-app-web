@@ -105,7 +105,7 @@ export default function RecipePage() {
 		setLoadingStatus(true);
 
 		if(recipeId) {
-			const response = await recipeAPI.getRecipeBuItsId(recipeId);
+			const response = await recipeAPI.getRecipeByItsId(recipeId);
 			if(response?.status === 200 && response?.data) {
 				const user = await userAPI.getUser(response.data.authorId);
 				if(user.status === 200 && user.data) {

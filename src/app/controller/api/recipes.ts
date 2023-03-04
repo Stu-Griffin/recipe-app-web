@@ -5,27 +5,9 @@ import { changeRate, RecipeSearchConfigI } from "../../types/recipes";
 class RecipeAPI {
 	constructor(protected url: string, private cancelToken: any) {}
 
-	async deleteRecipe(id: string, imgId: string) {
-		try {
-			const response = await axios.delete(`${this.url}/${id}`, {data: { imgId: imgId }});
-			if(response) return response.data;
-		} catch(e) {
-			console.log(e);
-		}
-	}
-
-	async getRecipeBuItsId(id: string) {
+	async getRecipeByItsId(id: string) {
 		try {
 			const response = await axios.get(`${this.url}/recipe/${id}`);
-			if(response) return response.data;
-		} catch (e) {
-			console.log(e);
-		}
-	}
-
-	async getSavedRecipes(savedRecipes: string[]) {
-		try {
-			const response = await axios.get(`${this.url}/saved-recipes`, {params: { savedRecipes: savedRecipes }});
 			if(response) return response.data;
 		} catch (e) {
 			console.log(e);
@@ -46,6 +28,33 @@ class RecipeAPI {
 		}
 	}
 
+	async getRecipesByAuthorId(id: string) {
+		try {
+			const response = await axios.get(`${this.url}/author/${id}`);
+			if(response) return response.data;
+		} catch(e) {
+			console.log(e);
+		}
+	}
+
+	async deleteRecipe(id: string, imgId: string) {
+		try {
+			const response = await axios.delete(`${this.url}/${id}`, {data: { imgId: imgId }});
+			if(response) return response.data;
+		} catch(e) {
+			console.log(e);
+		}
+	}
+
+	async getSavedRecipes(savedRecipes: string[]) {
+		try {
+			const response = await axios.get(`${this.url}/saved-recipes`, {params: { savedRecipes: savedRecipes }});
+			if(response) return response.data;
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
 	async editRecipe(recipe: FormData, id: string) {
 		try {
 			const response = await axios({
@@ -60,11 +69,11 @@ class RecipeAPI {
 		}
 	}
 
-	async getRecipeByAuthorId(id: string) {
+	async changeRecipesRate(id: string, rate: changeRate) {
 		try {
-			const response = await axios.get(`${this.url}/author/${id}`);
+			const response = await axios.put(`${this.url}/rating/${id}`, rate);
 			if(response) return response.data;
-		} catch(e) {
+		} catch (e) {
 			console.log(e);
 		}
 	}
@@ -82,15 +91,6 @@ class RecipeAPI {
 				},
 				cancelToken: this.cancelToken.token 
 			});
-			if(response) return response.data;
-		} catch (e) {
-			console.log(e);
-		}
-	}
-
-	async changeRecipesRate(id: string, rate: changeRate) {
-		try {
-			const response = await axios.put(`${this.url}/rating/${id}`, rate);
 			if(response) return response.data;
 		} catch (e) {
 			console.log(e);

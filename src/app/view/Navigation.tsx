@@ -104,10 +104,10 @@ export default function Navigation(): ReactElement {
 		const response = await userApi.getUser(userId);
 		if(response?.status === 200 && response?.data) {
 			const profile: ProfileUserI = {
-				login: response?.data.login, 
-				avatar: response?.data.avatar, 
-				avatarId: response?.data.avatarId,
-				savedRecipes: response?.data.savedRecipes,
+				login: response.data.login, 
+				avatar: response.data.avatar, 
+				avatarId: response.data.avatarId,
+				savedRecipes: response.data.savedRecipes,
 			};
 			dispatch(changeProfileValue({key: "user", value: profile}));
 		} else {

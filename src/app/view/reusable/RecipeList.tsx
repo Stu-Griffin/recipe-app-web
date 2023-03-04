@@ -46,7 +46,6 @@ export default function RecipesList({ ammountClickHandler, data, length, emptyMs
 			console.log(response.data);
 			dispatch(changeUserProfileValue({key: "savedRecipes", value: savedRecipes}));
 		}
-		dispatch(changeUserProfileValue({key: "savedRecipes", value: savedRecipes}));
 	};
 
 	const getList = (): ReactElement => {

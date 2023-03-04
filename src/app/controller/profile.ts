@@ -1,16 +1,5 @@
-//Components
-
-//Icons
-
-//Types
-import { ProfileFormStateI, ProfileFormActionI, ProfileErrorFormStateI, ProfileErrorFormActionI } from "../types/profile";
-
-//Libraries
-
-//Functions
-
-//Models
 import { profileErrorFormState, profileFormState } from "../model/profile";
+import { ProfileFormStateI, ProfileFormActionI, ProfileErrorFormStateI, ProfileErrorFormActionI } from "../types/profile";
 
 export function profileFormReducer(state: ProfileFormStateI, action: ProfileFormActionI): ProfileFormStateI {
 	switch (action.type) {

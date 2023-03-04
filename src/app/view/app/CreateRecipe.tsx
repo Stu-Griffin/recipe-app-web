@@ -93,7 +93,7 @@ export default function CreateRecipe() {
 	const setRecipe = async (): Promise<void> => {
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
 		
-		const response = await recipeAPI.getRecipeBuItsId(editRecipeId);
+		const response = await recipeAPI.getRecipeByItsId(editRecipeId);
 		if(response?.status === 200 && response?.data) {
 			const recipeEdit: RecipeFormStateI = {
 				authorLogin: user.login,

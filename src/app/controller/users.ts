@@ -1,15 +1,4 @@
-//Components
-
-//Icons
-
-//Types
 import { SignInUserFormStateI, SignInUserErrorFormStateI, SignInUserErrorFormActionI, SignInUserFormActionI, SignUpUserFormStateI, SignUpUserErrorFormStateI, SignUpUserFormActionI, SignUpUserErrorFormActionI} from "../types/user";
-
-//Libraries
-
-//Functions
-
-//Models
 
 export function signInUserFormReducer(state: SignInUserFormStateI, action: SignInUserFormActionI): SignInUserFormStateI {
 	switch (action.type) {

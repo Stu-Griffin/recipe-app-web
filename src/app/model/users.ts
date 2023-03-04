@@ -1,15 +1,4 @@
-//Components
-
-//Icons
-
-//Types
 import { SignInUserFormStateI, SignInUserErrorFormStateI, SignUpUserFormStateI, SignUpUserErrorFormStateI } from "../types/user";
-
-//Libraries
-
-//Functions
-
-//Models
 
 export const signInUserFormState: SignInUserFormStateI = {
 	email: "",
