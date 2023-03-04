@@ -25,24 +25,10 @@ export interface changeRate {
 	newRate: number;
 }
 
-export interface SavedRecipeI {
-	_id: string;
-	rate: number;
-	title: string;
-	image: string;
-	authorId: string;
-	authorLogin: string;
-}
-
 export interface PickImageArgI {
 	el: string;  
 	what: number; 
 	where: number; 
-}
-
-export interface RecipesStateI {
-	savedRecipes: SavedRecipeI[];
-	[key: string]: SavedRecipeI[];
 }
 
 export interface RecipeFormStateI {

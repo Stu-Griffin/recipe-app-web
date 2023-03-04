@@ -1,7 +1,9 @@
 export interface ProfileUserI {
 	login: string;
 	avatar: string;
-	[key: string]: string;
+	avatarId: string;
+	savedRecipes: string[];
+	[key: string]: string|string[];
 }
 
 export interface ProfileStateI {

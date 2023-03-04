@@ -16,7 +16,6 @@ import ProfileIcon from "../../assets/icons/profile";
 
 //Types
 import { ReactElement } from "react";
-import { RecipesStateI } from "../types/recipes";
 import { AppDispatch, RootState } from "../types/store";
 import { ProfileStateI, ProfileUserI } from "../types/profile";
 
@@ -35,7 +34,6 @@ import { changeProfileValue } from "../controller/redux/profile";
 export default function Navigation(): ReactElement {
 	const dispatch: AppDispatch = useDispatch();
 	const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false);
-	const { savedRecipes }: RecipesStateI = useSelector((state: RootState) => state.recipes);
 	const { userId, user }: ProfileStateI = useSelector((state: RootState) => state.profile);
 
 	useEffect(() => {
@@ -46,10 +44,6 @@ export default function Navigation(): ReactElement {
 			if(user) dispatch(changeProfileValue({key: "userId", value: user}));
 		}
 	}, [userId]);
-
-	useEffect(() => {
-		localStorage.setItem("saved-recipes", JSON.stringify(savedRecipes));
-	}, [savedRecipes]);
 
 	const toggle = (): void => {
 		setMenuIsOpen(!menuIsOpen);
@@ -86,7 +80,7 @@ export default function Navigation(): ReactElement {
 	};
 
 	const getInfoPart = (): ReactElement => {
-		if(Object.values(user).some((el: string) => {
+		if(Object.values(user).some((el: string|string[]) => {
 			if(el) {
 				return el.length !== 0;
 			} else {
@@ -113,6 +107,7 @@ export default function Navigation(): ReactElement {
 				login: response?.data.login, 
 				avatar: response?.data.avatar, 
 				avatarId: response?.data.avatarId,
+				savedRecipes: response?.data.savedRecipes,
 			};
 			dispatch(changeProfileValue({key: "user", value: profile}));
 		} else {

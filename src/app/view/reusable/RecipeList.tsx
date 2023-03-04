@@ -5,36 +5,49 @@ import RecipeCard from "../reusable/RecipeCard";
 import CrossIcon from "../../../assets/icons/cross";
 
 //Types
+import { RecipeI } from "../../types/recipes";
+import { ProfileStateI } from "../../types/profile";
 import { AdditionalStateI } from "../../types/additional";
 import { AppDispatch, RootState } from "../../types/store";
-import { RecipeI, SavedRecipeI } from "../../types/recipes";
 
 //Libraries
 import { Puff } from  "react-loader-spinner";
+import React, { ReactElement, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { CSSTransition } from "react-transition-group";
-import React, { ReactElement, useState, useRef } from "react";
 
 //Functions
+import userAPI from "../../controller/api/user";
 import styles from "../../style/reusable/recipes-list.module.css";
-import { removeSavedRecipe } from "../../controller/redux/recipes";
+import { changeUserProfileValue } from "../../controller/redux/profile";
 
 //Models
 
 interface PropsI {
 	title: string;
 	length: number;
+	data: RecipeI[];
 	emptyMsg: string;
 	deleteAbility: boolean;
-	data: RecipeI[]|SavedRecipeI[];
 	ammountClickHandler?: () => void;
 }
 
 export default function RecipesList({ ammountClickHandler, data, length, emptyMsg, deleteAbility, title }: PropsI) {
 	const nodeRef = useRef(null);
 	const dispatch: AppDispatch = useDispatch();
-	const [deleteId, setDeleteId] = useState<string|null>(null);
+	const { user, userId }: ProfileStateI = useSelector((state: RootState) => state.profile);
 	const { loadingStatus }: AdditionalStateI = useSelector((state: RootState) => state.additional);
+
+	const unSaveRecipe = async (id: string): Promise<void> => {
+		const formData: FormData = new FormData();
+		const savedRecipes = user.savedRecipes.filter((el: string) => el !== id);
+		formData.append("savedRecipes", JSON.stringify(savedRecipes));
+		const response = await userAPI.changeUser(userId, formData);
+		if(response?.status === 200 && response?.data) {
+			console.log(response.data);
+			dispatch(changeUserProfileValue({key: "savedRecipes", value: savedRecipes}));
+		}
+		dispatch(changeUserProfileValue({key: "savedRecipes", value: savedRecipes}));
+	};
 
 	const getList = (): ReactElement => {
 		if(length === 0) {
@@ -45,40 +58,31 @@ export default function RecipesList({ ammountClickHandler, data, length, emptyMs
 			return (
 				<div className={styles.list}>
 					{
-						data.map((el: RecipeI|SavedRecipeI) => {
+						data.map((el: RecipeI) => {
 							return (
 								<div key={el._id}>
-									<CSSTransition
-										timeout={300}
-										unmountOnExit
-										nodeRef={nodeRef}
-										classNames="recipe"
-										in={!(deleteId === el._id)}
-										onExited={() => dispatch(removeSavedRecipe(deleteId))}
+									<div
+										ref={nodeRef}
+										className={styles.recipe}
 									>
-										<div
-											ref={nodeRef}
-											className={styles.recipe}
-										>
-											{
-												(deleteAbility) 
+										{
+											(deleteAbility) 
 												&&
 												<CrossIcon 
 													width={30} 
 													height={30} 
 													style={{cursor: "pointer"}}
-													onClick={() => setDeleteId(el._id)}
+													onClick={() => unSaveRecipe(el._id)}
 												/>
-											}
-											<RecipeCard
-												id={el._id}
-												rate={el.rate} 
-												image={el.image} 
-												title={el.title} 
-												authorLogin={el.authorLogin}
-											/>
-										</div>
-									</CSSTransition>
+										}
+										<RecipeCard
+											id={el._id}
+											rate={el.rate} 
+											image={el.image} 
+											title={el.title} 
+											authorLogin={el.authorLogin}
+										/>
+									</div>
 								</div>
 							);
 						})

@@ -4,18 +4,18 @@ import RecipesList from "../reusable/RecipeList";
 //Icons
 
 //Types
-import { RecipesStateI } from "../../types/recipes";
+import { RecipeI } from "../../types/recipes";
 import { ProfileStateI } from "../../types/profile";
 import { AppDispatch, RootState } from "../../types/store";
 
 //Libraries
 import { useNavigate } from "react-router-dom";
-import React, { ReactElement, useEffect } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 //Functions
+import recipeAPI from "../../controller/api/recipes";
 import styles from "../../style/app/saved-recipes.module.css";
-import { changeRecipeValue } from "../../controller/redux/recipes";
 import { changeProfileValue } from "../../controller/redux/profile";
 import { changeAdditionalValue } from "../../controller/redux/additional";
 
@@ -24,23 +24,26 @@ import { changeAdditionalValue } from "../../controller/redux/additional";
 export default function SavedRecipes(): ReactElement {
 	const navigate = useNavigate();
 	const dispatch: AppDispatch = useDispatch();
-	const { userId }: ProfileStateI = useSelector((state: RootState) => state.profile);
-	const { savedRecipes }: RecipesStateI = useSelector((state: RootState) => state.recipes);
+	const [recipes, setRecipes] = useState<RecipeI[]>([]);
+	const { userId, user }: ProfileStateI = useSelector((state: RootState) => state.profile);
 
 	useEffect(() => {
 		if(userId === "") {
 			const user = localStorage.getItem("user");
 			(user) ? dispatch(changeProfileValue({key: "userId", value: user})) : navigate("/sign-in/");
-		} else {
-			getSavedRecipes();
 		}
 	}, [userId]);
 
-	const getSavedRecipes = (): void => {
+	useEffect(() => {
+		getSavedRecipes();
+	}, [user.savedRecipes]);
+
+	const getSavedRecipes = async (): Promise<void> => {
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
 		
-		const recipes = localStorage.getItem("saved-recipes");
-		if(recipes) dispatch(changeRecipeValue({key: "savedRecipes", value: JSON.parse(recipes)}));
+		const response = await recipeAPI.getSavedRecipes(user.savedRecipes);
+		if(response?.status === 200 && response?.data) setRecipes(response.data);
+		console.log(response);
 		
 		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
 	};
@@ -48,10 +51,10 @@ export default function SavedRecipes(): ReactElement {
 	return (
 		<main className={styles.container}>
 			<RecipesList
-				data={savedRecipes}
+				data={recipes}
 				deleteAbility={true}
 				title="Saved recipes"
-				length={savedRecipes.length}
+				length={recipes.length}
 				emptyMsg="You didn't save any recipes"
 			/>
 		</main>

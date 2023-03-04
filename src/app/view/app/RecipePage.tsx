@@ -8,9 +8,9 @@ import DeleteIcon from "../../../assets/icons/delete";
 import DefaultAvatar from "../../../assets/icons/avatar";
 
 //Types
+import { RecipeI } from "../../types/recipes";
 import { ProfileStateI } from "../../types/profile";
 import { AppDispatch, RootState } from "../../types/store";
-import { RecipeI, RecipesStateI, SavedRecipeI } from "../../types/recipes";
 
 //Libraries
 import Modal from "react-modal";
@@ -27,7 +27,7 @@ import recipeAPI from "../../controller/api/recipes";
 import styles from "../../style/app/recipe-page.module.css";
 import { recipeTypeButtonStyle } from "../../controller/style";
 import { changeAdditionalValue } from "../../controller/redux/additional";
-import { removeSavedRecipe, addSavedRecipe } from "../../controller/redux/recipes";
+import { changeUserProfileValue } from "../../controller/redux/profile";
 
 //Models
 
@@ -54,7 +54,6 @@ export default function RecipePage() {
 	const [activeList, setActiveList] = useState<string>("ingredients");
 	const [authorAvatar, setAuthorAvatar] = useState<string|undefined>(undefined);
 	const { userId, user }: ProfileStateI = useSelector((state: RootState) => state.profile);
-	const { savedRecipes }: RecipesStateI = useSelector((state: RootState) => state.recipes);
 
 	useEffect(() => {
 		getRecipe();
@@ -68,18 +67,16 @@ export default function RecipePage() {
 		setIsOpen(!modalIsOpen);
 	};
 
-	const saveRecipe = (): void => {
-		if(checkSavedRecipes()) {
-			dispatch(removeSavedRecipe(recipe?._id));
-		} else {
-			dispatch(addSavedRecipe({
-				_id: recipe?._id,
-				rate: recipe?.rate,
-				title: recipe?.title,
-				image: recipe?.image,
-				authorId: recipe?.authorId,
-				authorLogin: recipe?.authorLogin,
-			}));
+	const saveUnSaveRecipe = async (): Promise<void> => {
+		let savedRecipes = [];
+		const formData: FormData = new FormData();
+
+		savedRecipes = (checkSavedRecipes()) ? user.savedRecipes.filter((el: string) => el !== recipe?._id) : [...user.savedRecipes, recipe?._id];
+		formData.append("savedRecipes", JSON.stringify(savedRecipes));
+		const response = await userAPI.changeUser(userId, formData);
+		if(response?.status === 200 && response?.data) {
+			console.log(response.data);
+			dispatch(changeUserProfileValue({key: "savedRecipes", value: savedRecipes}));
 		}
 	};
 
@@ -97,7 +94,7 @@ export default function RecipePage() {
 	};
 
 	const checkSavedRecipes = (): boolean => {
-		return savedRecipes.some((el: SavedRecipeI) => el._id === recipe?._id);
+		return user.savedRecipes.some((el: string) => el === recipe?._id);
 	};
 
 	const handleRating = (rate: number): void => {
@@ -200,8 +197,8 @@ export default function RecipePage() {
 							{
 								(userId !== "") &&
 									<label 
-										onClick={saveRecipe}
 										className={styles.button}
+										onClick={saveUnSaveRecipe}
 									>
 										<SavedIcon
 											width={25}

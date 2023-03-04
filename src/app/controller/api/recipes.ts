@@ -16,7 +16,16 @@ class RecipeAPI {
 
 	async getRecipeBuItsId(id: string) {
 		try {
-			const response = await axios.get(`${this.url}/${id}`);
+			const response = await axios.get(`${this.url}/recipe/${id}`);
+			if(response) return response.data;
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
+	async getSavedRecipes(savedRecipes: string[]) {
+		try {
+			const response = await axios.get(`${this.url}/saved-recipes`, {params: { savedRecipes: savedRecipes }});
 			if(response) return response.data;
 		} catch (e) {
 			console.log(e);

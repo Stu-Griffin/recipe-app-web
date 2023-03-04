@@ -6,6 +6,7 @@ const profileState: ProfileStateI = {
 		login: "",
 		avatar: "",
 		avatarId: "",
+		savedRecipes: [],
 	},
 	userId: "",
 };

@@ -1,3 +1,3 @@
 window.env = {
-  "API_URL": "https://recipe-app-api-amber.vercel.app"
+  "API_URL": "http://127.0.0.1:8000"
 };
