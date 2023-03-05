@@ -18,14 +18,14 @@ import { AppDispatch, RootState } from "../../types/store";
 import { useNavigate } from "react-router-dom";
 import ImageUploading from "react-images-uploading";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useEffect, useReducer, useState } from "react";
+import { addFlashMessage } from "@42.nl/react-flash-messages";
+import React, { useEffect, useMemo, useReducer, useState } from "react";
 
 //Functions
 import userAPI from "../../controller/api/user";
 import recipeAPI from "../../controller/api/recipes";
 import styles from "../../style/app/profile.module.css";
 import { getButtonStyle } from "../../controller/style";
-import { changeAdditionalValue } from "../../controller/redux/additional";
 import { regularValidation, emailValidation } from "../../controller/validation";
 import { profileFormReducer, profileErrorFormReducer } from "../../controller/profile";
 import { changeProfileValue, changeUserProfileValue } from "../../controller/redux/profile";
@@ -40,24 +40,26 @@ export default function Profile() {
 	const navigate = useNavigate();
 	const dispatch: AppDispatch = useDispatch();
 	const [avatar, setAvatar] = useState<string>("");
+	const [loading, setLoading] = useState<boolean>(false);
 	const [recipes, setRecipes] = useState<Array<RecipeI>>([]);
+	const [listLoading, setListLoading] = useState<boolean>(true);
 	const [disabledStatus, setDisabledStatus] = useState<boolean>(true);
 	const [userForm, userFormDispatch] = useReducer(profileFormReducer, profileFormState);
 	const { userId, user }: ProfileStateI = useSelector((state: RootState) => state.profile);
 	const [userError, userErrorDispatch] = useReducer(profileErrorFormReducer, profileErrorFormState);
 
-	useEffect(() => {
-		setAvatar(user.avatar);
-	}, [user]);
-
-	useEffect(() => {
+	useMemo(() => {
 		if(userId === "") {
 			const user = localStorage.getItem("user");
 			(user) ? dispatch(changeProfileValue({key: "userId", value: user})) : navigate("/sign-in/");
 		} else {
 			getUsersRecipes();
 		}
-	}, [userId]);
+	}, [userId, user.login]);
+
+	useEffect(() => {
+		setAvatar(user.avatar);
+	}, [user]);
 
 	useEffect(() => {
 		setDisabledStatus(!(Object.values(userError).some((el: boolean) => el === false)));
@@ -80,23 +82,28 @@ export default function Profile() {
 		return data;
 	};
 
-	const deleteProfile = async (): Promise<void> => {
-		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
-
-		const response = await userAPI.deleteUser(userId, user.avatarId);
-		if(response?.status === 200) exit();
-		console.log(response?.data);
-		
-		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
-	};
-
-	const getUsersRecipes = async (): Promise<void> => {
-		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
+	async function getUsersRecipes(): Promise<void> {
+		setListLoading(true);
 
 		const response = await recipeAPI.getRecipesByAuthorId(userId);
 		if(response?.status === 200) setRecipes(response?.data);
 		
-		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
+		setListLoading(false);
+	}
+
+	const deleteProfile = async (): Promise<void> => {
+		setLoading(true);
+
+		const response = await userAPI.deleteUser(userId, user.avatarId);
+		if(response?.status === 200) exit();
+		addFlashMessage({
+			duration: 3000,
+			data: response?.data,
+			text: "Delete user profile",
+			type: (response?.status === 200) ? "SUCCESS" : "ERROR", 
+		});
+		
+		setLoading(false);
 	};
 
 	const changeAvatar = (imageList: ImageListType): void => {
@@ -106,12 +113,17 @@ export default function Profile() {
 			userFormDispatch({type: "add", payload: {key: "avatar", value: file}});
 			userErrorDispatch({type: "add", payload: {key: "avatar", value: false}});
 		} else {
-			alert(`Avatar image should be in ${allowedImgTypes} format`);
+			addFlashMessage({
+				type: "WARN", 
+				duration: 4000,
+				text: "Pick avatar image",
+				data: `Avatar image should be in ${allowedImgTypes} format`,
+			});
 		}
 	};
 
 	const saveChanges = async (e: React.MouseEvent<HTMLElement>): Promise<void> => {
-		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
+		setLoading(true);
 
 		e.preventDefault();
 		const response = await userAPI.changeUser(userId, convertData());
@@ -120,16 +132,21 @@ export default function Profile() {
 			(response.avatarId) && dispatch(changeUserProfileValue({key: "avatarId", value: response.avatarId}));
 			userForm.login.length > 0 && dispatch(changeUserProfileValue({key: "login", value: userForm.login}));
 		} 
-		console.log(response?.data);
+		addFlashMessage({
+			duration: 4000,
+			data: response?.data,
+			text: "User profile update",
+			type: (response?.status === 200) ? "SUCCESS" : "ERROR", 
+		});
 		userFormDispatch({type: "clear", payload: {key: "", value: null}});
 		userErrorDispatch({type: "clear", payload: {key: "", value: null}});
 
-		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
+		setLoading(false);
 	};
 	
 	return (
 		<main className={styles.container}>
-			<Loader/>
+			<Loader status={loading}/>
 			<div className={styles.profileActionArea}>
 				<DeleteProfileIcon 
 					width={40} 
@@ -156,22 +173,34 @@ export default function Profile() {
 						{({ onImageUpload }) => (
 							(avatar) 
 								?
-								(avatar === "")
-									?
-									<Loader/>
-									:
-									<img 
-										style={{
-											width: "122px",
-											height: "122px",
-											cursor: "pointer",
-											borderRadius: "100px",
-											border: "1px solid black",
-										}}
-										src={avatar}
-										alt="user avatar"
-										onClick={onImageUpload}
-									/>
+								// (avatar === "")
+								// 	?
+								// 	<Loader status={loading}/>
+								// 	:
+								// 	<img 
+								// 		style={{
+								// 			width: "122px",
+								// 			height: "122px",
+								// 			cursor: "pointer",
+								// 			borderRadius: "100px",
+								// 			border: "1px solid black",
+								// 		}}
+								// 		src={avatar}
+								// 		alt="user avatar"
+								// 		onClick={onImageUpload}
+								// 	/>
+								<img 
+									style={{
+										width: "122px",
+										height: "122px",
+										cursor: "pointer",
+										borderRadius: "100px",
+										border: "1px solid black",
+									}}
+									src={avatar}
+									alt="user avatar"
+									onClick={onImageUpload}
+								/>
 								:
 								<DefaultAvatar
 									style={{
@@ -228,6 +257,7 @@ export default function Profile() {
 				title="Your recipes"
 				deleteAbility={false}
 				length={recipes.length}
+				loadingStatus={listLoading}
 				emptyMsg="You didn't create any recipes"
 			/>
 		</main>

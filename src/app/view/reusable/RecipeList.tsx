@@ -7,13 +7,13 @@ import CrossIcon from "../../../assets/icons/cross";
 //Types
 import { RecipeI } from "../../types/recipes";
 import { ProfileStateI } from "../../types/profile";
-import { AdditionalStateI } from "../../types/additional";
 import { AppDispatch, RootState } from "../../types/store";
 
 //Libraries
 import { Puff } from  "react-loader-spinner";
 import React, { ReactElement, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { addFlashMessage } from "@42.nl/react-flash-messages";
 
 //Functions
 import userAPI from "../../controller/api/user";
@@ -27,15 +27,15 @@ interface PropsI {
 	length: number;
 	data: RecipeI[];
 	emptyMsg: string;
+	loadingStatus: boolean;
 	deleteAbility: boolean;
 	ammountClickHandler?: () => void;
 }
 
-export default function RecipesList({ ammountClickHandler, data, length, emptyMsg, deleteAbility, title }: PropsI) {
+export default function RecipesList({ ammountClickHandler, loadingStatus, data, length, emptyMsg, deleteAbility, title }: PropsI) {
 	const nodeRef = useRef(null);
 	const dispatch: AppDispatch = useDispatch();
 	const { user, userId }: ProfileStateI = useSelector((state: RootState) => state.profile);
-	const { loadingStatus }: AdditionalStateI = useSelector((state: RootState) => state.additional);
 
 	const unSaveRecipe = async (id: string): Promise<void> => {
 		const formData: FormData = new FormData();
@@ -43,9 +43,14 @@ export default function RecipesList({ ammountClickHandler, data, length, emptyMs
 		formData.append("savedRecipes", JSON.stringify(savedRecipes));
 		const response = await userAPI.changeUser(userId, formData);
 		if(response?.status === 200 && response?.data) {
-			console.log(response.data);
 			dispatch(changeUserProfileValue({key: "savedRecipes", value: savedRecipes}));
 		}
+		addFlashMessage({
+			duration: 5000,
+			text: "Saved recipe",
+			type: response?.status === 200 ? "SUCCESS" : "WARN", 
+			data: response?.status === 200 ? "Recipe was removed from saved list" : "Something went wrong",
+		});
 	};
 
 	const getList = (): ReactElement => {

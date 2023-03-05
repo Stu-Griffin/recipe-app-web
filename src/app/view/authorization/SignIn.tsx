@@ -5,21 +5,21 @@ import InputArea from "../reusable/Input";
 //Icons
 
 //Types
-import { ReactElement, useEffect } from "react";
+import { ReactElement } from "react";
 import { AppDispatch } from "../../types/store";
 
 //Libraries
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import React, { useReducer, useState } from "react";
+import { addFlashMessage } from "@42.nl/react-flash-messages";
+import React, { useReducer, useState, useEffect } from "react";
 
 //Functions
 import userAPI from "../../controller/api/user";
 import { getButtonStyle } from "../../controller/style";
 import styles from "../../style/authorization/sign-in.module.css";
 import { changeProfileValue } from "../../controller/redux/profile";
-import { changeAdditionalValue } from "../../controller/redux/additional";
 import { emailValidation, regularValidation } from "../../controller/validation";
 import { signInUserFormReducer, signInUserErrorFormReducer } from "../../controller/users";
 
@@ -29,6 +29,7 @@ import { signInUserFormState, signInUserErrorFormState } from "../../model/users
 export default function SignIn(): ReactElement {
 	const navigate = useNavigate();
 	const dispatch: AppDispatch = useDispatch();
+	const [loading, setLoading] = useState<boolean>(false);
 	const [checkedStatus, setCheckedStatus] = useState<boolean>(false);
 	const [disabledStatus, setDisabledStatus] = useState<boolean>(true);
 	const [user, userDispatch] = useReducer(signInUserFormReducer, signInUserFormState);
@@ -39,24 +40,29 @@ export default function SignIn(): ReactElement {
 	}, [userError]);
 
 	const signIn = async (e: React.MouseEvent<HTMLElement>): Promise<void> => {
+		setLoading(true);
 		e.preventDefault();
-		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
 	
 		const response = await userAPI.signIn(user);
-		if(response?.status === 200) {
+		if(response?.status === 200 && response?.data) {
 			dispatch(changeProfileValue({key: "userId", value: response.data}));
 			(checkedStatus) && localStorage.setItem("user", response.data);
 			navigate("/");
 		} else {
-			console.log(response?.data);
+			addFlashMessage({
+				type: "ERROR", 
+				duration: 2000,
+				data: response?.data,
+				text: "Authorization error",
+			});
 		}
 	
-		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
+		setLoading(false);
 	};
 
 	return (
 		<main className={styles.container}>
-			<Loader/>
+			<Loader status={loading}/>
 			<h1>Sign in</h1>
 			<form className={styles.form}>
 				<InputArea

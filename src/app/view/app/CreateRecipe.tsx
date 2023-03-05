@@ -14,6 +14,7 @@ import { RecipeErrorFormStateI, RecipeFormStateI } from "../../types/recipes";
 //Libraries
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { addFlashMessage } from "@42.nl/react-flash-messages";
 import ImageUploading, { ImageListType } from "react-images-uploading";
 import React, { ReactElement, useEffect, useReducer, useState } from "react";
 
@@ -36,6 +37,7 @@ export default function CreateRecipe() {
 	const dispatch: AppDispatch = useDispatch();
 	const [image, setImage] = useState<string>("");
 	const [imgId, setImgId] = useState<string>("");
+	const [loading, setLoading] = useState<boolean>(false);
 	const [disabledStatus, setDisabledStatus] = useState<boolean>(true);
 	const [recipe, recipeDispatch] = useReducer(recipeFormReducer, recipeFormState);
 	const { userId, user }: ProfileStateI = useSelector((state: RootState) => state.profile);
@@ -79,19 +81,18 @@ export default function CreateRecipe() {
 		data.append("title", recipe.title);
 		data.append("rate", `${recipe.rate}`);
 		data.append("authorId", recipe.authorId);
+		data.append("image", (recipe.image as File));
 		data.append("authorLogin", recipe.authorLogin);
 		data.append("description", recipe.description);
-		data.append("steps", (JSON.stringify(recipe.steps)));
-		data.append("image", JSON.parse(JSON.stringify(recipe.image)));
-		data.append("ingredients", (JSON.stringify(recipe.ingredients)));
-
 		(editRecipeId !== "") && data.append("imgId", imgId);
+		data.append("steps", (JSON.stringify(recipe.steps)));
+		data.append("ingredients", (JSON.stringify(recipe.ingredients)));
 
 		return data;
 	};
 
-	const setRecipe = async (): Promise<void> => {
-		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
+	async function setRecipe(): Promise<void> {
+		setLoading(true);
 		
 		const response = await recipeAPI.getRecipeByItsId(editRecipeId);
 		if(response?.status === 200 && response?.data) {
@@ -121,8 +122,8 @@ export default function CreateRecipe() {
 			recipeErrorDispatch({type: "set", payload: {key: "", value: recipeEditErrors}});
 		}
 		
-		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
-	};
+		setLoading(false);
+	}
 
 	const pickImage = (imageList: ImageListType): void => {
 		const file = imageList[0].file;
@@ -131,7 +132,12 @@ export default function CreateRecipe() {
 			recipeDispatch({type: "add", payload: {key: "image", value: file}});
 			recipeErrorDispatch({type: "add", payload: {key: "image", value: false}});
 		} else {
-			console.log(`Image should be in ${allowedImgTypes} format`);
+			addFlashMessage({
+				type: "WARN", 
+				duration: 4000,
+				text: "Pick recipe image",
+				data: `Image should be in ${allowedImgTypes} format`,
+			});
 		}
 	};
 
@@ -140,7 +146,7 @@ export default function CreateRecipe() {
 	};
 
 	const createRecipe = async (e: React.MouseEvent<HTMLElement>): Promise<void> => {
-		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
+		setLoading(true);
 
 		e.preventDefault();
 		const response = (editRecipeId === "") ? await recipeAPI.createRecipe(convertData()) : await recipeAPI.editRecipe(convertData(), editRecipeId);
@@ -149,14 +155,20 @@ export default function CreateRecipe() {
 			dispatch(changeAdditionalValue({key: "editRecipeId", value: ""}));
 			navigate("/");
 		}
-		console.log(response?.data);
 
-		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
+		addFlashMessage({
+			duration: 3000,
+			data: response?.data,
+			type: (response?.status === 200) ? "SUCCESS" : "ERROR", 
+			text: (editRecipeId === "") ? "Create recipe" : "Edit recipe",
+		});
+
+		setLoading(false);
 	};
 	
 	return (
 		<main className={styles.container}>
-			<Loader/>
+			<Loader status={loading}/>
 			<form className={styles.form}>
 				<ImageUploading
 					value={[]}

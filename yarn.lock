@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@42.nl/react-flash-messages@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@42.nl/react-flash-messages/-/react-flash-messages-2.0.2.tgz#6f89519dbe30c5833eb1688b8997c6cbf87b5ed9"
+  integrity sha512-IPjnXlTslLalrvmcFPzU8UOTZbweFmCOCRIdfttN/wWBI4vMHSolwqlnSJVZjxTIFHm1ZHaQLOD9WJSjLAIW0Q==
+
 "@adobe/css-tools@^4.0.1":
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/@adobe/css-tools/-/css-tools-4.1.0.tgz#417fef4a143f4396ad0b3b4351fee21323f15aa8"

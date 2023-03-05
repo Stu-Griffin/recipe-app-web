@@ -37,22 +37,6 @@ export default function InputArea({ style, title, type, value, error, placeholde
 		}
 	};
 
-	const getInputStyle = (): object => {
-		if(error && error !== null) {
-			return {
-				color: "red",
-				borderColor: "red",
-				outlineColor: "red",
-			};
-		} else {
-			return {
-				color: "#969696",
-				borderColor: "#969696",
-				outlineColor: "#969696",
-			};
-		}
-	};
-
 	return (
 		<div className={styles.container} style={style}>
 			<h3 style={getTitleStyle()}>{title}</h3>
@@ -61,7 +45,6 @@ export default function InputArea({ style, title, type, value, error, placeholde
 					?
 					<textarea 
 						value={value} 
-						style={getInputStyle()} 
 						className={styles.input} 
 						placeholder={placeholder} 
 						onChange={(e) => onChangeFunc(e.target.value)}
@@ -70,7 +53,6 @@ export default function InputArea({ style, title, type, value, error, placeholde
 					<input 
 						type={type} 
 						value={value} 
-						style={getInputStyle()} 
 						className={styles.input} 
 						placeholder={placeholder} 
 						onChange={(e) => onChangeFunc(e.target.value)}

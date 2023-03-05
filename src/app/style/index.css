@@ -13,6 +13,37 @@ a {
   justify-content: center;
 }
 
+.flash-message {
+	top: 1vh;
+	right: 1rem;
+  z-index: 9000;
+	cursor: pointer;
+	position: fixed;
+	padding: 10px 30px;
+	text-align: center;
+  border-radius: 10px;
+	font-family: "Poppins-Regular";
+}
+
+.ERROR {
+	color: #940000;
+  background-color: #ff8282;
+}
+
+.WARNING {
+	color: #946300;
+  background-color: #f9ff82;
+}
+
+.SUCCESS {
+	color: #319400;
+  background-color: #82ff8f;
+}
+.INFO {
+	color: #005e94;
+  background-color: #82d1ff;
+}
+
 .recipe-enter {
   opacity: 0;
   transform: scale(0.9);

@@ -5,20 +5,18 @@ import InputArea from "../reusable/Input";
 //Icons
 
 //Types
-import { AppDispatch } from "../../types/store";
 import { ReactElement, useEffect } from "react";
 
 //Libraries
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import React, { useReducer, useState } from "react";
+import { addFlashMessage } from "@42.nl/react-flash-messages";
 
 //Functions
 import userAPI from "../../controller/api/user";
 import { getButtonStyle } from "../../controller/style";
 import styles from "../../style/authorization/sign-up.module.css";
-import { changeAdditionalValue } from "../../controller/redux/additional";
 import { emailValidation, regularValidation } from "../../controller/validation";
 import { signUpUserFormReducer, signUpUserErrorFormReducer } from "../../controller/users";
 
@@ -27,7 +25,7 @@ import { signUpUserFormState, signUpUserErrorFormState } from "../../model/users
 
 export default function SignUp(): ReactElement {
 	const navigate = useNavigate();
-	const dispatch: AppDispatch = useDispatch();
+	const [loading, setLoading] = useState<boolean>(false);
 	const [checkedStatus, setCheckedStatus] = useState<boolean>(false);
 	const [disabledStatus, setDisabledStatus] = useState<boolean>(true);
 	const [user, userDispatch] = useReducer(signUpUserFormReducer, signUpUserFormState);
@@ -38,18 +36,23 @@ export default function SignUp(): ReactElement {
 	}, [userError, checkedStatus]);
 
 	const signUp = async (e: React.MouseEvent<HTMLElement>): Promise<void> => {
+		setLoading(true);
 		e.preventDefault();
-		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
 
 		const response = await userAPI.signUp({ login: user.login, email: user.email, password: user.password });
-		(response?.status === 200) ? navigate("/sign-in/") : console.log(response?.data);
+		(response?.status === 200) ? navigate("/sign-in/") : addFlashMessage({
+			type: "ERROR", 
+			duration: 5000,
+			data: response?.data,
+			text: "Authorization error",
+		});
 
-		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
+		setLoading(false);
 	};
 
 	return (
 		<main className={styles.container}>
-			<Loader/>
+			<Loader status={loading}/>
 			<h1>Sign up</h1>
 			<form className={styles.form}>
 				<InputArea

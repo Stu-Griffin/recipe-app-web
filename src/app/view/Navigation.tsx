@@ -100,7 +100,7 @@ export default function Navigation(): ReactElement {
 		}
 	};
 
-	const getUserInfo = async (): Promise<void> => {
+	async function getUserInfo(): Promise<void> {
 		const response = await userApi.getUser(userId);
 		if(response?.status === 200 && response?.data) {
 			const profile: ProfileUserI = {
@@ -114,7 +114,7 @@ export default function Navigation(): ReactElement {
 			localStorage.removeItem("user");
 			dispatch(changeProfileValue({key: "userId", value: ""}));
 		}
-	};
+	}
 
 	return (
 		<Router>

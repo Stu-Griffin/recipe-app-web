@@ -5,14 +5,14 @@ import RecipesList from "../reusable/RecipeList";
 //Icons
 
 //Types
-import { ReactElement, useEffect } from "react";
+import { ReactElement } from "react";
 import { AdditionalStateI } from "../../types/additional";
 import { AppDispatch, RootState } from "../../types/store";
 import { RecipeI, RecipeSearchConfigI } from "../../types/recipes";
 
 //Libraries
 import Modal from "react-modal";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 //Functions
@@ -37,12 +37,13 @@ const customStyles = {
 
 export default function Main(): ReactElement {
 	const dispatch: AppDispatch = useDispatch();
+	const [loading, setLoading] = useState<boolean>(true);
 	const [modalIsOpen, setIsOpen] = useState<boolean>(false);
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [recipes, setRecipes] = useState<Array<RecipeI>>([]);
 	const { recipeType, loadingStatus }: AdditionalStateI = useSelector((state: RootState) => state.additional);
 
-	useEffect(() => {
+	useMemo(() => {
 		getRecipes(recipeType, currentPage, recipeSearchConfig, false);
 	}, [recipeType, currentPage]);
 
@@ -56,14 +57,14 @@ export default function Main(): ReactElement {
 		dispatch(changeAdditionalValue({key: "recipeType", value: type}));		
 	};
 
-	const getRecipes = async (type: string, page: number|undefined, options: RecipeSearchConfigI, searchStatus: boolean): Promise<void> => {
-		dispatch(changeAdditionalValue({key: "loadingStatus", value: true}));
+	async function getRecipes(type: string, page: number|undefined, options: RecipeSearchConfigI, searchStatus: boolean): Promise<void> {
+		setLoading(true);
 		const response = await recipeAPI.getRecipes(type, page, options);
 		if(response?.status === 200 && response?.data) {
 			(searchStatus) ? setRecipes([...(response?.data as RecipeI[])]) : setRecipes([...recipes, ...(response?.data as RecipeI[])]);
 		}
-		dispatch(changeAdditionalValue({key: "loadingStatus", value: false}));
-	};
+		setLoading(false);
+	}
 
 	return (
 		<main className={styles.container}>
@@ -97,6 +98,7 @@ export default function Main(): ReactElement {
 				data={recipes}
 				title="Recipes"
 				deleteAbility={false}
+				loadingStatus={loading}
 				length={recipes.length}
 				ammountClickHandler={toggle}
 				emptyMsg="There's no such recipes"

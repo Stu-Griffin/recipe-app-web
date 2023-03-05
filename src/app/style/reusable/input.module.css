@@ -7,7 +7,9 @@
 	margin-top: 5px;
 	font-size: 18px;
 	resize: vertical;
+	color: #969696;
 	border-radius: 10px;
+	outline-color: #969696;
 	border: 2px solid #969696;
 	width: -webkit-fill-available;
 }

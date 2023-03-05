@@ -19,6 +19,7 @@ import { Puff } from  "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 import { Rating } from "react-simple-star-rating";
 import { useDispatch, useSelector } from "react-redux";
+import { addFlashMessage } from "@42.nl/react-flash-messages";
 import React, { ReactElement, useEffect, useState } from "react";
 
 //Functions
@@ -70,14 +71,12 @@ export default function RecipePage() {
 	const saveUnSaveRecipe = async (): Promise<void> => {
 		let savedRecipes = [];
 		const formData: FormData = new FormData();
-
+		setLoadingStatus(true);
 		savedRecipes = (checkSavedRecipes()) ? user.savedRecipes.filter((el: string) => el !== recipe?._id) : [...user.savedRecipes, recipe?._id];
 		formData.append("savedRecipes", JSON.stringify(savedRecipes));
-		const response = await userAPI.changeUser(userId, formData);
-		if(response?.status === 200 && response?.data) {
-			console.log(response.data);
-			dispatch(changeUserProfileValue({key: "savedRecipes", value: savedRecipes}));
-		}
+		dispatch(changeUserProfileValue({key: "savedRecipes", value: savedRecipes}));
+		await userAPI.changeUser(userId, formData);
+		setLoadingStatus(false);
 	};
 
 	const editRecipe = (): void => {
@@ -101,7 +100,7 @@ export default function RecipePage() {
 		setRating(rate);
 	};
 
-	const getRecipe = async (): Promise<void> => {
+	async function getRecipe(): Promise<void> {
 		setLoadingStatus(true);
 
 		if(recipeId) {
@@ -119,7 +118,7 @@ export default function RecipePage() {
 		setTimeout(() => {
 			setLoadingStatus(false);
 		}, 1500);
-	};
+	}
 
 	const changeRate = async (): Promise<void> => {
 		setLoadingStatus(true);
@@ -131,7 +130,12 @@ export default function RecipePage() {
 			newRecipe.rate = Math.round((((recipe as RecipeI).rate)+(rating))/2);
 			setRecipe(newRecipe);
 		}
-		console.log(response?.data);
+		addFlashMessage({
+			duration: 1500,
+			data: response?.data,
+			text: "Rate changing",
+			type: (response?.status === 200) ? "SUCCESS" : "ERROR", 
+		});
 
 		setLoadingStatus(false);
 	};
@@ -141,7 +145,12 @@ export default function RecipePage() {
 		const response = await recipeAPI.deleteRecipe((recipe as RecipeI)._id, (recipe as RecipeI).imgId);
 		setLoadingStatus(false);
 		if(response?.status === 200) navigate("/");
-		console.log(response?.data);
+		addFlashMessage({
+			duration: 2000,
+			data: response?.data,
+			text: "Delete recipe",
+			type: (response?.status === 200) ? "SUCCESS" : "ERROR", 
+		});
 	};
 
 	if(!loadingStatus) {

@@ -1,5 +1,6 @@
 import axios from "axios";
 import env from "react-dotenv";
+import { addFlashMessage } from "@42.nl/react-flash-messages";
 import { SignInUserFormStateI, UserI } from "../../types/user";
 
 class UserAPI {
@@ -10,7 +11,12 @@ class UserAPI {
 			const response = await axios.post(`${this.url}/sign-up`, user);
 			if(response) return response.data;
 		} catch (e) {
-			console.log(e);
+			addFlashMessage({
+				type: "ERROR", 
+				duration: 2000,
+				text: "User error",
+				data: "Error in registration user",
+			});
 		}
 	}
 
@@ -19,7 +25,12 @@ class UserAPI {
 			const response = await axios.get(`${this.url}/${id}`);
 			if(response) return response.data;
 		} catch(e) {
-			console.log(e);
+			addFlashMessage({
+				type: "ERROR", 
+				duration: 2000,
+				text: "User error",
+				data: "Error in getting user",
+			});
 		}
 	}
 
@@ -28,7 +39,12 @@ class UserAPI {
 			const response = await axios.post(`${this.url}/sign-in`, user);
 			if(response) return response.data;
 		} catch (e) {
-			console.log(e);
+			addFlashMessage({
+				type: "ERROR", 
+				duration: 2000,
+				text: "User error",
+				data: "Error in authorization",
+			});
 		}
 	}
 
@@ -41,8 +57,13 @@ class UserAPI {
 				headers: { "Content-Type": "multipart/form-data" },
 			});
 			if(response) return response.data;
-		} catch(e) {
-			console.log(e);
+		} catch {
+			addFlashMessage({
+				type: "ERROR", 
+				duration: 2000,
+				text: "User error",
+				data: "Error in changing user",
+			});
 		}
 	}
 
@@ -51,9 +72,14 @@ class UserAPI {
 			const response = await axios.delete(`${this.url}/${id}`, { data: { avatarId: avatarId } });
 			if(response) return response.data;
 		} catch(e) {
-			console.log(e);
+			addFlashMessage({
+				type: "ERROR", 
+				duration: 2000,
+				text: "User error",
+				data: "Error in deleting user",
+			});
 		}
 	}
 }
 
-export default new UserAPI(`${env.API_URL}/api/users`);
+export default new UserAPI("https://recipe-app-api-amber.vercel.app/api/users");

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@42.nl/react-flash-messages": "^2.0.2",
     "@reduxjs/toolkit": "^1.9.2",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
@@ -35,14 +36,16 @@
     "yarn": "^1.22.19"
   },
   "scripts": {
-		"start": "react-dotenv && react-scripts start",
+    "start": "react-dotenv && react-scripts start",
     "build": "react-dotenv && react-scripts build",
     "serve": "react-dotenv && serve build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-	"react-dotenv": {
-    "whitelist": ["API_URL"]
+  "react-dotenv": {
+    "whitelist": [
+      "API_URL"
+    ]
   },
   "eslintConfig": {
     "extends": [
