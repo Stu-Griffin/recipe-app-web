@@ -55,9 +55,15 @@ export default function RecipesList({ ammountClickHandler, loadingStatus, data, 
 
 	const getList = (): ReactElement => {
 		if(length === 0) {
-			return (
-				<h3 className={styles.error}>{emptyMsg}</h3>
-			);
+			if(!loadingStatus) {
+				return (
+					<h3 className={styles.error}>{emptyMsg}</h3>
+				);
+			} else {
+				return (		
+					<></>
+				);
+			}
 		} else {
 			return (
 				<div className={styles.list}>
@@ -105,7 +111,7 @@ export default function RecipesList({ ammountClickHandler, loadingStatus, data, 
 					onClick={ammountClickHandler}
 				>{length} results</p>
 			</div>
-			{(!loadingStatus) && getList()}
+			{getList()}
 			<Puff
 				width="80"
 				radius={1}

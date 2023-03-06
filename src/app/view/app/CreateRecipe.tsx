@@ -158,9 +158,9 @@ export default function CreateRecipe() {
 
 		addFlashMessage({
 			duration: 3000,
-			data: response?.data,
 			type: (response?.status === 200) ? "SUCCESS" : "ERROR", 
 			text: (editRecipeId === "") ? "Create recipe" : "Edit recipe",
+			data: response?.data || "Error during recipe creating/editing",
 		});
 
 		setLoading(false);
