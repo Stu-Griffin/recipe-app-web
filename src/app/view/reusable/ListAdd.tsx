@@ -2,6 +2,8 @@
 import InputArea from "../reusable/Input";
 
 //Icons
+import SaveIcon from "../../../assets/icons/save";
+import EditIcon from "../../../assets/icons/edit";
 import DeleteIcon from "../../../assets/icons/delete";
 
 //Types
@@ -20,18 +22,21 @@ import { regularValidation } from "../../controller/validation";
 
 interface PropsI {
 	title: string;
-	multiple?: boolean;
 	data: Array<string>;
 	placeholder: string;
 	listNumbering?: boolean;
 	saveEl: (value: string) => void;
 	removeEl: (value: number) => void;
+	editEl: (value: string, id: number) => void;
 	moveEl: (what: number, where: number, el: string) => void;
 }
 
-export default function ListAdd({multiple, listNumbering, data, title, placeholder, saveEl, removeEl, moveEl}: PropsI): ReactElement {
+export default function ListAdd({editEl, listNumbering, data, title, placeholder, saveEl, removeEl, moveEl}: PropsI): ReactElement {
 	const [value, setValue] = useState<string>("");
+	const [editId, setEditId] = useState<string>("");
+	const [editValue, setEditValue] = useState<string>("");
 	const [error, setError] = useState<boolean|null>(null);
+	const [editError, setEditError] = useState<boolean|null>(null);
 	const [disabledStatus, setDisabledStatus] = useState<boolean>(true);
 
 	useEffect(() => {
@@ -59,7 +64,7 @@ export default function ListAdd({multiple, listNumbering, data, title, placehold
 					value={value}
 					error={false}
 					title={title}
-					multiple={multiple}
+					multiple={true}
 					placeholder={placeholder}
 					onChangeFunc={(e: string): void => {
 						setValue(e);
@@ -91,17 +96,70 @@ export default function ListAdd({multiple, listNumbering, data, title, placehold
 															{...provided.dragHandleProps} 
 														>
 															{(listNumbering) && <h2>{index+1}</h2>}
-															<p className={styles.text}>{el}</p>
-															<DeleteIcon
-																style={{
-																	cursor: "pointer"
-																}}
-																width={22.5}
-																height={22.5}
-																onClick={(): void => {
-																	removeEl(index);
-																}}
-															/>
+															{
+																(editId === index.toString())
+																	?
+																	<InputArea
+																		title=""
+																		value={editValue}
+																		style={{
+																			width: "75%"
+																		}}
+																		multiple={true}
+																		error={false}
+																		placeholder=""
+																		onChangeFunc={(e: string) => {
+																			setEditValue(e);
+																			setEditError(regularValidation(e));
+																		}}
+																	/>
+																	:
+																	<p className={styles.text}>{el}</p>
+															}
+															<div className={styles.elButtons}>
+																{
+																	(editId === index.toString())
+																		?
+																		<SaveIcon
+																			style={{
+																				border: "none",
+																				cursor: "pointer",
+																				width: "25px",
+																				height: "25px",
+																				backgroundColor: "transparent",
+																				...getButtonStyle(!!editError),
+																			}}
+																			width={25}
+																			height={25}
+																			onClick={(): void => {
+																				setEditId("");
+																				editEl(editValue, index);
+																			}}
+																		/>
+																		:
+																		<EditIcon
+																			style={{
+																				cursor: "pointer"
+																			}}
+																			width={30}
+																			height={30}
+																			onClick={(): void => {
+																				setEditValue(el);
+																				setEditId(index.toString());
+																			}}
+																		/>
+																}
+																<DeleteIcon
+																	style={{
+																		cursor: "pointer"
+																	}}
+																	width={22.5}
+																	height={22.5}
+																	onClick={(): void => {
+																		removeEl(index);
+																	}}
+																/>
+															</div>
 														</div>
 													);
 												}}

@@ -46,6 +46,7 @@ export interface RecipeFormStateI {
 export interface RecipeFormActionI {
 	payload: {
 		key: string;
+		id?: number;
 		value: Image|Array<string>|string|number|File|RecipeFormStateI|PickImageArgI|undefined;
 	};
 	type: string;

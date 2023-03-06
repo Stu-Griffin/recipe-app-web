@@ -134,7 +134,7 @@ export default function Navigation(): ReactElement {
 				{
 					(userId !== "") &&
 						<Link 
-							to="/create-recipe/" 
+							to="/create-recipe/"
 							onClick={() => setMenuIsOpen(false)}
 						>
 							<AddIcon 
@@ -187,6 +187,10 @@ export default function Navigation(): ReactElement {
 				<Route 
 					path="/create-recipe/" 
 					element={<CreateRecipe/>} 
+				/>
+				<Route 
+					element={<CreateRecipe/>} 
+					path="/edit-recipe/:recipeId" 
 				/>
 				<Route 
 					path="/saved-recipes/" 

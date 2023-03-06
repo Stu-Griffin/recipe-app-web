@@ -12,6 +12,9 @@ export function recipeFormReducer(state: RecipeFormStateI, action: RecipeFormAct
 		state.steps.splice((action.payload.value as PickImageArgI).what, 1);
 		state.steps.splice((action.payload.value as PickImageArgI).where, 0, (action.payload.value as PickImageArgI).el);
 		return state;
+	case "editSteps":
+		state.steps[+(action.payload.key)] = (action.payload.value as string);
+		return {...state};
 	case "deleteSteps":
 		return {...state, [action.payload.key]: state.steps.filter((el: string, id: number) => id !== action.payload.value)};
 	case "addIngredients": 
@@ -20,6 +23,9 @@ export function recipeFormReducer(state: RecipeFormStateI, action: RecipeFormAct
 		state.ingredients.splice((action.payload.value as PickImageArgI).what, 1);
 		state.ingredients.splice((action.payload.value as PickImageArgI).where, 0, (action.payload.value as PickImageArgI).el);
 		return state;
+	case "editIngredients":
+		state.ingredients[+(action.payload.key)] = (action.payload.value as string);
+		return {...state};
 	case "deleteIngredients":
 		return {...state, [action.payload.key]: state.ingredients.filter((el: string, id: number) => id !== action.payload.value)};
 	default:

@@ -6,14 +6,13 @@ import ListAdd from "../reusable/ListAdd";
 //Icons
 
 //Types
+import { RootState } from "../../types/store";
 import { ProfileStateI } from "../../types/profile";
-import { AdditionalStateI } from "../../types/additional";
-import { AppDispatch, RootState } from "../../types/store";
 import { RecipeErrorFormStateI, RecipeFormStateI } from "../../types/recipes";
 
 //Libraries
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import { addFlashMessage } from "@42.nl/react-flash-messages";
 import ImageUploading, { ImageListType } from "react-images-uploading";
 import React, { ReactElement, useEffect, useReducer, useState } from "react";
@@ -23,7 +22,6 @@ import recipeAPI from "../../controller/api/recipes";
 import { getButtonStyle } from "../../controller/style";
 import styles from "../../style/app/create-recipe.module.css";
 import { regularValidation } from "../../controller/validation";
-import { changeAdditionalValue } from "../../controller/redux/additional";
 import { recipeFormReducer, recipeErrorFormReducer } from "../../controller/recipes";
 
 //Models
@@ -34,25 +32,24 @@ const allowedImgTypes = ["jpg", "png", "jpeg"];
 export default function CreateRecipe() {
 	const maxNumber = 69;
 	const navigate = useNavigate();
-	const dispatch: AppDispatch = useDispatch();
+	const { recipeId } = useParams();
 	const [image, setImage] = useState<string>("");
 	const [imgId, setImgId] = useState<string>("");
 	const [loading, setLoading] = useState<boolean>(false);
 	const [disabledStatus, setDisabledStatus] = useState<boolean>(true);
 	const [recipe, recipeDispatch] = useReducer(recipeFormReducer, recipeFormState);
 	const { userId, user }: ProfileStateI = useSelector((state: RootState) => state.profile);
-	const { editRecipeId }: AdditionalStateI = useSelector((state: RootState) => state.additional);
 	const [recipError, recipeErrorDispatch] = useReducer(recipeErrorFormReducer, recipeErrorFormState);
 
 	useEffect(() => {
-		if(editRecipeId === "") {
+		if(recipeId) {
+			setRecipe();
+		} else {
 			recipeDispatch({type: "add", payload: {key: "authorId", value: userId}});
 			recipeDispatch({type: "add", payload: {key: "authorLogin", value: user.login}});
 			recipeDispatch({type: "add", payload: {key: "type", value: (recipeTypes[0]).toLowerCase()}});
-		} else {
-			setRecipe();
 		}
-	}, [user]);
+	}, [recipeId]);
 
 	useEffect(() => {
 		setDisabledStatus(!(Object.values(recipError).every((el: boolean) => el === false)));
@@ -81,10 +78,10 @@ export default function CreateRecipe() {
 		data.append("title", recipe.title);
 		data.append("rate", `${recipe.rate}`);
 		data.append("authorId", recipe.authorId);
+		(recipeId) && data.append("imgId", imgId);
 		data.append("image", (recipe.image as File));
 		data.append("authorLogin", recipe.authorLogin);
 		data.append("description", recipe.description);
-		(editRecipeId !== "") && data.append("imgId", imgId);
 		data.append("steps", (JSON.stringify(recipe.steps)));
 		data.append("ingredients", (JSON.stringify(recipe.ingredients)));
 
@@ -94,7 +91,7 @@ export default function CreateRecipe() {
 	async function setRecipe(): Promise<void> {
 		setLoading(true);
 		
-		const response = await recipeAPI.getRecipeByItsId(editRecipeId);
+		const response = await recipeAPI.getRecipeByItsId((recipeId as string));
 		if(response?.status === 200 && response?.data) {
 			const recipeEdit: RecipeFormStateI = {
 				authorLogin: user.login,
@@ -149,17 +146,14 @@ export default function CreateRecipe() {
 		setLoading(true);
 
 		e.preventDefault();
-		const response = (editRecipeId === "") ? await recipeAPI.createRecipe(convertData()) : await recipeAPI.editRecipe(convertData(), editRecipeId);
+		const response = (recipeId) ?  await recipeAPI.editRecipe(convertData(), recipeId) : await recipeAPI.createRecipe(convertData());
 
-		if(response?.status === 200) {
-			dispatch(changeAdditionalValue({key: "editRecipeId", value: ""}));
-			navigate("/");
-		}
+		if(response?.status === 200) navigate("/");
 
 		addFlashMessage({
 			duration: 3000,
+			text: (recipeId) ? "Create recipe" : "Edit recipe",
 			type: (response?.status === 200) ? "SUCCESS" : "ERROR", 
-			text: (editRecipeId === "") ? "Create recipe" : "Edit recipe",
 			data: response?.data || "Error during recipe creating/editing",
 		});
 
@@ -238,13 +232,15 @@ export default function CreateRecipe() {
 					removeEl={(value: number): void => {
 						recipeDispatch({type: "deleteIngredients", payload: {key: "ingredients", value: value}});
 					}}
+					editEl={(value: string, id: number): void => {
+						recipeDispatch({type: "editIngredients", payload: {key: id.toString(), value: value}});
+					}}
 					moveEl={(what: number, where: number, el: string): void => {
 						recipeDispatch({type: "moveIngredient", payload: {key: "ingredients", value: {what, where, el}}});
 					}}
 				/>
 				<ListAdd
 					title="Steps"
-					multiple={true}
 					data={recipe.steps}
 					listNumbering={true}
 					placeholder="Enter Steps"
@@ -253,6 +249,9 @@ export default function CreateRecipe() {
 					}}
 					removeEl={(value: number): void => {
 						recipeDispatch({type: "deleteSteps", payload: {key: "steps", value: value}});
+					}}
+					editEl={(value: string, id: number): void => {
+						recipeDispatch({type: "editSteps", payload: {key: id.toString(), value: value}});
 					}}
 					moveEl={(what: number, where: number, el: string): void => {
 						recipeDispatch({type: "moveSteps", payload: {key: "steps", value: {what, where, el}}});
@@ -263,7 +262,7 @@ export default function CreateRecipe() {
 					disabled={disabledStatus}
 					className={styles.button}
 					style={getButtonStyle(disabledStatus)} 
-				>{(editRecipeId === "") ? "Create" : "Change"} recipe</button>
+				>{(recipeId) ? "Change" : "Create"} recipe</button>
 			</form>
 		</main>
 	);

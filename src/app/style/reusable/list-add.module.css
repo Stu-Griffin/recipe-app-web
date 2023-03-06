@@ -32,8 +32,15 @@
 }
 
 .text {
-	width: 90%;
+	width: 80%;
 	font-size: 18px;
+}
+
+.elButtons {
+	width: 10%;
+	display: flex;
+  align-items: center;
+  justify-content: space-around;
 }
 
 .delete {

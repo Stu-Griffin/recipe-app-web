@@ -39,7 +39,7 @@ export default function InputArea({ style, title, type, value, error, placeholde
 
 	return (
 		<div className={styles.container} style={style}>
-			<h3 style={getTitleStyle()}>{title}</h3>
+			{(title.length !== 0) && <h3 style={getTitleStyle()}>{title}</h3>}
 			{
 				(multiple)
 					?

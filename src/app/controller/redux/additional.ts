@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import { AdditionalStateI } from "../../types/additional";
 
 const additionalState: AdditionalStateI = {
-	editRecipeId: "",
 	loadingStatus: false,
 	recipeType: "appetizers",
 };

@@ -14,11 +14,10 @@ import { AppDispatch, RootState } from "../../types/store";
 
 //Libraries
 import Modal from "react-modal";
-import { useParams } from "react-router-dom";
 import { Puff } from  "react-loader-spinner";
-import { useNavigate } from "react-router-dom";
 import { Rating } from "react-simple-star-rating";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import { addFlashMessage } from "@42.nl/react-flash-messages";
 import React, { ReactElement, useEffect, useState } from "react";
 
@@ -27,7 +26,6 @@ import userAPI from "../../controller/api/user";
 import recipeAPI from "../../controller/api/recipes";
 import styles from "../../style/app/recipe-page.module.css";
 import { recipeTypeButtonStyle } from "../../controller/style";
-import { changeAdditionalValue } from "../../controller/redux/additional";
 import { changeUserProfileValue } from "../../controller/redux/profile";
 
 //Models
@@ -80,8 +78,7 @@ export default function RecipePage() {
 	};
 
 	const editRecipe = (): void => {
-		dispatch(changeAdditionalValue({key: "editRecipeId", value: recipe?._id}));
-		navigate("/create-recipe/");
+		navigate(`/edit-recipe/${recipe?._id}`);
 	};
 
 	const getAuthorLogin = (): string => {
