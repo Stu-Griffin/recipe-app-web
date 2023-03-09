@@ -31,14 +31,16 @@ Modal.setAppElement("#root");
 
 interface PropsI {
 	status: boolean;
+	overlayClassSatus?: boolean;
 }
 
-export default function Loader({ status }: PropsI) {
+export default function Loader({ status, overlayClassSatus }: PropsI) {
 	return (
 		<Modal
 			isOpen={status}
 			style={customStyles}
 			contentLabel="Example Modal"
+			overlayClassName={(overlayClassSatus) ? "Overlay" : ""}
 		>
 			<Puff
 				width="80"
