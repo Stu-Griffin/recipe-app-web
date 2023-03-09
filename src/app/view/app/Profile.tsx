@@ -19,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 import ImageUploading from "react-images-uploading";
 import { useDispatch, useSelector } from "react-redux";
 import { addFlashMessage } from "@42.nl/react-flash-messages";
-import React, { useEffect, useMemo, useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 
 //Functions
 import userAPI from "../../controller/api/user";
@@ -48,7 +48,7 @@ export default function Profile() {
 	const { userId, user }: ProfileStateI = useSelector((state: RootState) => state.profile);
 	const [userError, userErrorDispatch] = useReducer(profileErrorFormReducer, profileErrorFormState);
 
-	useMemo(() => {
+	useEffect(() => {
 		if(userId === "") {
 			const user = localStorage.getItem("user");
 			(user) ? dispatch(changeProfileValue({key: "userId", value: user})) : navigate("/sign-in/");
@@ -68,6 +68,13 @@ export default function Profile() {
 	const exit = (): void => {
 		navigate("/sign-in/");
 		localStorage.removeItem("user");
+		dispatch(changeProfileValue({key: "user", value: {
+			login: "",
+			avatar: "",
+			avatarId: "",
+			savedRecipes: [],
+		}}));
+		dispatch(changeProfileValue({key: "userId", value: ""}));
 	};
 
 	const convertData = (): FormData => {
@@ -173,22 +180,6 @@ export default function Profile() {
 						{({ onImageUpload }) => (
 							(avatar) 
 								?
-								// (avatar === "")
-								// 	?
-								// 	<Loader status={loading}/>
-								// 	:
-								// 	<img 
-								// 		style={{
-								// 			width: "122px",
-								// 			height: "122px",
-								// 			cursor: "pointer",
-								// 			borderRadius: "100px",
-								// 			border: "1px solid black",
-								// 		}}
-								// 		src={avatar}
-								// 		alt="user avatar"
-								// 		onClick={onImageUpload}
-								// 	/>
 								<img 
 									style={{
 										width: "122px",
