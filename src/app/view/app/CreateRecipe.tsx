@@ -42,6 +42,8 @@ export default function CreateRecipe() {
 	const [recipError, recipeErrorDispatch] = useReducer(recipeErrorFormReducer, recipeErrorFormState);
 
 	useEffect(() => {
+		setImage("");
+		recipeDispatch({type: "clear", payload: {key: "", value: ""}});
 		if(recipeId) {
 			setRecipe();
 		} else {
