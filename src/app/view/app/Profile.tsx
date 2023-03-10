@@ -18,7 +18,6 @@ import { AppDispatch, RootState } from "../../types/store";
 import { useNavigate } from "react-router-dom";
 import ImageUploading from "react-images-uploading";
 import { useDispatch, useSelector } from "react-redux";
-import { addFlashMessage } from "@42.nl/react-flash-messages";
 import React, { useEffect, useReducer, useState } from "react";
 
 //Functions
@@ -26,6 +25,7 @@ import userAPI from "../../controller/api/user";
 import recipeAPI from "../../controller/api/recipes";
 import styles from "../../style/app/profile.module.css";
 import { getButtonStyle } from "../../controller/style";
+import { changeFlashMessage } from "../../controller/redux/flashMessage";
 import { regularValidation, emailValidation } from "../../controller/validation";
 import { profileFormReducer, profileErrorFormReducer } from "../../controller/profile";
 import { changeProfileValue, changeUserProfileValue } from "../../controller/redux/profile";
@@ -92,7 +92,7 @@ export default function Profile() {
 	async function getUsersRecipes(): Promise<void> {
 		setListLoading(true);
 
-		const response = await recipeAPI.getRecipesByAuthorId(userId);
+		const response = await recipeAPI.getRecipesByAuthorId(dispatch, userId);
 		if(response?.status === 200) setRecipes(response?.data);
 		
 		setListLoading(false);
@@ -101,14 +101,15 @@ export default function Profile() {
 	const deleteProfile = async (): Promise<void> => {
 		setLoading(true);
 
-		const response = await userAPI.deleteUser(userId, user.avatarId);
+		const response = await userAPI.deleteUser(dispatch, userId, user.avatarId);
 		if(response?.status === 200) exit();
-		addFlashMessage({
+		dispatch(changeFlashMessage({
+			show: true,
 			duration: 3000,
-			data: response?.data,
-			text: "Delete user profile",
-			type: (response?.status === 200) ? "SUCCESS" : "ERROR", 
-		});
+			description: response?.data,
+			message: "Delete user profile",
+			status: (response?.status === 200) ? "SUCCESS" : "ERROR", 
+		}));
 		
 		setLoading(false);
 	};
@@ -120,12 +121,13 @@ export default function Profile() {
 			userFormDispatch({type: "add", payload: {key: "avatar", value: file}});
 			userErrorDispatch({type: "add", payload: {key: "avatar", value: false}});
 		} else {
-			addFlashMessage({
-				type: "WARN", 
+			dispatch(changeFlashMessage({
+				show: true,
+				status: "WARN",
 				duration: 4000,
-				text: "Pick avatar image",
-				data: `Avatar image should be in ${allowedImgTypes} format`,
-			});
+				message: "Pick avatar image",
+				description: `Avatar image should be in ${allowedImgTypes} format`,
+			}));
 		}
 	};
 
@@ -133,18 +135,19 @@ export default function Profile() {
 		setLoading(true);
 
 		e.preventDefault();
-		const response = await userAPI.changeUser(userId, convertData());
+		const response = await userAPI.changeUser(dispatch, userId, convertData());
 		if(response?.status === 200) {
 			userForm.avatar && dispatch(changeUserProfileValue({key: "avatar", value: avatar}));
 			(response.avatarId) && dispatch(changeUserProfileValue({key: "avatarId", value: response.avatarId}));
 			userForm.login.length > 0 && dispatch(changeUserProfileValue({key: "login", value: userForm.login}));
 		} 
-		addFlashMessage({
+		dispatch(changeFlashMessage({
+			show: true,
 			duration: 4000,
-			data: response?.data,
-			text: "User profile update",
-			type: (response?.status === 200) ? "SUCCESS" : "ERROR", 
-		});
+			description: response?.data,
+			message: "User profile update",
+			status: (response?.status === 200) ? "SUCCESS" : "ERROR", 
+		}));
 		userFormDispatch({type: "clear", payload: {key: "", value: null}});
 		userErrorDispatch({type: "clear", payload: {key: "", value: null}});
 

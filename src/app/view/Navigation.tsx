@@ -101,7 +101,7 @@ export default function Navigation(): ReactElement {
 	};
 
 	async function getUserInfo(): Promise<void> {
-		const response = await userApi.getUser(userId);
+		const response = await userApi.getUser(dispatch, userId);
 		if(response?.status === 200 && response?.data) {
 			const profile: ProfileUserI = {
 				login: response.data.login, 

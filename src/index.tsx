@@ -16,6 +16,7 @@ import reportWebVitals from "./reportWebVitals";
 
 //Styles
 import "./app/style/index.css";
+import "./app/style/flashMessage.css";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(<App />);
 

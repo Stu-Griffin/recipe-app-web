@@ -11,20 +11,23 @@ import { ReactElement, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import React, { useReducer, useState } from "react";
-import { addFlashMessage } from "@42.nl/react-flash-messages";
 
 //Functions
 import userAPI from "../../controller/api/user";
 import { getButtonStyle } from "../../controller/style";
 import styles from "../../style/authorization/sign-up.module.css";
+import { changeFlashMessage } from "../../controller/redux/flashMessage";
 import { emailValidation, regularValidation } from "../../controller/validation";
 import { signUpUserFormReducer, signUpUserErrorFormReducer } from "../../controller/users";
 
 //Models
 import { signUpUserFormState, signUpUserErrorFormState } from "../../model/users";
+import { AppDispatch } from "../../types/store";
+import { useDispatch } from "react-redux";
 
 export default function SignUp(): ReactElement {
 	const navigate = useNavigate();
+	const dispatch: AppDispatch = useDispatch();
 	const [loading, setLoading] = useState<boolean>(false);
 	const [checkedStatus, setCheckedStatus] = useState<boolean>(false);
 	const [disabledStatus, setDisabledStatus] = useState<boolean>(true);
@@ -39,13 +42,18 @@ export default function SignUp(): ReactElement {
 		setLoading(true);
 		e.preventDefault();
 
-		const response = await userAPI.signUp({ login: user.login, email: user.email, password: user.password });
-		(response?.status === 200) ? navigate("/sign-in/") : addFlashMessage({
-			type: "ERROR", 
-			duration: 5000,
-			data: response?.data,
-			text: "Authorization error",
-		});
+		const response = await userAPI.signUp(dispatch, { login: user.login, email: user.email, password: user.password });
+		if(response?.status === 200) {
+			navigate("/sign-in/");
+		} else {
+			dispatch(changeFlashMessage({
+				show: true,
+				duration: 5000,
+				status: "ERROR",
+				description: response?.data,
+				message: "Registration error",
+			}));
+		}
 
 		setLoading(false);
 	};

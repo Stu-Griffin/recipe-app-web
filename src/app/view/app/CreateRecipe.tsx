@@ -6,14 +6,13 @@ import ListAdd from "../reusable/ListAdd";
 //Icons
 
 //Types
-import { RootState } from "../../types/store";
+import { AppDispatch, RootState } from "../../types/store";
 import { ProfileStateI } from "../../types/profile";
 import { RecipeErrorFormStateI, RecipeFormStateI } from "../../types/recipes";
 
 //Libraries
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { addFlashMessage } from "@42.nl/react-flash-messages";
 import ImageUploading, { ImageListType } from "react-images-uploading";
 import React, { ReactElement, useEffect, useReducer, useState } from "react";
 
@@ -22,10 +21,12 @@ import recipeAPI from "../../controller/api/recipes";
 import { getButtonStyle } from "../../controller/style";
 import styles from "../../style/app/create-recipe.module.css";
 import { regularValidation } from "../../controller/validation";
+import { changeFlashMessage } from "../../controller/redux/flashMessage";
 import { recipeFormReducer, recipeErrorFormReducer } from "../../controller/recipes";
 
 //Models
 import { recipeFormState, recipeErrorFormState, recipeTypes } from "../../model/recipes";
+import { useDispatch } from "react-redux";
 
 const allowedImgTypes = ["jpg", "png", "jpeg"];
 
@@ -33,6 +34,7 @@ export default function CreateRecipe() {
 	const maxNumber = 69;
 	const navigate = useNavigate();
 	const { recipeId } = useParams();
+	const dispatch: AppDispatch = useDispatch();
 	const [image, setImage] = useState<string>("");
 	const [imgId, setImgId] = useState<string>("");
 	const [loading, setLoading] = useState<boolean>(false);
@@ -93,7 +95,7 @@ export default function CreateRecipe() {
 	async function setRecipe(): Promise<void> {
 		setLoading(true);
 		
-		const response = await recipeAPI.getRecipeByItsId((recipeId as string));
+		const response = await recipeAPI.getRecipeByItsId(dispatch, (recipeId as string));
 		if(response?.status === 200 && response?.data) {
 			const recipeEdit: RecipeFormStateI = {
 				authorLogin: user.login,
@@ -131,12 +133,13 @@ export default function CreateRecipe() {
 			recipeDispatch({type: "add", payload: {key: "image", value: file}});
 			recipeErrorDispatch({type: "add", payload: {key: "image", value: false}});
 		} else {
-			addFlashMessage({
-				type: "WARN", 
+			dispatch(changeFlashMessage({
+				show: true,
 				duration: 4000,
-				text: "Pick recipe image",
-				data: `Image should be in ${allowedImgTypes} format`,
-			});
+				status: "WARN", 
+				message: "Pick recipe image",
+				description: `Image should be in ${allowedImgTypes} format`,
+			}));
 		}
 	};
 
@@ -148,16 +151,17 @@ export default function CreateRecipe() {
 		setLoading(true);
 
 		e.preventDefault();
-		const response = (recipeId) ?  await recipeAPI.editRecipe(convertData(), recipeId) : await recipeAPI.createRecipe(convertData());
+		const response = (recipeId) ?  await recipeAPI.editRecipe(dispatch, convertData(), recipeId) : await recipeAPI.createRecipe(dispatch, convertData());
 
 		if(response?.status === 200) navigate("/");
 
-		addFlashMessage({
+		dispatch(changeFlashMessage({
+			show: true,
 			duration: 3000,
-			text: (recipeId) ? "Create recipe" : "Edit recipe",
-			type: (response?.status === 200) ? "SUCCESS" : "ERROR", 
-			data: response?.data || "Error during recipe creating/editing",
-		});
+			message: (recipeId) ? "Create recipe" : "Edit recipe",
+			status: (response?.status === 200) ? "SUCCESS" : "ERROR", 
+			description: response?.data || "Error during recipe creating/editing",
+		}));
 
 		setLoading(false);
 	};

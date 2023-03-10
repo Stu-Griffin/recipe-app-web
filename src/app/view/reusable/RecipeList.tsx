@@ -13,12 +13,12 @@ import { AppDispatch, RootState } from "../../types/store";
 import { Puff } from  "react-loader-spinner";
 import React, { ReactElement, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addFlashMessage } from "@42.nl/react-flash-messages";
 
 //Functions
 import userAPI from "../../controller/api/user";
 import styles from "../../style/reusable/recipes-list.module.css";
 import { changeUserProfileValue } from "../../controller/redux/profile";
+import { changeFlashMessage } from "../../controller/redux/flashMessage";
 
 //Models
 
@@ -41,16 +41,17 @@ export default function RecipesList({ ammountClickHandler, loadingStatus, data, 
 		const formData: FormData = new FormData();
 		const savedRecipes = user.savedRecipes.filter((el: string) => el !== id);
 		formData.append("savedRecipes", JSON.stringify(savedRecipes));
-		const response = await userAPI.changeUser(userId, formData);
+		const response = await userAPI.changeUser(dispatch, userId, formData);
 		if(response?.status === 200 && response?.data) {
 			dispatch(changeUserProfileValue({key: "savedRecipes", value: savedRecipes}));
 		}
-		addFlashMessage({
+		dispatch(changeFlashMessage({
+			show: true,
 			duration: 5000,
-			text: "Saved recipe",
-			type: response?.status === 200 ? "SUCCESS" : "WARN", 
-			data: response?.status === 200 ? "Recipe was removed from saved list" : "Something went wrong",
-		});
+			description: response?.data,
+			status: response?.status === 200 ? "SUCCESS" : "WARN", 
+			message: response?.status === 200 ? "Recipe was removed from saved list" : "Something went wrong",
+		}));
 	};
 
 	const getList = (): ReactElement => {

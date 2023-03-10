@@ -42,7 +42,7 @@ export default function SavedRecipes(): ReactElement {
 	async function getSavedRecipes(): Promise<void> {
 		setLoading(true);
 		
-		const response = await recipeAPI.getSavedRecipes(user.savedRecipes);
+		const response = await recipeAPI.getSavedRecipes(dispatch, user.savedRecipes);
 		if(response?.status === 200 && response?.data) setRecipes(response.data);
 		
 		setLoading(false);

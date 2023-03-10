@@ -5,9 +5,8 @@
 //Models
 
 //Libraries
-import React, { useEffect, useState } from "react";
 import { Provider } from "react-redux";
-import { FlashMessagesProvider } from "@42.nl/react-flash-messages";
+import React, { useEffect, useState } from "react";
 
 //Functions
 import { store } from "./app/controller/redux/store";
@@ -37,14 +36,12 @@ export default function SignIn() {
 
 	return (
 		<Provider store={store}>
-			<FlashMessagesProvider>
-				<Loader 
-					status={loadingStatus} 
-					overlayClassSatus={true}
-				/>
-				<Navigation/>
-				<FlashMessageComponent/>
-			</FlashMessagesProvider>
+			<Loader 
+				status={loadingStatus} 
+				overlayClassSatus={true}
+			/>
+			<Navigation/>
+			<FlashMessageComponent/>
 		</Provider>
 	);
 }

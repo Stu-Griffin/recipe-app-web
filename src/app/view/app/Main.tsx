@@ -59,7 +59,7 @@ export default function Main(): ReactElement {
 
 	async function getRecipes(type: string, page: number|undefined, options: RecipeSearchConfigI, searchStatus: boolean): Promise<void> {
 		setLoading(true);
-		const response = await recipeAPI.getRecipes(type, page, options);
+		const response = await recipeAPI.getRecipes(dispatch, type, page, options);
 		if(response?.status === 200 && response?.data) {
 			(searchStatus) ? setRecipes([...(response?.data as RecipeI[])]) : setRecipes([...recipes, ...(response?.data as RecipeI[])]);
 		}
