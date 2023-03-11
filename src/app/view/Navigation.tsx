@@ -51,18 +51,6 @@ export default function Navigation(): ReactElement {
 		setMenuIsOpen(!menuIsOpen);
 	};
 
-	const menuStyle = (): object => {
-		if(menuIsOpen) {
-			return {
-				display: "flex",
-			};
-		} else {
-			return {
-				display: "none",
-			};
-		}
-	};
-
 	const getMenuIcon = (): ReactElement => {
 		if(menuIsOpen) {
 			return <CrossIcon 
@@ -138,7 +126,6 @@ export default function Navigation(): ReactElement {
 			>
 				<nav
 					ref={nodeRef}
-					// style={menuStyle()} 
 					className={styles.navigation}
 				>
 					{

@@ -72,7 +72,7 @@ export default function Main(): ReactElement {
 				{
 					recipeTypes.map((el: string, index: number): ReactElement => {
 						return (
-							<button 
+							<button
 								key={index}
 								className={styles.type}
 								style={recipeTypeButtonStyle(recipeType, el)}

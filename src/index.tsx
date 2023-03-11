@@ -17,6 +17,7 @@ import reportWebVitals from "./reportWebVitals";
 //Styles
 import "./app/style/menu.css";
 import "./app/style/index.css";
+import "./app/style/recipe-list.css";
 import "./app/style/flashMessage.css";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(<App />);

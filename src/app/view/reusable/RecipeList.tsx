@@ -13,6 +13,7 @@ import { AppDispatch, RootState } from "../../types/store";
 import { Puff } from  "react-loader-spinner";
 import React, { ReactElement, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { CSSTransition } from "react-transition-group";
 
 //Functions
 import userAPI from "../../controller/api/user";
@@ -34,6 +35,7 @@ interface PropsI {
 
 export default function RecipesList({ ammountClickHandler, loadingStatus, data, length, emptyMsg, deleteAbility, title }: PropsI) {
 	const nodeRef = useRef(null);
+	const listNodeRef = useRef(null);
 	const dispatch: AppDispatch = useDispatch();
 	const { user, userId }: ProfileStateI = useSelector((state: RootState) => state.profile);
 
@@ -58,7 +60,7 @@ export default function RecipesList({ ammountClickHandler, loadingStatus, data, 
 		if(length === 0) {
 			if(!loadingStatus) {
 				return (
-					<h3 className={styles.error}>{emptyMsg}</h3>
+					<h3 ref={nodeRef} className={styles.error}>{emptyMsg}</h3>
 				);
 			} else {
 				return (		
@@ -67,7 +69,7 @@ export default function RecipesList({ ammountClickHandler, loadingStatus, data, 
 			}
 		} else {
 			return (
-				<div className={styles.list}>
+				<div ref={listNodeRef} className={styles.list}>
 					{
 						data.map((el: RecipeI) => {
 							return (
@@ -112,7 +114,15 @@ export default function RecipesList({ ammountClickHandler, loadingStatus, data, 
 					onClick={ammountClickHandler}
 				>{length} results</p>
 			</div>
-			{getList()}
+			<CSSTransition
+				unmountOnExit
+				timeout={1000}
+				in={!loadingStatus}
+				nodeRef={listNodeRef}
+				classNames="recipe-list"
+			>
+				{getList()}
+			</CSSTransition>
 			<Puff
 				width="80"
 				radius={1}
