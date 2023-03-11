@@ -1,4 +1,9 @@
-import { RecipeFormStateI, RecipeErrorFormStateI, RecipeSearchConfigI, RecipeErrorSearchConfigI } from "../types/recipes";
+import { 
+	RecipeFormStateI, 
+	RecipeSearchConfigI, 
+	RecipeErrorFormStateI, 
+	RecipeErrorSearchConfigI 
+} from "../types/recipes";
 
 export const recipeFormState: RecipeFormStateI = {
 	rate: 0,

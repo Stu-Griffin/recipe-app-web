@@ -1,25 +1,25 @@
-//Components
-import InputArea from "../reusable/Input";
-
 //Icons
-import SaveIcon from "../../../assets/icons/save";
-import EditIcon from "../../../assets/icons/edit";
-import DeleteIcon from "../../../assets/icons/delete";
+import SaveIcon from "../../../../assets/icons/save";
+import EditIcon from "../../../../assets/icons/edit";
+import DeleteIcon from "../../../../assets/icons/delete";
 
 //Types
-import { ReactElement, useEffect } from "react";
+import { ReactElement } from "react";
+
+//Models
 
 //Libraries
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 
 //Functions
-import { getButtonStyle } from "../../controller/style";
-import styles from "../../style/reusable/list-add.module.css";
-import { regularValidation } from "../../controller/validation";
+import { getButtonStyle } from "../../../controller/style";
+import { regularValidation } from "../../../controller/validation";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
+import styles from "../../../style/app/create-edit-recipe/list-add.module.css";
 
-//Models
+//Components
+import InputArea from "../../reusable/Input";
 
 interface PropsI {
 	title: string;
@@ -32,7 +32,16 @@ interface PropsI {
 	moveEl: (what: number, where: number, el: string) => void;
 }
 
-export default function ListAdd({editEl, listNumbering, data, title, placeholder, saveEl, removeEl, moveEl}: PropsI): ReactElement {
+export default function ListAdd({
+	data, 
+	title,
+	editEl,  
+	saveEl, 
+	moveEl,
+	removeEl, 
+	placeholder, 
+	listNumbering, 
+}: PropsI): ReactElement {
 	const [value, setValue] = useState<string>("");
 	const [editId, setEditId] = useState<string>("");
 	const [editValue, setEditValue] = useState<string>("");

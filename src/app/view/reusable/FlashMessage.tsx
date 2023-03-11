@@ -1,35 +1,33 @@
-//Components
+//Models
 
 //Icons
 
 //Types
-import { ReactElement, useEffect } from "react";
+import { ReactElement } from "react";
 import { AppDispatch, RootState } from "../../types/store";
 
+//Models
+
 //Libraries
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { CSSTransition } from "react-transition-group";
 import { useSelector, useDispatch } from "react-redux";
 
 //Functions
 import { changeFlashMessageShowStatus } from "../../controller/redux/flashMessage";
 
-//Models
+//Components
 
 export default function FlashMessageComponent(): ReactElement {
 	const nodeRef = useRef(null);
 	const dispatch: AppDispatch = useDispatch();
-	const {duration, status, message, description, show} = useSelector((state: RootState) => state.flashMessage);
+	const { show, status,  message, duration,  description } = useSelector((state: RootState) => state.flashMessage);
 
 	useEffect(() => {
-		if(show && duration) {
-			setTimeout(() => {
-				closeFlashMessage();
-			}, duration);
-		}
+		if(show && duration) setTimeout(() => closeFlashMessage(), duration);
 	}, [show]);
 
-	const closeFlashMessage = () => {
+	const closeFlashMessage = (): void => {
 		dispatch(changeFlashMessageShowStatus(false));
 	};
 

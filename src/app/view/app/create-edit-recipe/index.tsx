@@ -1,36 +1,36 @@
-//Components
-import Loader from "../reusable/Loader";
-import InputArea from "../reusable/Input";
-import ListAdd from "../reusable/ListAdd";
-
 //Icons
 
 //Types
-import { AppDispatch, RootState } from "../../types/store";
-import { ProfileStateI } from "../../types/profile";
-import { RecipeErrorFormStateI, RecipeFormStateI } from "../../types/recipes";
-
-//Libraries
-import { useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
-import ImageUploading, { ImageListType } from "react-images-uploading";
-import React, { ReactElement, useEffect, useReducer, useState } from "react";
-
-//Functions
-import recipeAPI from "../../controller/api/recipes";
-import { getButtonStyle } from "../../controller/style";
-import styles from "../../style/app/create-recipe.module.css";
-import { regularValidation } from "../../controller/validation";
-import { changeFlashMessage } from "../../controller/redux/flashMessage";
-import { recipeFormReducer, recipeErrorFormReducer } from "../../controller/recipes";
+import { ReactElement } from "react";
+import { ProfileStateI } from "../../../types/profile";
+import { AppDispatch, RootState } from "../../../types/store";
+import { RecipeErrorFormStateI, RecipeFormStateI } from "../../../types/recipes";
 
 //Models
-import { recipeFormState, recipeErrorFormState, recipeTypes } from "../../model/recipes";
-import { useDispatch } from "react-redux";
+import { recipeFormState, recipeErrorFormState, recipeTypes } from "../../../model/recipes";
+
+//Libraries
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import ImageUploading, { ImageListType } from "react-images-uploading";
+import React, { useEffect, useReducer, useState } from "react";
+
+//Functions
+import recipeAPI from "../../../controller/api/recipes";
+import { getButtonStyle } from "../../../controller/style";
+import { regularValidation } from "../../../controller/validation";
+import styles from "../../../style/app/create-edit-recipe/index.module.css";
+import { changeFlashMessage } from "../../../controller/redux/flashMessage";
+import { recipeFormReducer, recipeErrorFormReducer } from "../../../controller/recipes";
+
+//Components
+import ListAdd from "./ListAdd";
+import Loader from "../../reusable/Loader";
+import InputArea from "../../reusable/Input";
 
 const allowedImgTypes = ["jpg", "png", "jpeg"];
 
-export default function CreateRecipe() {
+export default function CreateRecipe(): ReactElement {
 	const maxNumber = 69;
 	const navigate = useNavigate();
 	const { recipeId } = useParams();

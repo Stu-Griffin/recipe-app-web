@@ -1,4 +1,13 @@
-import { SignInUserFormStateI, SignInUserErrorFormStateI, SignInUserErrorFormActionI, SignInUserFormActionI, SignUpUserFormStateI, SignUpUserErrorFormStateI, SignUpUserFormActionI, SignUpUserErrorFormActionI} from "../types/user";
+import { 
+	SignInUserFormStateI,
+	SignUpUserFormStateI,
+	SignUpUserFormActionI,
+	SignInUserFormActionI,
+	SignUpUserErrorFormStateI,
+	SignInUserErrorFormStateI,
+	SignUpUserErrorFormActionI,
+	SignInUserErrorFormActionI,
+} from "../types/user";
 
 export function signInUserFormReducer(state: SignInUserFormStateI, action: SignInUserFormActionI): SignInUserFormStateI {
 	switch (action.type) {

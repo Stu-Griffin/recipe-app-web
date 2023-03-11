@@ -1,8 +1,8 @@
 import axios from "axios";
 import env from "react-dotenv";
+import { AppDispatch } from "../../types/store";
 import { changeFlashMessage } from "../redux/flashMessage";
 import { SignInUserFormStateI, UserI } from "../../types/user";
-import { AppDispatch } from "../../types/store";
 
 class UserAPI {
 	constructor(protected url: string) {}

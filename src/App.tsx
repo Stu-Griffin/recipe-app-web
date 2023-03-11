@@ -1,6 +1,7 @@
 //Icons
 
 //Types
+import { ReactElement } from "react";
 
 //Models
 
@@ -12,11 +13,11 @@ import React, { useEffect, useState } from "react";
 import { store } from "./app/controller/redux/store";
 
 //Components
-import Navigation from "./app/view/Navigation";
+import Navigation from "./app/view/navigation";
 import Loader from "./app/view/reusable/Loader";
 import FlashMessageComponent from "./app/view/reusable/FlashMessage";
 
-export default function SignIn() {
+export default function App(): ReactElement {
 	const [loadingStatus, setLoadingStatus] = useState<boolean>(true);
 
 	useEffect(() => {

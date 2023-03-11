@@ -1,4 +1,9 @@
-import { SignInUserFormStateI, SignInUserErrorFormStateI, SignUpUserFormStateI, SignUpUserErrorFormStateI } from "../types/user";
+import { 
+	SignInUserFormStateI, 
+	SignUpUserFormStateI, 
+	SignUpUserErrorFormStateI,
+	SignInUserErrorFormStateI, 
+} from "../types/user";
 
 export const signInUserFormState: SignInUserFormStateI = {
 	email: "",

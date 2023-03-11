@@ -1,8 +1,9 @@
-//Components
-
 //Icons
 
 //Types
+import { ReactElement } from "react";
+
+//Models
 
 //Libraries
 import React from "react";
@@ -10,7 +11,7 @@ import React from "react";
 //Functions
 import styles from "../../style/reusable/input.module.css";
 
-//Models
+//Components
 
 interface PropsI {
 	title: string;
@@ -23,8 +24,16 @@ interface PropsI {
 	onChangeFunc: (e: string) => void;
 }
 
-
-export default function InputArea({ style, title, type, value, error, placeholder, onChangeFunc, multiple }: PropsI) {
+export default function InputArea({
+	type,
+	style,
+	title,
+	value,
+	error,
+	multiple,
+	placeholder,
+	onChangeFunc,
+}: PropsI): ReactElement {
 	const getTitleStyle = (): object => {
 		if(error && error !== null) {
 			return {

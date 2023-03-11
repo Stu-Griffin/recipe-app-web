@@ -1,30 +1,29 @@
-//Components
-import Loader from "../reusable/Loader";
-import InputArea from "../reusable/Input";
-
 //Icons
 
 //Types
 import { ReactElement } from "react";
-import { AppDispatch } from "../../types/store";
+import { AppDispatch } from "../../../types/store";
+
+//Models
+import { signInUserFormState, signInUserErrorFormState } from "../../../model/users";
 
 //Libraries
-import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import React, { useReducer, useState, useEffect } from "react";
 
 //Functions
-import userAPI from "../../controller/api/user";
-import { getButtonStyle } from "../../controller/style";
-import styles from "../../style/authorization/sign-in.module.css";
-import { changeProfileValue } from "../../controller/redux/profile";
-import { changeFlashMessage } from "../../controller/redux/flashMessage";
-import { emailValidation, regularValidation } from "../../controller/validation";
-import { signInUserFormReducer, signInUserErrorFormReducer } from "../../controller/users";
+import userAPI from "../../../controller/api/user";
+import { getButtonStyle } from "../../../controller/style";
+import { changeProfileValue } from "../../../controller/redux/profile";
+import styles from "../../../style/authorization/sign-in/index.module.css";
+import { changeFlashMessage } from "../../../controller/redux/flashMessage";
+import { emailValidation, regularValidation } from "../../../controller/validation";
+import { signInUserFormReducer, signInUserErrorFormReducer } from "../../../controller/users";
 
-//Models
-import { signInUserFormState, signInUserErrorFormState } from "../../model/users";
+//Components
+import Loader from "../../reusable/Loader";
+import InputArea from "../../reusable/Input";
 
 export default function SignIn(): ReactElement {
 	const navigate = useNavigate();

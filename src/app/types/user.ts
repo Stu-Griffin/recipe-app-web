@@ -9,12 +9,34 @@ export interface SignInUserFormStateI {
 	password: string;
 }
 
+export interface SignUpUserFormStateI {
+	login: string;
+	email: string;
+	password: string;
+	confirmPassword: string;
+}
+
 export interface SignInUserFormActionI {
 	payload: {
 		key: string;
 		value: string;
 	};
 	type: string;
+}
+
+export interface SignUpUserFormActionI {
+	payload: {
+		key: string;
+		value: string;
+	};
+	type: string;
+}
+
+export interface SignUpUserErrorFormStateI {
+	login: boolean|null;
+	email: boolean|null;
+	password: boolean|null;
+	confirmPassword: boolean|null;
 }
 
 export interface SignInUserErrorFormStateI {
@@ -28,27 +50,6 @@ export interface SignInUserErrorFormActionI {
 		value: boolean;
 	};
 	type: string;
-}
-
-export interface SignUpUserFormStateI {
-	login: string;
-	email: string;
-	password: string;
-	confirmPassword: string;
-}
-
-export interface SignUpUserFormActionI {
-	payload: {
-		key: string;
-		value: string;
-	};
-	type: string;
-}
-export interface SignUpUserErrorFormStateI {
-	login: boolean|null;
-	email: boolean|null;
-	password: boolean|null;
-	confirmPassword: boolean|null;
 }
 
 export interface SignUpUserErrorFormActionI {

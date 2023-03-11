@@ -1,41 +1,42 @@
-//Components
-import Loader from "../reusable/Loader";
-import InputArea from "../reusable/Input";
-import RecipesList from "../reusable/RecipeList";
-
 //Icons
-import ExitIcon from "../../../assets/icons/exit";
-import DefaultAvatar from "../../../assets/icons/avatar";
-import DeleteProfileIcon from "../../../assets/icons/deleteProfile";
+import ExitIcon from "../../../../assets/icons/exit";
+import DefaultAvatar from "../../../../assets/icons/avatar";
+import DeleteProfileIcon from "../../../../assets/icons/deleteProfile";
 
 //Types
-import { RecipeI } from "../../types/recipes";
-import { ProfileStateI } from "../../types/profile";
+import { RecipeI } from "../../../types/recipes";
+import { ProfileStateI } from "../../../types/profile";
 import { ImageListType } from "react-images-uploading";
-import { AppDispatch, RootState } from "../../types/store";
+import { AppDispatch, RootState } from "../../../types/store";
+
+//Models
+import { profileFormState, profileErrorFormState } from "../../../model/profile";
 
 //Libraries
+import { ReactElement } from "react";
 import { useNavigate } from "react-router-dom";
 import ImageUploading from "react-images-uploading";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useReducer, useState } from "react";
 
 //Functions
-import userAPI from "../../controller/api/user";
-import recipeAPI from "../../controller/api/recipes";
-import styles from "../../style/app/profile.module.css";
-import { getButtonStyle } from "../../controller/style";
-import { changeFlashMessage } from "../../controller/redux/flashMessage";
-import { regularValidation, emailValidation } from "../../controller/validation";
-import { profileFormReducer, profileErrorFormReducer } from "../../controller/profile";
-import { changeProfileValue, changeUserProfileValue } from "../../controller/redux/profile";
+import userAPI from "../../../controller/api/user";
+import recipeAPI from "../../../controller/api/recipes";
+import { getButtonStyle } from "../../../controller/style";
+import styles from "../../../style/app/profile/index.module.css";
+import { changeFlashMessage } from "../../../controller/redux/flashMessage";
+import { regularValidation, emailValidation } from "../../../controller/validation";
+import { profileFormReducer, profileErrorFormReducer } from "../../../controller/profile";
+import { changeProfileValue, changeUserProfileValue } from "../../../controller/redux/profile";
 
-//Models
-import { profileFormState, profileErrorFormState } from "../../model/profile";
+//Components
+import Loader from "../../reusable/Loader";
+import InputArea from "../../reusable/Input";
+import RecipesList from "../../reusable/RecipeList";
 
 const allowedImgTypes = ["jpg", "png", "jpeg"];
 
-export default function Profile() {
+export default function Profile(): ReactElement {
 	const maxNumber = 69;
 	const navigate = useNavigate();
 	const dispatch: AppDispatch = useDispatch();

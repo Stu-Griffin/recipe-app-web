@@ -1,17 +1,17 @@
-//Components
-
 //Icons
-import Star from "../../../assets/icons/star";
+import Star from "../../../../assets/icons/star";
 
 //Types
+
+//Models
 
 //Libraries
 import React from "react";
 
 //Functions
-import styles from "../../style/reusable/rate-box.module.css";
+import styles from "../../../style/app/recipe-page/rate-box.module.css";
 
-//Models
+//Components
 
 interface PropsI {
 	rate: number;

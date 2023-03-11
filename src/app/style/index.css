@@ -1,43 +1,10 @@
-li {
-	list-style: none;
-}
-
 a {
 	color: black;
 	text-decoration: none;
 }
 
-.loader {
-	display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.recipe-enter {
-  opacity: 0;
-  transform: scale(0.9);
-}
-.recipe-enter-active {
-  opacity: 1;
-  transform: translateX(0);
-  transition: opacity 300ms, transform 300ms;
-}
-.recipe-exit {
-  opacity: 1;
-}
-.recipe-exit-active {
-  opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 300ms, transform 300ms;
-}
-
-.Overlay {
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	position: fixed;
-	background-color: white;
+li {
+	list-style: none;
 }
 
 body {
@@ -55,35 +22,4 @@ h1, h2, h3, h4, h5, h6, p, li, a, label {
 @font-face {
 	font-family: "Poppins-Regular";
 	src: local("GoldmanBold"), url("../../assets/fonts/Poppins/Poppins-Regular.ttf") format("truetype");
-}
-
-
-@keyframes fade-in {
-	0% {
-		opacity: 0;
-		transform: translateX(-100%);
-	}
-	100% {
-		opacity: 1;
-		transform: translateX(0%);
-	}
-}
-
-@keyframes fade-out {
-	0% {
-		opacity: 1;
-		transform: translateX(0%);
-	}
-	100% {
-		opacity: 0;
-		transform: translateX(100%);
-	}
-}
-
-.el-exit-active {
-	animation: fade-out 500ms forwards;
-}
-
-.el-enter-active {
-	animation: fade-in 500ms forwards;
 }

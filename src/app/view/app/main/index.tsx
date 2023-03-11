@@ -1,14 +1,13 @@
-//Components
-import SearchArea from "./SearchArea";
-import RecipesList from "../reusable/RecipeList";
-
 //Icons
 
 //Types
 import { ReactElement } from "react";
-import { AdditionalStateI } from "../../types/additional";
-import { AppDispatch, RootState } from "../../types/store";
-import { RecipeI, RecipeSearchConfigI } from "../../types/recipes";
+import { AdditionalStateI } from "../../../types/additional";
+import { AppDispatch, RootState } from "../../../types/store";
+import { RecipeI, RecipeSearchConfigI } from "../../../types/recipes";
+
+//Models
+import { recipeSearchConfig, recipeTypes } from "../../../model/recipes";
 
 //Libraries
 import Modal from "react-modal";
@@ -16,13 +15,14 @@ import React, { useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 //Functions
-import styles from "../../style/app/main.module.css";
-import recipeAPI from "../../controller/api/recipes";
-import { recipeTypeButtonStyle } from "../../controller/style";
-import { changeAdditionalValue } from "../../controller/redux/additional";
+import recipeAPI from "../../../controller/api/recipes";
+import styles from "../../../style/app/main/index.module.css";
+import { recipeTypeButtonStyle } from "../../../controller/style";
+import { changeAdditionalValue } from "../../../controller/redux/additional";
 
-//Models
-import { recipeSearchConfig, recipeTypes } from "../../model/recipes";
+//Components
+import SearchArea from "./SearchArea";
+import RecipesList from "../../reusable/RecipeList";
 
 const customStyles = {
 	content: {

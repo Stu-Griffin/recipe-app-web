@@ -1,5 +1,13 @@
-import { profileErrorFormState, profileFormState } from "../model/profile";
-import { ProfileFormStateI, ProfileFormActionI, ProfileErrorFormStateI, ProfileErrorFormActionI } from "../types/profile";
+import { 
+	profileFormState,
+	profileErrorFormState, 
+} from "../model/profile";
+import { 
+	ProfileFormStateI, 
+	ProfileFormActionI, 
+	ProfileErrorFormStateI, 
+	ProfileErrorFormActionI,
+} from "../types/profile";
 
 export function profileFormReducer(state: ProfileFormStateI, action: ProfileFormActionI): ProfileFormStateI {
 	switch (action.type) {

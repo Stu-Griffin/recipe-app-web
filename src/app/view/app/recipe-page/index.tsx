@@ -1,16 +1,15 @@
-//Components
-import RateBox from "../reusable/RateBox";
-
 //Icons
-import EditIcon from "../../../assets/icons/edit";
-import SavedIcon from "../../../assets/icons/saved";
-import DeleteIcon from "../../../assets/icons/delete";
-import DefaultAvatar from "../../../assets/icons/avatar";
+import EditIcon from "../../../../assets/icons/edit";
+import SavedIcon from "../../../../assets/icons/saved";
+import DeleteIcon from "../../../../assets/icons/delete";
+import DefaultAvatar from "../../../../assets/icons/avatar";
 
 //Types
-import { RecipeI } from "../../types/recipes";
-import { ProfileStateI } from "../../types/profile";
-import { AppDispatch, RootState } from "../../types/store";
+import { RecipeI } from "../../../types/recipes";
+import { ProfileStateI } from "../../../types/profile";
+import { AppDispatch, RootState } from "../../../types/store";
+
+//Models
 
 //Libraries
 import Modal from "react-modal";
@@ -21,14 +20,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import React, { ReactElement, useEffect, useState } from "react";
 
 //Functions
-import userAPI from "../../controller/api/user";
-import recipeAPI from "../../controller/api/recipes";
-import styles from "../../style/app/recipe-page.module.css";
-import { recipeTypeButtonStyle } from "../../controller/style";
-import { changeUserProfileValue } from "../../controller/redux/profile";
-import { changeFlashMessage } from "../../controller/redux/flashMessage";
+import userAPI from "../../../controller/api/user";
+import recipeAPI from "../../../controller/api/recipes";
+import { recipeTypeButtonStyle } from "../../../controller/style";
+import styles from "../../../style/app/recipe-page/index.module.css";
+import { changeUserProfileValue } from "../../../controller/redux/profile";
+import { changeFlashMessage } from "../../../controller/redux/flashMessage";
 
-//Models
+//Components
+import RateBox from "./RateBox";
 
 const customStyles = {
 	content: {
