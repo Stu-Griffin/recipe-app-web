@@ -1,54 +1,58 @@
 import axios from "axios";
 import env from "react-dotenv";
-import { addFlashMessage } from "@42.nl/react-flash-messages";
+import { AppDispatch } from "../../types/store";
+import { changeFlashMessage } from "../redux/flashMessage";
 import { SignInUserFormStateI, UserI } from "../../types/user";
 
 class UserAPI {
 	constructor(protected url: string) {}
 
-	async signUp(user: UserI) {
+	async signUp(dispatch:AppDispatch, user: UserI) {
 		try {
 			const response = await axios.post(`${this.url}/sign-up`, user);
 			if(response) return response.data;
 		} catch (e) {
-			addFlashMessage({
-				type: "ERROR", 
+			dispatch(changeFlashMessage({
+				show: true,
 				duration: 2000,
-				text: "User error",
-				data: "Error in registration user",
-			});
+				status: "ERROR",
+				message: "User error",
+				description: "Error in registration user",
+			}));
 		}
 	}
 
-	async getUser(id: string) {
+	async getUser(dispatch:AppDispatch, id: string) {
 		try {
 			const response = await axios.get(`${this.url}/${id}`);
 			if(response) return response.data;
 		} catch(e) {
-			addFlashMessage({
-				type: "ERROR", 
+			dispatch(changeFlashMessage({
+				show: true,
 				duration: 2000,
-				text: "User error",
-				data: "Error in getting user",
-			});
+				status: "ERROR",
+				message: "User error",
+				description: "Error in getting user",
+			}));
 		}
 	}
 
-	async signIn(user: SignInUserFormStateI) {
+	async signIn(dispatch:AppDispatch, user: SignInUserFormStateI) {
 		try {
 			const response = await axios.post(`${this.url}/sign-in`, user);
 			if(response) return response.data;
 		} catch (e) {
-			addFlashMessage({
-				type: "ERROR", 
+			dispatch(changeFlashMessage({
+				show: true,
 				duration: 2000,
-				text: "User error",
-				data: "Error in authorization",
-			});
+				status: "ERROR",
+				message: "User error",
+				description: "Error in authorization",
+			}));
 		}
 	}
 
-	async changeUser(id: string, user: FormData) {
+	async changeUser(dispatch:AppDispatch, id: string, user: FormData) {
 		try {
 			const response = await axios({
 				data: user,
@@ -58,26 +62,28 @@ class UserAPI {
 			});
 			if(response) return response.data;
 		} catch {
-			addFlashMessage({
-				type: "ERROR", 
+			dispatch(changeFlashMessage({
+				show: true,
 				duration: 2000,
-				text: "User error",
-				data: "Error in changing user",
-			});
+				status: "ERROR",
+				message: "User error",
+				description: "Error in changing user",
+			}));
 		}
 	}
 
-	async deleteUser(id: string, avatarId: string) {
+	async deleteUser(dispatch:AppDispatch, id: string, avatarId: string) {
 		try {
 			const response = await axios.delete(`${this.url}/${id}`, { data: { avatarId: avatarId } });
 			if(response) return response.data;
 		} catch(e) {
-			addFlashMessage({
-				type: "ERROR", 
+			dispatch(changeFlashMessage({
+				show: true,
 				duration: 2000,
-				text: "User error",
-				data: "Error in deleting user",
-			});
+				status: "ERROR",
+				message: "User error",
+				description: "Error in deleting user",
+			}));
 		}
 	}
 }

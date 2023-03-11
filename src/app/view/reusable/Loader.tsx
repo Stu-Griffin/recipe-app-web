@@ -1,18 +1,19 @@
-//Components
-
 //Icons
 
 //Types
+import { ReactElement } from "react";
+
+//Models
 
 //Libraries
-
 import React from "react";
 import Modal from "react-modal";
 import { Puff } from  "react-loader-spinner";
 
 //Functions
+import styles from "../../style/reusable/loader.module.css";
 
-//Models
+//Components
 
 const customStyles = {
 	content: {
@@ -34,13 +35,16 @@ interface PropsI {
 	overlayClassSatus?: boolean;
 }
 
-export default function Loader({ status, overlayClassSatus }: PropsI) {
+export default function Loader({
+	status,
+	overlayClassSatus
+}: PropsI): ReactElement {
 	return (
 		<Modal
 			isOpen={status}
 			style={customStyles}
-			contentLabel="Example Modal"
-			overlayClassName={(overlayClassSatus) ? "Overlay" : ""}
+			contentLabel="Modal"
+			overlayClassName={(overlayClassSatus) ? styles.overlay : ""}
 		>
 			<Puff
 				width="80"
@@ -48,8 +52,8 @@ export default function Loader({ status, overlayClassSatus }: PropsI) {
 				height="80"
 				color="#129575"
 				visible={status}
-				wrapperClass="loader"
 				ariaLabel="puff-loading"
+				wrapperClass={styles.loader}
 			/>
 		</Modal>
 	);

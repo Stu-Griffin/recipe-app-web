@@ -1,74 +1,14 @@
-li {
-	list-style: none;
-}
-
 a {
 	color: black;
 	text-decoration: none;
 }
 
-.loader {
-	display: flex;
-  align-items: center;
-  justify-content: center;
+li {
+	list-style: none;
 }
 
-.flash-message {
-	top: 1vh;
-	right: 1rem;
-  z-index: 9000;
-	cursor: pointer;
-	position: fixed;
-	padding: 10px 30px;
-	text-align: center;
-  border-radius: 10px;
-	font-family: "Poppins-Regular";
-}
-
-.ERROR {
-	color: #940000;
-  background-color: #ff8282;
-}
-
-.WARNING {
-	color: #946300;
-  background-color: #f9ff82;
-}
-
-.SUCCESS {
-	color: #319400;
-  background-color: #82ff8f;
-}
-.INFO {
-	color: #005e94;
-  background-color: #82d1ff;
-}
-
-.recipe-enter {
-  opacity: 0;
-  transform: scale(0.9);
-}
-.recipe-enter-active {
-  opacity: 1;
-  transform: translateX(0);
-  transition: opacity 300ms, transform 300ms;
-}
-.recipe-exit {
-  opacity: 1;
-}
-.recipe-exit-active {
-  opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 300ms, transform 300ms;
-}
-
-.Overlay {
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	position: fixed;
-	background-color: white;
+body {
+	overflow-x: hidden;
 }
 
 body, h1, h2, h3, h4, h5, h6, p, a {

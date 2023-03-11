@@ -1,23 +1,23 @@
-//Components
-import InputArea from "../reusable/Input";
-
 //Icons
 
 //Types
 import { ReactElement } from "react";
-import { RecipeSearchConfigI } from "../../types/recipes";
+import { RecipeSearchConfigI } from "../../../types/recipes";
+
+//Models
+import { recipeErrorSearchConfig, recipeSearchConfig } from "../../../model/recipes";
 
 //Libraries
 import React, { useEffect, useState, useReducer } from "react";
 
 //Functions
-import styles from "../../style/app/main.module.css";
-import { regularValidation } from "../../controller/validation";
-import { recipeTypeButtonStyle, getButtonStyle } from "../../controller/style";
-import { recipeErrorSearchConfigReducer, recipeSearchConfigReducer } from "../../controller/recipes";
+import { regularValidation } from "../../../controller/validation";
+import styles from "../../../style/app/main/serach-area.module.css";
+import { recipeTypeButtonStyle, getButtonStyle } from "../../../controller/style";
+import { recipeErrorSearchConfigReducer, recipeSearchConfigReducer } from "../../../controller/recipes";
 
-//Models
-import { recipeErrorSearchConfig, recipeSearchConfig } from "../../model/recipes";
+//Components
+import InputArea from "../../reusable/Input";
 
 interface PropsI {
 	search: (config: RecipeSearchConfigI) => void;

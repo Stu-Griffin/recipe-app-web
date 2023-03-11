@@ -1,26 +1,28 @@
 import axios from "axios";
 import env from "react-dotenv";
-import { addFlashMessage } from "@42.nl/react-flash-messages";
+import { AppDispatch } from "../../types/store";
+import { changeFlashMessage } from "../redux/flashMessage";
 import { changeRate, RecipeSearchConfigI } from "../../types/recipes";
 
 class RecipeAPI {
 	constructor(protected url: string, private cancelToken: any) {}
 
-	async getRecipeByItsId(id: string) {
+	async getRecipeByItsId(dispatch: AppDispatch, id: string) {
 		try {
 			const response = await axios.get(`${this.url}/recipe/${id}`);
 			if(response) return response.data;
 		} catch {
-			addFlashMessage({
-				type: "ERROR", 
+			dispatch(changeFlashMessage({
+				show: true,
 				duration: 2000,
-				text: "Recipe error",
-				data: "Error in getting recipe",
-			});
+				status: "ERROR",
+				message: "Recipe error",
+				description: "Error in getting recipe",
+			}));
 		}
 	}
 
-	async createRecipe(recipe: FormData) {
+	async createRecipe(dispatch: AppDispatch, recipe: FormData) {
 		try {
 			const response = await axios({
 				data: recipe,
@@ -30,58 +32,62 @@ class RecipeAPI {
 			});
 			if(response) return response.data;
 		} catch {
-			addFlashMessage({
-				type: "ERROR", 
+			dispatch(changeFlashMessage({
+				show: true,
 				duration: 2000,
-				text: "Recipe error",
-				data: "Error in creating recipe",
-			});
+				status: "ERROR",
+				message: "Recipe error",
+				description: "Error in creating recipe",
+			}));
 		}
 	}
 
-	async getRecipesByAuthorId(id: string) {
+	async getRecipesByAuthorId(dispatch: AppDispatch, id: string) {
 		try {
 			const response = await axios.get(`${this.url}/author/${id}`);
 			if(response) return response.data;
 		} catch {
-			addFlashMessage({
-				type: "ERROR", 
+			dispatch(changeFlashMessage({
+				show: true,
 				duration: 2000,
-				text: "Recipe error",
-				data: "Error in getting authors recipes",
-			});
+				status: "ERROR",
+				message: "Recipe error",
+				description: "Error in getting authors recipes",
+			}));
 		}
 	}
 
-	async deleteRecipe(id: string, imgId: string) {
+	async deleteRecipe(dispatch: AppDispatch, id: string, imgId: string) {
 		try {
 			const response = await axios.delete(`${this.url}/${id}`, {data: { imgId: imgId }});
 			if(response) return response.data;
 		} catch {
-			addFlashMessage({
-				type: "ERROR", 
+			dispatch(changeFlashMessage({
+				show: true,
 				duration: 2000,
-				text: "Recipe error",
-				data: "Error in deleting recipe",
-			});
+				status: "ERROR",
+				message: "Recipe error",
+				description: "Error in deleting recipe",
+			}));
 		}
 	}
 
-	async getSavedRecipes(savedRecipes: string[]) {
+	async getSavedRecipes(dispatch: AppDispatch, savedRecipes: string[]) {
 		try {
 			const response = await axios.get(`${this.url}/saved-recipes`, {params: { savedRecipes: savedRecipes }});
 			if(response) return response.data;
 		} catch {
-			addFlashMessage({
-				type: "ERROR", 
+			dispatch(changeFlashMessage({
+				show: true,
 				duration: 2000,
-				text: "Recipe error",
-				data: "Error in getting saved recipes",
-			});
+				status: "ERROR",
+				message: "Recipe error",
+				description: "Error in getting saved recipes",
+			}));
 		}
 	}
 
-	async editRecipe(recipe: FormData, id: string) {
+	async editRecipe(dispatch: AppDispatch, recipe: FormData, id: string) {
 		try {
 			const response = await axios({
 				data: recipe,
@@ -91,30 +97,32 @@ class RecipeAPI {
 			});
 			if(response) return response.data;
 		} catch {
-			addFlashMessage({
-				type: "ERROR", 
+			dispatch(changeFlashMessage({
+				show: true,
 				duration: 2000,
-				text: "Recipe error",
-				data: "Error in editting recipe",
-			});
+				status: "ERROR",
+				message: "Recipe error",
+				description: "Error in editting recipe",
+			}));
 		}
 	}
 
-	async changeRecipesRate(id: string, rate: changeRate) {
+	async changeRecipesRate(dispatch: AppDispatch, id: string, rate: changeRate) {
 		try {
 			const response = await axios.put(`${this.url}/rating/${id}`, rate);
 			if(response) return response.data;
 		} catch {
-			addFlashMessage({
-				type: "ERROR", 
+			dispatch(changeFlashMessage({
+				show: true,
 				duration: 2000,
-				text: "Recipe error",
-				data: "Error in chaging recipes rate",
-			});
+				status: "ERROR",
+				message: "Recipe error",
+				description: "Error in chaging recipes rate",
+			}));
 		}
 	}
 
-	async getRecipes(type: string, page: number|undefined, options: RecipeSearchConfigI) {
+	async getRecipes(dispatch: AppDispatch, type: string, page: number|undefined, options: RecipeSearchConfigI) {
 		if (typeof this.cancelToken !== typeof undefined) this.cancelToken.cancel("Operation canceled due to new request.");
 		this.cancelToken = axios.CancelToken.source();
 		

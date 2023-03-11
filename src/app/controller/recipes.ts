@@ -1,5 +1,15 @@
+import { 
+	PickImageArgI,
+	RecipeFormStateI, 
+	RecipeFormActionI, 
+	RecipeSearchConfigI, 
+	RecipeErrorFormStateI, 
+	RecipeErrorFormActionI, 
+	RecipeErrorSearchConfigI, 
+	RecipeSearchConfigActionI, 
+	RecipeErrorSearchConfigActionI, 
+} from "../types/recipes";
 import { recipeFormState } from "../model/recipes";
-import { RecipeFormStateI, RecipeFormActionI, RecipeErrorFormStateI, RecipeErrorSearchConfigI, RecipeSearchConfigI, RecipeErrorFormActionI, RecipeSearchConfigActionI, RecipeErrorSearchConfigActionI, PickImageArgI } from "../types/recipes";
 
 export function recipeFormReducer(state: RecipeFormStateI, action: RecipeFormActionI): RecipeFormStateI {
 	switch (action.type) {

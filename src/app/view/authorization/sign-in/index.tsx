@@ -1,30 +1,29 @@
-//Components
-import Loader from "../reusable/Loader";
-import InputArea from "../reusable/Input";
-
 //Icons
 
 //Types
 import { ReactElement } from "react";
-import { AppDispatch } from "../../types/store";
+import { AppDispatch } from "../../../types/store";
+
+//Models
+import { signInUserFormState, signInUserErrorFormState } from "../../../model/users";
 
 //Libraries
-import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { addFlashMessage } from "@42.nl/react-flash-messages";
+import { useNavigate, Link } from "react-router-dom";
 import React, { useReducer, useState, useEffect } from "react";
 
 //Functions
-import userAPI from "../../controller/api/user";
-import { getButtonStyle } from "../../controller/style";
-import styles from "../../style/authorization/sign-in.module.css";
-import { changeProfileValue } from "../../controller/redux/profile";
-import { emailValidation, regularValidation } from "../../controller/validation";
-import { signInUserFormReducer, signInUserErrorFormReducer } from "../../controller/users";
+import userAPI from "../../../controller/api/user";
+import { getButtonStyle } from "../../../controller/style";
+import { changeProfileValue } from "../../../controller/redux/profile";
+import styles from "../../../style/authorization/sign-in/index.module.css";
+import { changeFlashMessage } from "../../../controller/redux/flashMessage";
+import { emailValidation, regularValidation } from "../../../controller/validation";
+import { signInUserFormReducer, signInUserErrorFormReducer } from "../../../controller/users";
 
-//Models
-import { signInUserFormState, signInUserErrorFormState } from "../../model/users";
+//Components
+import Loader from "../../reusable/Loader";
+import InputArea from "../../reusable/Input";
 
 export default function SignIn(): ReactElement {
 	const navigate = useNavigate();
@@ -41,20 +40,21 @@ export default function SignIn(): ReactElement {
 
 	const signIn = async (e: React.MouseEvent<HTMLElement>): Promise<void> => {
 		setLoading(true);
+
 		e.preventDefault();
-	
-		const response = await userAPI.signIn(user);
+		const response = await userAPI.signIn(dispatch, user);
 		if(response?.status === 200 && response?.data) {
 			dispatch(changeProfileValue({key: "userId", value: response.data}));
 			(checkedStatus) && localStorage.setItem("user", response.data);
 			navigate("/");
 		} else {
-			addFlashMessage({
-				type: "ERROR", 
-				duration: 2000,
-				data: response?.data,
-				text: "Authorization error",
-			});
+			dispatch(changeFlashMessage({
+				show: true,
+				duration: 3000,
+				status: "ERROR",
+				description: response?.data,
+				message: "Authorization error",
+			}));
 		}
 	
 		setLoading(false);

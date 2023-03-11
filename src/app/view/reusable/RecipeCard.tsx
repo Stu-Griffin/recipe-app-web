@@ -1,9 +1,9 @@
-//Components
-import RateBox from "./RateBox";
-
 //Icons
 
 //Types
+import { ReactElement } from "react";
+
+//Models
 
 //Libraries
 import React from "react";
@@ -12,7 +12,8 @@ import { useNavigate } from "react-router-dom";
 //Functions
 import styles from "../../style/reusable/recipe-card.module.css";
 
-//Models
+//Components
+import RateBox from "../app/recipe-page/RateBox";
 
 interface PropsI {
 	id: string;
@@ -22,7 +23,13 @@ interface PropsI {
 	authorLogin: string;
 }
 
-export default function RecipeCard({id, rate, image, title, authorLogin}: PropsI) {
+export default function RecipeCard({
+	id,
+	rate,
+	image,
+	title,
+	authorLogin
+}: PropsI): ReactElement {
 	const navigate = useNavigate();
 
 	const getTitle = (): string => {

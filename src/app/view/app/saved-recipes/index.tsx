@@ -1,13 +1,12 @@
-//Components
-import RecipesList from "../reusable/RecipeList";
-
 //Icons
 
 //Types
 import { ReactElement } from "react";
-import { RecipeI } from "../../types/recipes";
-import { ProfileStateI } from "../../types/profile";
-import { AppDispatch, RootState } from "../../types/store";
+import { RecipeI } from "../../../types/recipes";
+import { ProfileStateI } from "../../../types/profile";
+import { AppDispatch, RootState } from "../../../types/store";
+
+//Models
 
 //Libraries
 import { useNavigate } from "react-router-dom";
@@ -15,11 +14,12 @@ import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState, useMemo } from "react";
 
 //Functions
-import recipeAPI from "../../controller/api/recipes";
-import styles from "../../style/app/saved-recipes.module.css";
-import { changeProfileValue } from "../../controller/redux/profile";
+import recipeAPI from "../../../controller/api/recipes";
+import styles from "../../../style/app/saved-recipes/index.module.css";
+import { changeProfileValue } from "../../../controller/redux/profile";
 
-//Models
+//Components
+import RecipesList from "../../reusable/RecipeList";
 
 export default function SavedRecipes(): ReactElement {
 	const navigate = useNavigate();
@@ -42,7 +42,7 @@ export default function SavedRecipes(): ReactElement {
 	async function getSavedRecipes(): Promise<void> {
 		setLoading(true);
 		
-		const response = await recipeAPI.getSavedRecipes(user.savedRecipes);
+		const response = await recipeAPI.getSavedRecipes(dispatch, user.savedRecipes);
 		if(response?.status === 200 && response?.data) setRecipes(response.data);
 		
 		setLoading(false);

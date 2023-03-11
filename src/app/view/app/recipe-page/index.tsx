@@ -1,16 +1,15 @@
-//Components
-import RateBox from "../reusable/RateBox";
-
 //Icons
-import EditIcon from "../../../assets/icons/edit";
-import SavedIcon from "../../../assets/icons/saved";
-import DeleteIcon from "../../../assets/icons/delete";
-import DefaultAvatar from "../../../assets/icons/avatar";
+import EditIcon from "../../../../assets/icons/edit";
+import SavedIcon from "../../../../assets/icons/saved";
+import DeleteIcon from "../../../../assets/icons/delete";
+import DefaultAvatar from "../../../../assets/icons/avatar";
 
 //Types
-import { RecipeI } from "../../types/recipes";
-import { ProfileStateI } from "../../types/profile";
-import { AppDispatch, RootState } from "../../types/store";
+import { RecipeI } from "../../../types/recipes";
+import { ProfileStateI } from "../../../types/profile";
+import { AppDispatch, RootState } from "../../../types/store";
+
+//Models
 
 //Libraries
 import Modal from "react-modal";
@@ -18,17 +17,18 @@ import { Puff } from  "react-loader-spinner";
 import { Rating } from "react-simple-star-rating";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { addFlashMessage } from "@42.nl/react-flash-messages";
 import React, { ReactElement, useEffect, useState } from "react";
 
 //Functions
-import userAPI from "../../controller/api/user";
-import recipeAPI from "../../controller/api/recipes";
-import styles from "../../style/app/recipe-page.module.css";
-import { recipeTypeButtonStyle } from "../../controller/style";
-import { changeUserProfileValue } from "../../controller/redux/profile";
+import userAPI from "../../../controller/api/user";
+import recipeAPI from "../../../controller/api/recipes";
+import { recipeTypeButtonStyle } from "../../../controller/style";
+import styles from "../../../style/app/recipe-page/index.module.css";
+import { changeUserProfileValue } from "../../../controller/redux/profile";
+import { changeFlashMessage } from "../../../controller/redux/flashMessage";
 
-//Models
+//Components
+import RateBox from "./RateBox";
 
 const customStyles = {
 	content: {
@@ -73,7 +73,7 @@ export default function RecipePage() {
 		savedRecipes = (checkSavedRecipes()) ? user.savedRecipes.filter((el: string) => el !== recipe?._id) : [...user.savedRecipes, recipe?._id];
 		formData.append("savedRecipes", JSON.stringify(savedRecipes));
 		dispatch(changeUserProfileValue({key: "savedRecipes", value: savedRecipes}));
-		await userAPI.changeUser(userId, formData);
+		await userAPI.changeUser(dispatch, userId, formData);
 		setLoadingStatus(false);
 	};
 
@@ -101,9 +101,9 @@ export default function RecipePage() {
 		setLoadingStatus(true);
 
 		if(recipeId) {
-			const response = await recipeAPI.getRecipeByItsId(recipeId);
+			const response = await recipeAPI.getRecipeByItsId(dispatch, recipeId);
 			if(response?.status === 200 && response?.data) {
-				const user = await userAPI.getUser(response.data.authorId);
+				const user = await userAPI.getUser(dispatch, response.data.authorId);
 				if(user.status === 200 && user.data) {
 					response.data.authorLogin = user.data.login;
 					setAuthorAvatar(user.data.avatar);
@@ -121,33 +121,35 @@ export default function RecipePage() {
 		setLoadingStatus(true);
 
 		toggle();
-		const response = await recipeAPI.changeRecipesRate((recipe as RecipeI)._id, { newRate: rating, rate: (recipe as RecipeI).rate });
+		const response = await recipeAPI.changeRecipesRate(dispatch, (recipe as RecipeI)._id, { newRate: rating, rate: (recipe as RecipeI).rate });
 		if(response?.status === 200) {
 			const newRecipe = JSON.parse(JSON.stringify(recipe));
 			newRecipe.rate = Math.round((((recipe as RecipeI).rate)+(rating))/2);
 			setRecipe(newRecipe);
 		}
-		addFlashMessage({
+		dispatch(changeFlashMessage({
+			show: true,
 			duration: 1500,
-			data: response?.data,
-			text: "Rate changing",
-			type: (response?.status === 200) ? "SUCCESS" : "ERROR", 
-		});
+			message: "Rate changing",
+			description: response?.data,
+			status: (response?.status === 200) ? "SUCCESS" : "ERROR", 
+		}));
 
 		setLoadingStatus(false);
 	};
 
 	const deleteRecipe = async (): Promise<void> => {
 		setLoadingStatus(true);
-		const response = await recipeAPI.deleteRecipe((recipe as RecipeI)._id, (recipe as RecipeI).imgId);
+		const response = await recipeAPI.deleteRecipe(dispatch, (recipe as RecipeI)._id, (recipe as RecipeI).imgId);
 		setLoadingStatus(false);
 		if(response?.status === 200) navigate("/");
-		addFlashMessage({
+		dispatch(changeFlashMessage({
+			show: true,
 			duration: 2000,
-			data: response?.data,
-			text: "Delete recipe",
-			type: (response?.status === 200) ? "SUCCESS" : "ERROR", 
-		});
+			message: "Delete recipe",
+			description: response?.data,
+			status: (response?.status === 200) ? "SUCCESS" : "ERROR", 
+		}));
 	};
 
 	if(!loadingStatus) {
