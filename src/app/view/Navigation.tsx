@@ -20,8 +20,9 @@ import { AppDispatch, RootState } from "../types/store";
 import { ProfileStateI, ProfileUserI } from "../types/profile";
 
 //Libraries
-import React, { useEffect, useState } from "react";
+import { CSSTransition } from "react-transition-group";
 import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState, useRef } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
 //Functions
@@ -32,6 +33,7 @@ import { changeProfileValue } from "../controller/redux/profile";
 //Models
 
 export default function Navigation(): ReactElement {
+	const nodeRef = useRef(null);
 	const dispatch: AppDispatch = useDispatch();
 	const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false);
 	const { userId, user }: ProfileStateI = useSelector((state: RootState) => state.profile);
@@ -127,12 +129,20 @@ export default function Navigation(): ReactElement {
 				</Link>
 				{getMenuIcon()}
 			</header>
-			<nav
-				style={menuStyle()} 
-				className={styles.navigation}
+			<CSSTransition
+				timeout={750}
+				unmountOnExit
+				in={menuIsOpen}
+				nodeRef={nodeRef}
+				classNames="menu"
 			>
-				{
-					(userId !== "") &&
+				<nav
+					ref={nodeRef}
+					// style={menuStyle()} 
+					className={styles.navigation}
+				>
+					{
+						(userId !== "") &&
 						<Link 
 							to="/create-recipe/"
 							onClick={() => setMenuIsOpen(false)}
@@ -142,27 +152,28 @@ export default function Navigation(): ReactElement {
 								height={30}
 							/>
 						</Link>
-				}
-				<Link 
-					to="/saved-recipes/" 
-					onClick={() => setMenuIsOpen(false)}
-				>
-					<SavedIcon 
-						width={30} 
-						height={30} 
-						fill="transparent"
-					/>
-				</Link>
-				<Link 
-					to="/profile/" 
-					onClick={() => setMenuIsOpen(false)}
-				>
-					<ProfileIcon 
-						width={30} 
-						height={30}
-					/>
-				</Link>
-			</nav>
+					}
+					<Link 
+						to="/saved-recipes/" 
+						onClick={() => setMenuIsOpen(false)}
+					>
+						<SavedIcon 
+							width={30} 
+							height={30} 
+							fill="transparent"
+						/>
+					</Link>
+					<Link 
+						to="/profile/" 
+						onClick={() => setMenuIsOpen(false)}
+					>
+						<ProfileIcon 
+							width={30} 
+							height={30}
+						/>
+					</Link>
+				</nav>
+			</CSSTransition>
 			<Routes>
 				<Route 
 					path="/" 

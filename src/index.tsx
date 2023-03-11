@@ -15,6 +15,7 @@ import reportWebVitals from "./reportWebVitals";
 //Models
 
 //Styles
+import "./app/style/menu.css";
 import "./app/style/index.css";
 import "./app/style/flashMessage.css";
 
