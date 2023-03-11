@@ -17,6 +17,7 @@ import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautif
 import { getButtonStyle } from "../../controller/style";
 import styles from "../../style/reusable/list-add.module.css";
 import { regularValidation } from "../../controller/validation";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 //Models
 
@@ -83,90 +84,98 @@ export default function ListAdd({editEl, listNumbering, data, title, placeholder
 					{(provided) => {
 						return (
 							<div {...provided.droppableProps} ref={provided.innerRef} className={styles.list}>
-								{
-									data.map((el: string, index: number): ReactElement => {
-										return (
-											<Draggable key={index} draggableId={`${index}`} index={index}>
-												{(provided) => {
-													return (
-														<div 
-															ref={provided.innerRef} 
-															className={styles.element}
-															{...provided.draggableProps} 
-															{...provided.dragHandleProps} 
-														>
-															{(listNumbering) && <h2>{index+1}</h2>}
-															{
-																(editId === index.toString())
-																	?
-																	<InputArea
-																		title=""
-																		value={editValue}
-																		style={{
-																			width: "75%"
-																		}}
-																		multiple={true}
-																		error={false}
-																		placeholder=""
-																		onChangeFunc={(e: string) => {
-																			setEditValue(e);
-																			setEditError(regularValidation(e));
-																		}}
-																	/>
-																	:
-																	<p className={styles.text}>{el}</p>
-															}
-															<div className={styles.elButtons}>
-																{
-																	(editId === index.toString())
-																		?
-																		<SaveIcon
-																			style={{
-																				border: "none",
-																				cursor: "pointer",
-																				width: "25px",
-																				height: "25px",
-																				backgroundColor: "transparent",
-																				...getButtonStyle(!!editError),
-																			}}
-																			width={25}
-																			height={25}
-																			onClick={(): void => {
-																				setEditId("");
-																				editEl(editValue, index);
-																			}}
-																		/>
-																		:
-																		<EditIcon
+								<TransitionGroup>
+									{
+										data.map((el: string, index: number): ReactElement => {
+											return (
+												<CSSTransition 
+													key={index}
+													timeout={500}
+													classNames="el"
+												>
+													<Draggable key={index} draggableId={`${index}`} index={index}>
+														{(provided) => {
+															return (
+																<div 
+																	ref={provided.innerRef} 
+																	className={styles.element}
+																	{...provided.draggableProps} 
+																	{...provided.dragHandleProps} 
+																>
+																	{(listNumbering) && <h2>{index+1}</h2>}
+																	{
+																		(editId === index.toString())
+																			?
+																			<InputArea
+																				title=""
+																				value={editValue}
+																				style={{
+																					width: "75%"
+																				}}
+																				multiple={true}
+																				error={false}
+																				placeholder=""
+																				onChangeFunc={(e: string) => {
+																					setEditValue(e);
+																					setEditError(regularValidation(e));
+																				}}
+																			/>
+																			:
+																			<p className={styles.text}>{el}</p>
+																	}
+																	<div className={styles.elButtons}>
+																		{
+																			(editId === index.toString())
+																				?
+																				<SaveIcon
+																					style={{
+																						border: "none",
+																						cursor: "pointer",
+																						width: "25px",
+																						height: "25px",
+																						backgroundColor: "transparent",
+																						...getButtonStyle(!!editError),
+																					}}
+																					width={25}
+																					height={25}
+																					onClick={(): void => {
+																						setEditId("");
+																						editEl(editValue, index);
+																					}}
+																				/>
+																				:
+																				<EditIcon
+																					style={{
+																						cursor: "pointer"
+																					}}
+																					width={30}
+																					height={30}
+																					onClick={(): void => {
+																						setEditValue(el);
+																						setEditId(index.toString());
+																					}}
+																				/>
+																		}
+																		<DeleteIcon
 																			style={{
 																				cursor: "pointer"
 																			}}
-																			width={30}
-																			height={30}
+																			width={22.5}
+																			height={22.5}
 																			onClick={(): void => {
-																				setEditValue(el);
-																				setEditId(index.toString());
+																				removeEl(index);
 																			}}
 																		/>
-																}
-																<DeleteIcon
-																	style={{
-																		cursor: "pointer"
-																	}}
-																	width={22.5}
-																	height={22.5}
-																	onClick={(): void => {
-																		removeEl(index);
-																	}}
-																/>
-															</div>
-														</div>
-													);
-												}}
-											</Draggable>
-										);
-									})
-								}
+																	</div>
+																</div>
+															);
+														}}
+													</Draggable>
+												</CSSTransition>
+											);
+										})
+									}
+								</TransitionGroup>
 								{provided.placeholder}
 							</div>
 						);
